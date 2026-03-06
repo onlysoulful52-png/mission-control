@@ -1,0 +1,946 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎯 Mission Control — Eqdom Portfolio</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: linear-gradient(135deg, #0a0e1a 0%, #0f1823 100%);
+            color: #e4e6eb;
+            min-height: 100vh;
+        }
+        
+        .header {
+            background: rgba(26, 31, 58, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 15px 20px;
+            border-bottom: 1px solid #2a3f5f;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .header h1 {
+            font-size: 18px;
+            background: linear-gradient(135deg, #00d4ff, #7b68ee);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .header-stats {
+            display: flex;
+            gap: 20px;
+            font-size: 11px;
+        }
+        
+        .header-stat-value {
+            font-weight: 600;
+            color: #00d4ff;
+        }
+        
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #00ff88;
+            box-shadow: 0 0 10px #00ff88;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        /* EQDOM HERO SECTION */
+        .eqdom-hero {
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.1) 0%, rgba(123, 104, 238, 0.1) 100%);
+            border: 2px solid #00d4ff;
+            border-radius: 16px;
+            padding: 20px;
+            margin: 20px;
+        }
+        
+        .eqdom-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .eqdom-title {
+            font-size: 24px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #00d4ff, #7b68ee);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .eqdom-badge {
+            background: rgba(0, 255, 136, 0.2);
+            color: #00ff88;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+        
+        .eqdom-kpis {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+        }
+        
+        .kpi-card {
+            background: rgba(15, 24, 35, 0.8);
+            border: 1px solid #2a3f5f;
+            border-radius: 12px;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .kpi-card:hover {
+            border-color: #00d4ff;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(0, 212, 255, 0.2);
+        }
+        
+        .kpi-card:active {
+            transform: scale(0.98);
+        }
+        
+        .kpi-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: #00d4ff;
+        }
+        
+        .kpi-label {
+            font-size: 10px;
+            color: #8892a0;
+            text-transform: uppercase;
+            margin-top: 4px;
+        }
+        
+        .kpi-change {
+            font-size: 11px;
+            margin-top: 4px;
+        }
+        
+        .kpi-change.up { color: #00ff88; }
+        .kpi-change.down { color: #ff6b6b; }
+        
+        /* Navigation */
+        .nav-tabs {
+            display: flex;
+            gap: 5px;
+            padding: 15px 20px 0;
+            border-bottom: 1px solid #2a3f5f;
+            background: rgba(15, 20, 32, 0.8);
+            overflow-x: auto;
+        }
+        
+        .nav-tab {
+            padding: 12px 20px;
+            background: transparent;
+            border: none;
+            color: #8892a0;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 500;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+        
+        .nav-tab:hover { color: #e4e6eb; }
+        
+        .nav-tab.active {
+            color: #00d4ff;
+            border-bottom-color: #00d4ff;
+        }
+        
+        .nav-tab .badge {
+            background: #ff6b6b;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 10px;
+            font-size: 9px;
+            margin-left: 5px;
+        }
+        
+        /* Content */
+        .main-content {
+            padding: 20px;
+        }
+        
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        
+        /* Cards */
+        .card {
+            background: rgba(26, 35, 64, 0.6);
+            border: 1px solid #2a3f5f;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .card-title {
+            font-size: 14px;
+            color: #00d4ff;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        /* Agent Cards */
+        .agent-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 15px;
+        }
+        
+        .agent-card {
+            background: linear-gradient(135deg, rgba(26, 35, 64, 0.8) 0%, rgba(15, 24, 35, 0.8) 100%);
+            border: 1px solid #2a3f5f;
+            border-radius: 12px;
+            padding: 15px;
+            position: relative;
+        }
+        
+        .agent-card.online { border-color: #00ff88; }
+        .agent-card.busy { border-color: #ffd93d; }
+        .agent-card.idle { border-color: #8892a0; }
+        
+        .agent-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+        
+        .agent-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            background: linear-gradient(135deg, #1a2340, #2a3f5f);
+        }
+        
+        .agent-avatar.henry { border: 2px solid #00d4ff; }
+        .agent-avatar.aiman { border: 2px solid #ff6b6b; }
+        .agent-avatar.junior { border: 2px solid #4ecdc4; }
+        .agent-avatar.mckinsey { border: 2px solid #ffd700; }
+        
+        .agent-name {
+            font-size: 16px;
+            font-weight: 600;
+        }
+        
+        .agent-role {
+            font-size: 11px;
+            color: #8892a0;
+        }
+        
+        .agent-status {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            padding: 6px 10px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 6px;
+            margin-bottom: 10px;
+        }
+        
+        .status-dot-small {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+        
+        .status-dot-small.online { background: #00ff88; }
+        .status-dot-small.busy { background: #ffd93d; }
+        .status-dot-small.idle { background: #8892a0; }
+        
+        .agent-activity {
+            font-size: 11px;
+            color: #8892a0;
+            padding: 8px;
+            background: rgba(0,0,0,0.2);
+            border-radius: 6px;
+            font-family: monospace;
+        }
+        
+        .agent-stats {
+            display: flex;
+            gap: 15px;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid #2a3f5f;
+        }
+        
+        .agent-stat {
+            text-align: center;
+        }
+        
+        .agent-stat-value {
+            font-size: 16px;
+            font-weight: 600;
+            color: #00d4ff;
+        }
+        
+        .agent-stat-label {
+            font-size: 9px;
+            color: #6b7280;
+        }
+        
+        /* Project Cards */
+        .project-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 15px;
+        }
+        
+        .project-card {
+            background: linear-gradient(135deg, rgba(26, 35, 64, 0.8) 0%, rgba(15, 24, 35, 0.8) 100%);
+            border: 1px solid #2a3f5f;
+            border-radius: 12px;
+            padding: 15px;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .project-card:hover {
+            border-color: #00d4ff;
+            transform: translateY(-2px);
+        }
+        
+        .project-card::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            border-radius: 12px 0 0 12px;
+        }
+        
+        .project-card.live::before { background: #00ff88; }
+        .project-card.testing::before { background: #ffd93d; }
+        .project-card.backlog::before { background: #8892a0; }
+        
+        .project-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 10px;
+        }
+        
+        .project-name {
+            font-size: 16px;
+            font-weight: 600;
+        }
+        
+        .project-status {
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: 600;
+        }
+        
+        .status-live { background: rgba(0, 255, 136, 0.2); color: #00ff88; }
+        .status-testing { background: rgba(255, 217, 61, 0.2); color: #ffd93d; }
+        .status-backlog { background: rgba(136, 146, 160, 0.2); color: #8892a0; }
+        
+        .project-desc {
+            font-size: 12px;
+            color: #8892a0;
+            margin-bottom: 12px;
+        }
+        
+        .progress-bar {
+            height: 6px;
+            background: #1a2535;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            border-radius: 3px;
+        }
+        
+        .progress-fill.high { background: linear-gradient(90deg, #00ff88, #00d4ff); }
+        .progress-fill.medium { background: linear-gradient(90deg, #ffd93d, #ff6b6b); }
+        .progress-fill.low { background: #8892a0; }
+        
+        .project-meta {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+            font-size: 11px;
+            color: #6b7280;
+        }
+        
+        /* Timeline */
+        .timeline {
+            background: rgba(15, 20, 32, 0.6);
+            border: 1px solid #2a3f5f;
+            border-radius: 12px;
+            padding: 15px;
+        }
+        
+        .timeline-item {
+            display: flex;
+            gap: 12px;
+            padding: 12px 0;
+            border-left: 2px solid #2a3f5f;
+            margin-left: 10px;
+            padding-left: 15px;
+            position: relative;
+        }
+        
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -5px;
+            top: 15px;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #2a3f5f;
+        }
+        
+        .timeline-item.success::before { background: #00ff88; }
+        .timeline-item.info::before { background: #00d4ff; }
+        .timeline-item.warning::before { background: #ffd93d; }
+        
+        .timeline-time {
+            font-size: 11px;
+            color: #6b7280;
+            min-width: 50px;
+        }
+        
+        .timeline-content {
+            flex: 1;
+        }
+        
+        .timeline-title {
+            font-size: 13px;
+            margin-bottom: 2px;
+        }
+        
+        .timeline-desc {
+            font-size: 11px;
+            color: #8892a0;
+        }
+        
+        .timeline-agent {
+            font-size: 9px;
+            padding: 2px 6px;
+            border-radius: 4px;
+            margin-top: 4px;
+            display: inline-block;
+        }
+        
+        .timeline-agent.henry { background: rgba(0, 212, 255, 0.1); color: #00d4ff; }
+        .timeline-agent.aiman { background: rgba(255, 107, 107, 0.1); color: #ff6b6b; }
+        .timeline-agent.junior { background: rgba(78, 205, 196, 0.1); color: #4ecdc4; }
+        .timeline-agent.mckinsey { background: rgba(255, 215, 0, 0.1); color: #ffd700; }
+        
+        /* Logs */
+        .log-container {
+            background: #0a0e1a;
+            border: 1px solid #2a3f5f;
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 11px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .log-line {
+            padding: 8px 12px;
+            border-bottom: 1px solid #1a2535;
+            display: flex;
+            gap: 10px;
+        }
+        
+        .log-time { color: #6b7280; min-width: 70px; }
+        .log-level { min-width: 40px; font-weight: 600; }
+        .log-level.info { color: #00d4ff; }
+        .log-level.warn { color: #ffd93d; }
+        .log-level.error { color: #ff6b6b; }
+        .log-level.success { color: #00ff88; }
+        .log-agent { min-width: 60px; color: #8892a0; }
+        .log-msg { flex: 1; }
+        
+        /* Modal */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .modal-overlay.active { display: flex; }
+        
+        .modal {
+            background: #1a2535;
+            border: 1px solid #2a3f5f;
+            border-radius: 16px;
+            padding: 20px;
+            max-width: 500px;
+            width: 100%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .modal-title {
+            font-size: 18px;
+            color: #00d4ff;
+        }
+        
+        .modal-close {
+            background: none;
+            border: none;
+            color: #8892a0;
+            font-size: 24px;
+            cursor: pointer;
+        }
+        
+        .modal-content {
+            font-size: 13px;
+            line-height: 1.6;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .eqdom-kpis { grid-template-columns: repeat(2, 1fr); }
+            .agent-grid { grid-template-columns: 1fr; }
+            .project-grid { grid-template-columns: 1fr; }
+            .header-stats { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <h1>🎯 Mission Control — Eqdom Portfolio</h1>
+        <div class="header-stats">
+            <div><span class="status-dot"></span> Online</div>
+            <div>Agents: <span class="header-stat-value">4/4</span></div>
+            <div>Tasks: <span class="header-stat-value">12</span></div>
+        </div>
+    </header>
+    
+    <!-- EQDOM HERO SECTION -->
+    <div class="eqdom-hero">
+        <div class="eqdom-header">
+            <div class="eqdom-title">🏦 EQDOM — Projet Principal</div>
+            <span class="eqdom-badge">LIVE</span>
+        </div>
+        <div class="eqdom-kpis">
+            <div class="kpi-card" onclick="showKPIDetail('conversion')">
+                <div class="kpi-value">23.4%</div>
+                <div class="kpi-label">Conversion</div>
+                <div class="kpi-change up">↑ 2.1% vs last week</div>
+            </div>
+            <div class="kpi-card" onclick="showKPIDetail('users')">
+                <div class="kpi-value">1,247</div>
+                <div class="kpi-label">Users Actifs</div>
+                <div class="kpi-change up">↑ 18% vs last month</div>
+            </div>
+            <div class="kpi-card" onclick="showKPIDetail('revenue')">
+                <div class="kpi-value">$45.2K</div>
+                <div class="kpi-label">MRR</div>
+                <div class="kpi-change up">↑ 12% vs last month</div>
+            </div>
+            <div class="kpi-card" onclick="showKPIDetail('churn')">
+                <div class="kpi-value">4.2%</div>
+                <div class="kpi-label">Churn</div>
+                <div class="kpi-change down">↓ 0.8% improvement</div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Navigation -->
+    <nav class="nav-tabs">
+        <button class="nav-tab active" onclick="showTab('agents')">🤖 Agents <span class="badge">4</span></button>
+        <button class="nav-tab" onclick="showTab('projects')">🏗️ Projets <span class="badge">3</span></button>
+        <button class="nav-tab" onclick="showTab('eqdom')">🏦 Eqdom Details</button>
+        <button class="nav-tab" onclick="showTab('history')">📜 Historique</button>
+        <button class="nav-tab" onclick="showTab('logs')">📋 Logs <span class="badge">24</span></button>
+    </nav>
+    
+    <main class="main-content">
+        <!-- TAB: AGENTS -->
+        <div id="agents" class="tab-content active">
+            <div class="agent-grid">
+                <div class="agent-card online">
+                    <div class="agent-header">
+                        <div class="agent-avatar henry">🎯</div>
+                        <div>
+                            <div class="agent-name">Henry</div>
+                            <div class="agent-role">AI Employee Generalist</div>
+                        </div>
+                    </div>
+                    <div class="agent-status">
+                        <span class="status-dot-small online"></span>
+                        <span>Online — Morning Brief</span>
+                    </div>
+                    <div class="agent-activity">
+                        [08:42:15] Checking memory files...<br>
+                        [08:35:00] Generated daily report
+                    </div>
+                    <div class="agent-stats">
+                        <div class="agent-stat"><div class="agent-stat-value">47</div><div class="agent-stat-label">Tasks</div></div>
+                        <div class="agent-stat"><div class="agent-stat-value">1.4k</div><div class="agent-stat-label">Tokens</div></div>
+                        <div class="agent-stat"><div class="agent-stat-value">12m</div><div class="agent-stat-label">Active</div></div>
+                    </div>
+                </div>
+                
+                <div class="agent-card busy">
+                    <div class="agent-header">
+                        <div class="agent-avatar aiman">💻</div>
+                        <div>
+                            <div class="agent-name">Aiman</div>
+                            <div class="agent-role">Lead Developer</div>
+                        </div>
+                    </div>
+                    <div class="agent-status">
+                        <span class="status-dot-small busy"></span>
+                        <span>Busy — Code Review</span>
+                    </div>
+                    <div class="agent-activity">
+                        [08:30:00] Reviewing PR #42<br>
+                        [08:15:30] Commit #a4f2d1 pushed
+                    </div>
+                    <div class="agent-stats">
+                        <div class="agent-stat"><div class="agent-stat-value">15</div><div class="agent-stat-label">Commits</div></div>
+                        <div class="agent-stat"><div class="agent-stat-value">890</div><div class="agent-stat-label">Tokens</div></div>
+                        <div class="agent-stat"><div class="agent-stat-value">45m</div><div class="agent-stat-label">Active</div></div>
+                    </div>
+                </div>
+                
+                <div class="agent-card online">
+                    <div class="agent-header">
+                        <div class="agent-avatar junior">📊</div>
+                        <div>
+                            <div class="agent-name">Junior</div>
+                            <div class="agent-role">PM Consultant</div>
+                        </div>
+                    </div>
+                    <div class="agent-status">
+                        <span class="status-dot-small online"></span>
+                        <span>Online — Documentation</span>
+                    </div>
+                    <div class="agent-activity">
+                        [08:41:30] Updating HANDOVER.md<br>
+                        [08:25:15] Analyzing project risks...
+                    </div>
+                    <div class="agent-stats">
+                        <div class="agent-stat"><div class="agent-stat-value">8</div><div class="agent-stat-label">Docs</div></div>
+                        <div class="agent-stat"><div class="agent-stat-value">757</div><div class="agent-stat-label">Tokens</div></div>
+                        <div class="agent-stat"><div class="agent-stat-value">1h</div><div class="agent-stat-label">Active</div></div>
+                    </div>
+                </div>
+                
+                <div class="agent-card idle">
+                    <div class="agent-header">
+                        <div class="agent-avatar mckinsey">💼</div>
+                        <div>
+                            <div class="agent-name">Alexander Rothschild</div>
+                            <div class="agent-role">McKinsey Partner</div>
+                        </div>
+                    </div>
+                    <div class="agent-status">
+                        <span class="status-dot-small idle"></span>
+                        <span>Idle — Awaiting Challenge</span>
+                    </div>
+                    <div class="agent-activity">
+                        [Ready] Strategic review mode<br>
+                        [Ready] Challenger framework active
+                    </div>
+                    <div class="agent-stats">
+                        <div class="agent-stat"><div class="agent-stat-value">200+</div><div class="agent-stat-label">Projects</div></div>
+                        <div class="agent-stat"><div class="agent-stat-value">25yr</div><div class="agent-stat-label">Exp</div></div>
+                        <div class="agent-stat"><div class="agent-stat-value">Fintech</div><div class="agent-stat-label">Focus</div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- TAB: PROJECTS -->
+        <div id="projects" class="tab-content">
+            <div class="project-grid">
+                <div class="project-card live" onclick="showProjectDetail('eqdom')">
+                    <div class="project-header">
+                        <div class="project-name">🏦 EQDOM</div>
+                        <span class="project-status status-live">LIVE</span>
+                    </div>
+                    <div class="project-desc">Crédit premium — Plateforme CNDP compliant avec dark mode. Next.js, TypeScript, Prisma.</div>
+                    <div class="progress-bar"><div class="progress-fill high" style="width: 78%"></div></div>
+                    <div class="project-meta">
+                        <span>Progress: 78%</span>
+                        <span>Tasks: 12/15</span>
+                    </div>
+                </div>
+                
+                <div class="project-card testing" onclick="showProjectDetail('bobcat')">
+                    <div class="project-header">
+                        <div class="project-name">⚡ Bobcat Energy</div>
+                        <span class="project-status status-testing">TESTING</span>
+                    </div>
+                    <div class="project-desc">WhatsApp automation pour prospection CEE. Bot conversationnel, qualification leads.</div>
+                    <div class="progress-bar"><div class="progress-fill medium" style="width: 45%"></div></div>
+                    <div class="project-meta">
+                        <span>Progress: 45%</span>
+                        <span>Tasks: 5/11</span>
+                    </div>
+                </div>
+                
+                <div class="project-card backlog" onclick="showProjectDetail('mission-control')">
+                    <div class="project-header">
+                        <div class="project-name">🎯 Mission Control</div>
+                        <span class="project-status status-backlog">BACKLOG</span>
+                    </div>
+                    <div class="project-desc">Dashboard de gestion des agents et projets. Version 2.0 en cours de développement.</div>
+                    <div class="progress-bar"><div class="progress-fill low" style="width: 25%"></div></div>
+                    <div class="project-meta">
+                        <span>Progress: 25%</span>
+                        <span>Tasks: 3/12</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- TAB: EQDOM DETAILS -->
+        <div id="eqdom" class="tab-content">
+            <div class="card">
+                <div class="card-title">🏦 EQDOM — Vue Détaillée</div>
+                <p style="margin-bottom: 15px; color: #8892a0;">Plateforme de crédit premium orientée MENA. Stack technique moderne avec compliance CNDP.</p>
+                
+                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-top: 20px;">
+                    <div class="card">
+                        <div class="card-title">📊 Métriques Clés</div>
+                        <div style="font-size: 13px; line-height: 2;">
+                            <div>👥 Users inscrits: <strong style="color: #00d4ff;">2,847</strong></div>
+                            <div>📈 Taux conversion: <strong style="color: #00ff88;">23.4%</strong></div>
+                            <div>💰 MRR: <strong style="color: #ffd93d;">$45,200</strong></div>
+                            <div>⭐ NPS Score: <strong style="color: #00d4ff;">42</strong></div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-title">🚀 Roadmap Q1 2026</div>
+                        <div style="font-size: 13px; line-height: 2;">
+                            <div>✅ Dark mode implementation</div>
+                            <div>✅ CNDP compliance audit</div>
+                            <div>🔄 Multi-language support (AR)</div>
+                            <div>⏳ Payment gateway integration</div>
+                            <div>⏳ Mobile app beta</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card" style="margin-top: 15px;">
+                    <div class="card-title">👥 Équipe Assignée</div>
+                    <div style="display: flex; gap: 15px; flex-wrap: wrap; margin-top: 10px;">
+                        <span style="background: rgba(0,212,255,0.1); padding: 6px 12px; border-radius: 20px; font-size: 12px;">🎯 Henry — Lead</span>
+                        <span style="background: rgba(255,107,107,0.1); padding: 6px 12px; border-radius: 20px; font-size: 12px;">💻 Aiman — Dev</span>
+                        <span style="background: rgba(78,205,196,0.1); padding: 6px 12px; border-radius: 20px; font-size: 12px;">📊 Junior — PM</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- TAB: HISTORY -->
+        <div id="history" class="tab-content">
+            <div class="timeline">
+                <div class="timeline-item success">
+                    <div class="timeline-time">08:42</div>
+                    <div class="timeline-content">
+                        <div class="timeline-title">Dashboard V2 déployé</div>
+                        <div class="timeline-desc">Nouveau design avec section Eqdom principale et KPIs cliquables</div>
+                        <span class="timeline-agent henry">Henry</span>
+                    </div>
+                </div>
+                <div class="timeline-item info">
+                    <div class="timeline-time">08:35</div>
+                    <div class="timeline-content">
+                        <div class="timeline-title">McKinsey Partner recruté</div>
+                        <div class="timeline-desc">Alexander Rothschild rejoint l'équipe en tant que consultant stratégique</div>
+                        <span class="timeline-agent henry">Henry</span>
+                    </div>
+                </div>
+                <div class="timeline-item success">
+                    <div class="timeline-time">08:30</div>
+                    <div class="timeline-content">
+                        <div class="timeline-title">Code review complété — PR #42</div>
+                        <div class="timeline-desc">Authentication module approved for merge</div>
+                        <span class="timeline-agent aiman">Aiman</span>
+                    </div>
+                </div>
+                <div class="timeline-item warning">
+                    <div class="timeline-time">08:25</div>
+                    <div class="timeline-content">
+                        <div class="timeline-title">GitHub Pages 404 error</div>
+                        <div class="timeline-desc">Configuration issue identified and fixed by Tech Lead</div>
+                        <span class="timeline-agent henry">Henry</span>
+                    </div>
+                </div>
+                <div class="timeline-item info">
+                    <div class="timeline-time">08:15</div>
+                    <div class="timeline-content">
+                        <div class="timeline-title">Daily metrics updated</div>
+                        <div class="timeline-desc">Conversion rate improved by 2.1% — investigating cause</div>
+                        <span class="timeline-agent junior">Junior</span>
+                    </div>
+                </div>
+                <div class="timeline-item success">
+                    <div class="timeline-time">08:00</div>
+                    <div class="timeline-content">
+                        <div class="timeline-title">Morning brief generated</div>
+                        <div class="timeline-desc">3 priorities identified, competitor scan scheduled</div>
+                        <span class="timeline-agent henry">Henry</span>
+                    </div>
+                </div>
+                <div class="timeline-item info">
+                    <div class="timeline-time">07:30</div>
+                    <div class="timeline-content">
+                        <div class="timeline-title">System heartbeat</div>
+                        <div class="timeline-desc">All agents operational, no issues detected</div>
+                        <span class="timeline-agent henry">Henry</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- TAB: LOGS -->
+        <div id="logs" class="tab-content">
+            <div class="log-container">
+                <div class="log-line"><span class="log-time">08:42:15</span><span class="log-level success">SUCCESS</span><span class="log-agent">henry</span><span class="log-msg">Dashboard V2 deployed successfully</span></div>
+                <div class="log-line"><span class="log-time">08:41:30</span><span class="log-level info">INFO</span><span class="log-agent">junior</span><span class="log-msg">Updated project documentation</span></div>
+                <div class="log-line"><span class="log-time">08:40:00</span><span class="log-level info">INFO</span><span class="log-agent">aiman</span><span class="log-msg">Started code review session</span></div>
+                <div class="log-line"><span class="log-time">08:35:22</span><span class="log-level info">INFO</span><span class="log-agent">henry</span><span class="log-msg">Agent mckinsey-partner initialized</span></div>
+                <div class="log-line"><span class="log-time">08:30:15</span><span class="log-level success">SUCCESS</span><span class="log-agent">aiman</span><span class="log-msg">PR #42 approved and merged</span></div>
+                <div class="log-line"><span class="log-time">08:25:10</span><span class="log-level warn">WARN</span><span class="log-agent">henry</span><span class="log-msg">GitHub Pages returning 404 — investigating</span></div>
+                <div class="log-line"><span class="log-time">08:20:00</span><span class="log-level info">INFO</span><span class="log-agent">junior</span><span class="log-msg">Daily metrics calculation started</span></div>
+                <div class="log-line"><span class="log-time">08:15:45</span><span class="log-level success">SUCCESS</span><span class="log-agent">junior</span><span class="log-msg">Conversion rate analysis complete</span></div>
+                <div class="log-line"><span class="log-time">08:10:30</span><span class="log-level info">INFO</span><span class="log-agent">henry</span><span class="log-msg">User requested dashboard improvements</span></div>
+                <div class="log-line"><span class="log-time">08:05:00</span><span class="log-level info">INFO</span><span class="log-agent">system</span><span class="log-msg">Cron job: morning-brief executed</span></div>
+                <div class="log-line"><span class="log-time">08:00:00</span><span class="log-level success">SUCCESS</span><span class="log-agent">henry</span><span class="log-msg">Morning brief generated and delivered</span></div>
+                <div class="log-line"><span class="log-time">07:45:30</span><span class="log-level info">INFO</span><span class="log-agent">aiman</span><span class="log-msg">Automated tests passed: 47/47</span></div>
+                <div class="log-line"><span class="log-time">07:30:00</span><span class="log-level info">INFO</span><span class="log-agent">system</span><span class="log-msg">Heartbeat check — all systems nominal</span></div>
+                <div class="log-line"><span class="log-time">07:15:20</span><span class="log-level warn">WARN</span><span class="log-agent">system</span><span class="log-msg">Token usage approaching daily limit (85%)</span></div>
+                <div class="log-line"><span class="log-time">07:00:00</span><span class="log-level success">SUCCESS</span><span class="log-agent">system</span><span class="log-msg">Backup completed — 2.4GB archived</span></div>
+            </div>
+        </div>
+    </main>
+    
+    <!-- Modal -->
+    <div class="modal-overlay" id="modal" onclick="closeModal(event)">
+        <div class="modal">
+            <div class="modal-header">
+                <div class="modal-title" id="modal-title">Détail</div>
+                <button class="modal-close" onclick="closeModal()">×</button>
+            </div>
+            <div class="modal-content" id="modal-content">
+                Content here...
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function showTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.nav-tab').forEach(tab => tab.classList.remove('active'));
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+        
+        function showKPIDetail(kpi) {
+            const details = {
+                conversion: {
+                    title: '📈 Conversion Rate Analysis',
+                    content: '<strong>Current: 23.4%</strong><br><br>• <strong>+2.1%</strong> vs last week<br>• Industry benchmark: 18-22%<br>• Trend: ↗️ Improving<br><br><strong>Key drivers:</strong><br>• New onboarding flow (+15% completion)<br>• Reduced form fields (5 → 3)<br>• Added trust badges<br><br><strong>Action items:</strong><br>• A/B test CTA button colors<br>• Implement exit-intent popup'
+                },
+                users: {
+                    title: '👥 Active Users',
+                    content: '<strong>Current: 1,247</strong><br><br>• <strong>+18%</strong> vs last month<br>• Daily active: 892 (71%)<br>• Weekly active: 1,105 (89%)<br><br><strong>Segmentation:</strong><br>• New users (30d): 312<br>• Returning: 935<br>• Power users: 156<br><br><strong>Cohort analysis:</strong><br>• Week 1 retention: 68%<br>• Month 1 retention: 42%'
+                },
+                revenue: {
+                    title: '💰 Monthly Recurring Revenue',
+                    content: '<strong>Current MRR: $45,200</strong><br><br>• <strong>+12%</strong> vs last month<br>• ARPU: $36.25<br>• Growth rate: 12% MoM<br><br><strong>Breakdown:</strong><br>• Premium plans: $38,500 (85%)<br>• Add-ons: $4,200 (9%)<br>• Enterprise: $2,500 (6%)<br><br><strong>Projections:</strong><br>• Target Q1: $55,000<br>• Run rate: $542,400 ARR'
+                },
+                churn: {
+                    title: '📉 Churn Rate',
+                    content: '<strong>Current: 4.2%</strong><br><br>• <strong>-0.8%</strong> improvement<br>• Industry avg: 5-7%<br>• Status: 🟢 Excellent<br><br><strong>Churn reasons:</strong><br>• Price sensitivity: 35%<br>• Feature gaps: 28%<br>• Support issues: 22%<br>• Other: 15%<br><br><strong>Retention initiatives:</strong><br>• Win-back campaign launched<br>• Quarterly check-in program'
+                }
+            };
+            
+            const detail = details[kpi];
+            document.getElementById('modal-title').innerHTML = detail.title;
+            document.getElementById('modal-content').innerHTML = detail.content;
+            document.getElementById('modal').classList.add('active');
+        }
+        
+        function showProjectDetail(project) {
+            const details = {
+                eqdom: {
+                    title: '🏦 EQDOM — Deep Dive',
+                    content: 'Full project analysis available. Access:<br><br>• <a href="#" style="color:#00d4ff">Technical Architecture</a><br>• <a href="#" style="color:#00d4ff">User Research</a><br>• <a href="#" style="color:#00d4ff">Competitive Analysis</a><br>• <a href="#" style="color:#00d4ff">Roadmap Q1-Q2</a>'
+                },
+                bobcat: {
+                    title: '⚡ Bobcat Energy — Deep Dive',
+                    content: 'WhatsApp automation project. Access:<br><br>• <a href="#" style="color:#00d4ff">Bot Flow Diagram</a><br>• <a href="#" style="color:#00d4ff">CEE Compliance Doc</a><br>• <a href="#" style="color:#00d4ff">Lead Scoring Matrix</a>'
+                },
+                'mission-control': {
+                    title: '🎯 Mission Control — Deep Dive',
+                    content: 'Internal dashboard project. Access:<br><br>• <a href="#" style="color:#00d4ff">Feature Specs</a><br>• <a href="#" style="color:#00d4ff">API Documentation</a><br>• <a href="#" style="color:#00d4ff">Design System</a>'
+                }
+            };
+            
+            const detail = details[project];
+            document.getElementById('modal-title').innerHTML = detail.title;
+            document.getElementById('modal-content').innerHTML = detail.content;
+            document.getElementById('modal').classList.add('active');
+        }
+        
+        function closeModal(event) {
+            if (!event || event.target.id === 'modal' || event.target.classList.contains('modal-close')) {
+                document.getElementById('modal').classList.remove('active');
+            }
+        }
+    </script>
+</body>
+</html>

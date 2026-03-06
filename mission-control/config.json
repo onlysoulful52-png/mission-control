@@ -1,0 +1,54 @@
+{
+  "agents": [
+    {
+      "id": "henry",
+      "name": "Henry",
+      "role": "AI Employee Generalist",
+      "color": "#00d4ff",
+      "status": "active",
+      "tasks": ["morning-brief", "competitor-scan", "mission-control"],
+      "projects": ["eqdom", "bobcat"]
+    },
+    {
+      "id": "aiman",
+      "name": "Aiman", 
+      "role": "Lead Developer Eqdom",
+      "color": "#ff6b6b",
+      "status": "active",
+      "tasks": ["development", "code-review", "security"],
+      "projects": ["eqdom"]
+    },
+    {
+      "id": "junior",
+      "name": "Junior",
+      "role": "PM Consultant",
+      "color": "#4ecdc4", 
+      "status": "active",
+      "tasks": ["project-tracking", "documentation", "reporting"],
+      "projects": ["eqdom", "bobcat"]
+    }
+  ],
+  "projects": [
+    {
+      "id": "eqdom",
+      "name": "Eqdom Premium",
+      "status": "active",
+      "progress": 65,
+      "deadline": null,
+      "agents": ["henry", "aiman", "junior"]
+    },
+    {
+      "id": "bobcat",
+      "name": "Bobcat Energy",
+      "status": "active", 
+      "progress": 40,
+      "deadline": null,
+      "agents": ["henry", "junior"]
+    }
+  ],
+  "kanban": {
+    "columns": ["todo", "progress", "review", "done"],
+    "autoSync": true,
+    "syncInterval": 300
+  }
+}

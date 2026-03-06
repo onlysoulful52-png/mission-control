@@ -1,0 +1,44 @@
+{
+  "id": "7526d79f-6c4b-470c-9a34-ad7763ff7102",
+  "timestamp": "2026-03-06T11:47:46.784Z",
+  "receivedAt": "2026-03-06T11:47:46.784Z",
+  "raw": {
+    "FromName": "Lead Bobcat",
+    "From": "prospect@entreprise.fr",
+    "Subject": "Demande informations CEE Chèque Énergie",
+    "TextBody": "Bonjour, je cherche des infos sur les CEE et le chèque énergie pour ma renovation.",
+    "Date": "2026-03-06T15:00:00Z",
+    "Attachments": []
+  },
+  "classification": {
+    "categories": [
+      "bobcat"
+    ],
+    "primaryCategory": "bobcat",
+    "scores": {
+      "eqdom": 0,
+      "bobcat": 8,
+      "urgent": 0,
+      "spam": 0
+    }
+  },
+  "attachments": [],
+  "summary": {
+    "id": "f78d2f61-0f86-457d-bd2b-752469c640af",
+    "timestamp": "2026-03-06T11:47:46.784Z",
+    "from": "prospect@entreprise.fr",
+    "fromName": "Lead Bobcat",
+    "subject": "Demande informations CEE Chèque Énergie",
+    "receivedAt": "2026-03-06T15:00:00Z",
+    "classification": "bobcat",
+    "categories": [
+      "bobcat"
+    ],
+    "urgencyScore": 0,
+    "hasAttachments": false,
+    "attachmentCount": 0,
+    "bodyPreview": "Bonjour, je cherche des infos sur les CEE et le chèque énergie pour ma renovation.",
+    "actionRequired": false,
+    "recommendedAction": "ROUTER_VERS_BOBCAT - Lead CEE à qualifier"
+  }
+}

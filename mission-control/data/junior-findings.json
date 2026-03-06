@@ -1,0 +1,74 @@
+[
+  {
+    "timestamp": "2026-03-07T04:45:00Z",
+    "source": "web",
+    "topic": "Trend #1: AI-Powered Vertical/Micro SaaS",
+    "summary": "Le marché du Vertical SaaS devrait atteindre $720B d'ici 2028 (CAGR 25.89%). Les micro-SaaS qui résolvent UN problème spécifique pour UNE niche précise explosent. Exemples: compliance monitoring, mental health tracking remote, workflow automation sectorielle. Les solopreneurs peuvent viser $5K-$50K MRR sur des niches trop petites pour les gros acteurs.",
+    "url": "https://millipixels.com/blog/micro-saas-startup-ideas-2026",
+    "relevance": "high",
+    "for_rothschild": true
+  },
+  {
+    "timestamp": "2026-03-07T04:45:00Z",
+    "source": "web",
+    "topic": "Trend #2: AI Compliance & ESG Reporting pour PME",
+    "summary": "Coût compliance pour PME: $12,000/an. 50+ pays rendent l'ESG reporting obligatoire. Marché ESG: $53T d'ici 2025. Les PME ne peuvent pas payer les solutions enterprise. Opportunité: SaaS $49-199/mois pour automatiser GDPR, HIPAA, ESG reporting. Churn faible, LTV élevé.",
+    "url": "https://millipixels.com/blog/micro-saas-startup-ideas-2026",
+    "relevance": "high",
+    "for_rothschild": true
+  },
+  {
+    "timestamp": "2026-03-07T04:45:00Z",
+    "source": "web",
+    "topic": "Trend #3: Blue-Collar Workflow Digitization",
+    "summary": "Les cols blancs ont Notion/Slack/Asana. Les cols bleus (logistique, construction, manufacturing) utilisent encore papier, talkies-walkies, Excel sur WhatsApp. Besoin: outils mobile-first, offline-first, voice-first pour job orders, check-ins, inventory. Marché massivement sous-servi.",
+    "url": "https://teqnoid.com/underserved-mobile-app-niches-in-2025/",
+    "relevance": "high",
+    "for_rothschild": true
+  },
+  {
+    "timestamp": "2026-03-07T04:45:00Z",
+    "source": "web",
+    "topic": "Niche MENA #1: Fintech pour PME",
+    "summary": "L'écosystème MENA a levé $415M en Q2 2025, principalement B2B. Fintech domine avec $200M+. Exemple: Nqoodlet (SME corporate cards) lève $3M. Fawry (Egypte) est devenu une licorne. Gap majeur: les PME MENA sont 'underserved' sur les cartes corporate, expense tracking, factoring.",
+    "url": "https://www.linkedin.com/pulse/mena-startup-investment-h1-2025",
+    "relevance": "high",
+    "for_rothschild": true
+  },
+  {
+    "timestamp": "2026-03-07T04:45:00Z",
+    "source": "web",
+    "topic": "Niche MENA #2: Construction Tech",
+    "summary": "WakeCap (Saudi) lève $28M pour IoT wearable sur les chantiers. Saudi Vision 2030 + Qatar + UAE = explosion de projets immobiliers. Manque: outils de gestion de chantier, safety compliance, procurement pour mid-size contractors. Opportunité B2B SaaS vertical.",
+    "url": "https://www.linkedin.com/pulse/mena-startup-investment-h1-2025",
+    "relevance": "high",
+    "for_rothschild": true
+  },
+  {
+    "timestamp": "2026-03-07T04:45:00Z",
+    "source": "web",
+    "topic": "Niche MENA #3: Localized Streaming/Content",
+    "summary": "MENA SVOD: $1.2B en 2024. FAST channels: $7M en 2023, x4 attendu d'ici 5 ans. STARZ PLAY: 3.5M subscribers. Shahid (MBC): 40% du marché OTT. Gap: contenu local sous-représenté, niches sportives (cricket, MMA), contenu en arabe dialectal local.",
+    "url": "https://www.comcasttechnologysolutions.com/blog/market-opportunities-mena-streaming-advertising-and-sports",
+    "relevance": "medium",
+    "for_rothschild": true
+  },
+  {
+    "timestamp": "2026-03-07T04:45:00Z",
+    "source": "web",
+    "topic": "Success Story: Data Fetcher",
+    "summary": "Andy Cloke a bootstrapé Data Fetcher (plugin API pour Airtable) de £3k à £20k MRR (~$25K). Stratégie: YouTube marketing + doubling down sur un seul produit. Preuve qu'un solo founder peut atteindre $20-30K MRR sur une niche très spécifique.",
+    "url": "https://www.indiehackers.com/podcasts",
+    "relevance": "medium",
+    "for_rothschild": true
+  },
+  {
+    "timestamp": "2026-03-07T04:45:00Z",
+    "source": "web",
+    "topic": "Success Story: Ticket Tailor",
+    "summary": "Jonny White a fondé Ticket Tailor en 2011, l'a vendu à TimeOut, puis racheté. Aujourd'hui: £6M ARR (~$7.5M). Modèle: bootstrap, team de 20+, focus sur profitability. Leçon: les business models de ticketing/events ont une retention forte et des économies d'échelle.",
+    "url": "https://www.indiehackers.com/podcasts",
+    "relevance": "medium",
+    "for_rothschild": true
+  }
+]

@@ -1,0 +1,47 @@
+{
+  "id": "8b072294-df21-4a9d-8245-bca4bf796ddb",
+  "timestamp": "2026-03-06T11:47:39.268Z",
+  "receivedAt": "2026-03-06T11:47:39.268Z",
+  "raw": {
+    "FromName": "Client Test",
+    "From": "client@email.ma",
+    "To": "pro-emails@inbound.postmarkapp.com",
+    "Subject": "Demande de simulation crédit Eqdom",
+    "TextBody": "Bonjour, je souhaite faire une simulation de crédit pour un montant de 50000 DH sur 60 mois. Merci.",
+    "HtmlBody": "<p>Bonjour, je souhaite faire une simulation de crédit...</p>",
+    "Date": "2026-03-06T14:30:00Z",
+    "Attachments": []
+  },
+  "classification": {
+    "categories": [
+      "eqdom"
+    ],
+    "primaryCategory": "eqdom",
+    "scores": {
+      "eqdom": 5,
+      "bobcat": 0,
+      "urgent": 0,
+      "spam": 0
+    }
+  },
+  "attachments": [],
+  "summary": {
+    "id": "0f64b907-5b17-4510-8531-5fb599b0c72a",
+    "timestamp": "2026-03-06T11:47:39.268Z",
+    "from": "client@email.ma",
+    "fromName": "Client Test",
+    "to": "pro-emails@inbound.postmarkapp.com",
+    "subject": "Demande de simulation crédit Eqdom",
+    "receivedAt": "2026-03-06T14:30:00Z",
+    "classification": "eqdom",
+    "categories": [
+      "eqdom"
+    ],
+    "urgencyScore": 0,
+    "hasAttachments": false,
+    "attachmentCount": 0,
+    "bodyPreview": "Bonjour, je souhaite faire une simulation de crédit pour un montant de 50000 DH sur 60 mois. Merci.",
+    "actionRequired": true,
+    "recommendedAction": "ROUTER_VERS_EQDOM - Nouvelle demande de crédit à traiter"
+  }
+}

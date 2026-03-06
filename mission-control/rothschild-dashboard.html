@@ -1,0 +1,1111 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🏦 Rothschild Command Center - Business Intelligence</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: linear-gradient(135deg, #0a0e1a 0%, #0f1823 100%);
+      color: #e4e6eb;
+      min-height: 100vh;
+    }
+    
+    /* Header */
+    .roth-header {
+      background: linear-gradient(135deg, rgba(26, 31, 58, 0.95), rgba(15, 20, 32, 0.95));
+      backdrop-filter: blur(10px);
+      padding: 20px 30px;
+      border-bottom: 1px solid #2a3f5f;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    
+    .roth-header h1 {
+      font-size: 22px;
+      background: linear-gradient(135deg, #ffd700, #ffed4e);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    
+    .roth-header-sub {
+      font-size: 12px;
+      color: #8892a0;
+      margin-top: 4px;
+    }
+    
+    .roth-header-stats {
+      display: flex;
+      gap: 30px;
+      font-size: 13px;
+    }
+    
+    .roth-stat {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .roth-stat-value {
+      font-weight: 600;
+      color: #ffd700;
+    }
+    
+    .roth-status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #00ff88;
+      box-shadow: 0 0 10px #00ff88;
+      animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+    
+    /* Navigation */
+    .roth-nav {
+      display: flex;
+      gap: 5px;
+      padding: 15px 30px 0;
+      border-bottom: 1px solid #2a3f5f;
+      background: rgba(15, 20, 32, 0.8);
+    }
+    
+    .roth-nav-tab {
+      padding: 12px 24px;
+      background: transparent;
+      border: none;
+      color: #8892a0;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 500;
+      border-bottom: 2px solid transparent;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .roth-nav-tab:hover {
+      color: #e4e6eb;
+      background: rgba(255,255,255,0.05);
+    }
+    
+    .roth-nav-tab.active {
+      color: #ffd700;
+      border-bottom-color: #ffd700;
+      background: rgba(255, 215, 0, 0.1);
+    }
+    
+    /* Main Content */
+    .roth-main {
+      padding: 25px 30px;
+      max-width: 1800px;
+      margin: 0 auto;
+    }
+    
+    .roth-tab-content {
+      display: none;
+    }
+    
+    .roth-tab-content.active {
+      display: block;
+      animation: fadeIn 0.3s ease;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    /* Metrics Bar */
+    .roth-metrics-bar {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 15px;
+      margin-bottom: 25px;
+    }
+    
+    .roth-metric-card {
+      background: linear-gradient(135deg, rgba(26, 35, 64, 0.9) 0%, rgba(15, 24, 35, 0.9) 100%);
+      border: 1px solid #2a3f5f;
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .roth-metric-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, #ffd700, #ff6b6b);
+    }
+    
+    .roth-metric-icon {
+      font-size: 24px;
+      margin-bottom: 8px;
+    }
+    
+    .roth-metric-value {
+      font-size: 32px;
+      font-weight: 700;
+      background: linear-gradient(135deg, #fff, #ffd700);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    
+    .roth-metric-label {
+      font-size: 11px;
+      color: #6b7280;
+      text-transform: uppercase;
+      margin-top: 4px;
+      letter-spacing: 0.5px;
+    }
+    
+    /* Pipeline View */
+    .roth-pipeline {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+      min-height: 500px;
+    }
+    
+    .roth-pipeline-column {
+      background: rgba(15, 20, 32, 0.6);
+      border-radius: 16px;
+      border: 1px solid #1a2535;
+      min-height: 400px;
+    }
+    
+    .roth-column-header {
+      padding: 15px 20px;
+      border-bottom: 1px solid #1a2535;
+      font-weight: 600;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 14px;
+    }
+    
+    .roth-column-count {
+      background: #2a3f5f;
+      padding: 4px 12px;
+      border-radius: 12px;
+      font-size: 12px;
+    }
+    
+    .roth-col-research .roth-column-header { color: #ffd93d; border-bottom-color: #ffd93d; }
+    .roth-col-validation .roth-column-header { color: #00d4ff; border-bottom-color: #00d4ff; }
+    .roth-col-validated .roth-column-header { color: #00ff88; border-bottom-color: #00ff88; }
+    .roth-col-rejected .roth-column-header { color: #ff6b6b; border-bottom-color: #ff6b6b; }
+    
+    .roth-column-content {
+      padding: 15px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    
+    /* Opportunity Cards */
+    .roth-card {
+      background: linear-gradient(135deg, rgba(26, 35, 64, 0.8) 0%, rgba(15, 24, 35, 0.8) 100%);
+      border: 1px solid #2a3f5f;
+      border-radius: 12px;
+      padding: 15px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+    
+    .roth-card:hover {
+      border-color: #ffd700;
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(255, 215, 0, 0.1);
+    }
+    
+    .roth-card.recommended {
+      border-color: #ffd700;
+      box-shadow: 0 0 20px rgba(255, 215, 0, 0.15);
+    }
+    
+    .roth-card.recommended::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, #ffd700, #ffed4e);
+      border-radius: 12px 12px 0 0;
+    }
+    
+    .roth-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 10px;
+    }
+    
+    .roth-score {
+      background: linear-gradient(135deg, rgba(255, 215, 0, 0.2), rgba(255, 107, 107, 0.2));
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #ffd700;
+    }
+    
+    .roth-badge-recommended {
+      background: rgba(255, 215, 0, 0.2);
+      color: #ffd700;
+      padding: 3px 8px;
+      border-radius: 10px;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+    
+    .roth-card-title {
+      font-size: 14px;
+      margin-bottom: 6px;
+      line-height: 1.4;
+    }
+    
+    .roth-card-cat {
+      font-size: 11px;
+      color: #8892a0;
+      margin-bottom: 10px;
+    }
+    
+    .roth-card-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11px;
+      margin-bottom: 8px;
+    }
+    
+    .roth-cost {
+      color: #00ff88;
+    }
+    
+    .roth-diff {
+      color: #ffd93d;
+      letter-spacing: 2px;
+    }
+    
+    .roth-card-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 10px;
+      border-top: 1px solid #2a3f5f;
+    }
+    
+    .roth-conf {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    .roth-btn-details {
+      background: transparent;
+      border: 1px solid #2a3f5f;
+      color: #ffd700;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 10px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .roth-btn-details:hover {
+      background: rgba(255, 215, 0, 0.1);
+      border-color: #ffd700;
+    }
+    
+    /* Comparison View */
+    .roth-comparison {
+      background: rgba(15, 20, 32, 0.6);
+      border: 1px solid #2a3f5f;
+      border-radius: 16px;
+      padding: 20px;
+      overflow-x: auto;
+    }
+    
+    .roth-comparison-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+    
+    .roth-comparison-table th {
+      text-align: left;
+      padding: 15px 12px;
+      border-bottom: 2px solid #2a3f5f;
+      color: #ffd700;
+      font-weight: 600;
+      text-transform: uppercase;
+      font-size: 11px;
+      letter-spacing: 0.5px;
+      white-space: nowrap;
+    }
+    
+    .roth-comparison-table td {
+      padding: 15px 12px;
+      border-bottom: 1px solid #1a2535;
+      vertical-align: middle;
+    }
+    
+    .roth-comparison-table tr:hover td {
+      background: rgba(255, 215, 0, 0.05);
+      cursor: pointer;
+    }
+    
+    .roth-score-badge {
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #fff;
+    }
+    
+    /* Detail View */
+    .roth-detail {
+      background: rgba(15, 20, 32, 0.6);
+      border: 1px solid #2a3f5f;
+      border-radius: 16px;
+      padding: 30px;
+    }
+    
+    .roth-detail-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 30px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid #2a3f5f;
+    }
+    
+    .roth-detail-title-section h2 {
+      font-size: 28px;
+      margin-bottom: 10px;
+      background: linear-gradient(135deg, #fff, #ffd700);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    
+    .roth-detail-cat {
+      background: rgba(0, 212, 255, 0.1);
+      color: #00d4ff;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-right: 10px;
+    }
+    
+    .roth-badge-top {
+      background: linear-gradient(135deg, rgba(255, 215, 0, 0.2), rgba(255, 107, 107, 0.2));
+      color: #ffd700;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+    
+    .roth-detail-score {
+      text-align: center;
+    }
+    
+    .roth-big-score {
+      font-size: 64px;
+      font-weight: 700;
+      display: block;
+      line-height: 1;
+    }
+    
+    .roth-score-label {
+      font-size: 14px;
+      color: #8892a0;
+    }
+    
+    .roth-detail-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 25px;
+    }
+    
+    .roth-detail-section {
+      background: rgba(26, 35, 64, 0.4);
+      border: 1px solid #2a3f5f;
+      border-radius: 12px;
+      padding: 20px;
+    }
+    
+    .roth-detail-section h4 {
+      color: #ffd700;
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 12px;
+    }
+    
+    .roth-detail-section p {
+      font-size: 14px;
+      line-height: 1.7;
+      color: #c9cdd4;
+    }
+    
+    .roth-detail-sub {
+      margin-top: 8px;
+      font-size: 12px;
+      color: #8892a0;
+    }
+    
+    .roth-metrics-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+    
+    .roth-metric {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    
+    .roth-metric-label {
+      font-size: 11px;
+      color: #8892a0;
+      text-transform: uppercase;
+    }
+    
+    .roth-metric-value {
+      font-size: 16px;
+      font-weight: 600;
+      color: #00ff88;
+    }
+    
+    .roth-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    
+    .roth-tag {
+      background: rgba(0, 212, 255, 0.1);
+      color: #00d4ff;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 11px;
+    }
+    
+    .roth-confidence-section {
+      grid-column: 1 / -1;
+    }
+    
+    .roth-confidence-bar {
+      height: 8px;
+      background: #1a2535;
+      border-radius: 4px;
+      overflow: hidden;
+      margin-bottom: 8px;
+    }
+    
+    .roth-confidence-fill {
+      height: 100%;
+      border-radius: 4px;
+      transition: width 0.5s ease;
+    }
+    
+    .roth-confidence-text {
+      font-size: 12px;
+      font-weight: 600;
+    }
+    
+    /* Controls */
+    .roth-controls {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 25px;
+      padding: 15px 20px;
+      background: rgba(15, 20, 32, 0.8);
+      border: 1px solid #2a3f5f;
+      border-radius: 12px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    
+    .roth-control-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .roth-control-group label {
+      font-size: 12px;
+      color: #8892a0;
+      text-transform: uppercase;
+    }
+    
+    .roth-select, .roth-input {
+      background: #1a2535;
+      border: 1px solid #2a3f5f;
+      border-radius: 6px;
+      padding: 8px 12px;
+      color: #e4e6eb;
+      font-size: 13px;
+      min-width: 150px;
+    }
+    
+    .roth-select:focus, .roth-input:focus {
+      outline: none;
+      border-color: #ffd700;
+    }
+    
+    .roth-btn {
+      background: linear-gradient(135deg, #ffd700, #ffed4e);
+      border: none;
+      border-radius: 6px;
+      padding: 8px 16px;
+      color: #0a0e1a;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .roth-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
+    }
+    
+    .roth-btn-secondary {
+      background: transparent;
+      border: 1px solid #2a3f5f;
+      color: #ffd700;
+    }
+    
+    .roth-btn-secondary:hover {
+      background: rgba(255, 215, 0, 0.1);
+      border-color: #ffd700;
+    }
+    
+    /* Auto-refresh indicator */
+    .roth-refresh-indicator {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 11px;
+      color: #8892a0;
+      margin-left: auto;
+    }
+    
+    .roth-refresh-dot {
+      width: 6px;
+      height: 6px;
+      background: #00ff88;
+      border-radius: 50%;
+      animation: pulse 1.5s infinite;
+    }
+    
+    .roth-refresh-dot.paused {
+      background: #ffd93d;
+      animation: none;
+    }
+    
+    /* Last update */
+    .roth-last-update {
+      text-align: center;
+      padding: 15px;
+      font-size: 11px;
+      color: #6b7280;
+      border-top: 1px solid #1a2535;
+      margin-top: 20px;
+    }
+    
+    /* Loading state */
+    .roth-loading {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 300px;
+      font-size: 14px;
+      color: #8892a0;
+    }
+    
+    .roth-loading::after {
+      content: '';
+      width: 20px;
+      height: 20px;
+      border: 2px solid #2a3f5f;
+      border-top-color: #ffd700;
+      border-radius: 50%;
+      margin-left: 10px;
+      animation: spin 1s linear infinite;
+    }
+    
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    
+    /* Empty state */
+    .roth-empty {
+      text-align: center;
+      padding: 40px;
+      color: #6b7280;
+      font-size: 14px;
+    }
+    
+    /* Responsive */
+    @media (max-width: 1200px) {
+      .roth-pipeline { grid-template-columns: repeat(2, 1fr); }
+      .roth-metrics-bar { grid-template-columns: repeat(3, 1fr); }
+      .roth-detail-grid { grid-template-columns: 1fr; }
+    }
+    
+    @media (max-width: 768px) {
+      .roth-pipeline { grid-template-columns: 1fr; }
+      .roth-metrics-bar { grid-template-columns: repeat(2, 1fr); }
+      .roth-nav { overflow-x: auto; }
+      .roth-header { flex-direction: column; gap: 15px; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="roth-header">
+    <div>
+      <h1>🏦 Rothschild Command Center</h1>
+      <div class="roth-header-sub">Business Intelligence & Opportunity Pipeline</div>
+    </div>
+    <div class="roth-header-stats">
+      <div class="roth-stat">
+        <span class="roth-status-dot"></span>
+        <span>Live Intelligence</span>
+      </div>
+      <div class="roth-stat">
+        <span>Analystes:</span>
+        <span class="roth-stat-value">Rothschild + Junior</span>
+      </div>
+      <div class="roth-stat">
+        <span>Last Update:</span>
+        <span class="roth-stat-value" id="last-update">--:--</span>
+      </div>
+    </div>
+  </header>
+  
+  <!-- Navigation -->
+  <nav class="roth-nav">
+    <button class="roth-nav-tab active" onclick="showTab('pipeline')">
+      🎯 Pipeline
+    </button>
+    <button class="roth-nav-tab" onclick="showTab('comparison')">
+      📊 Comparateur
+    </button>
+    <button class="roth-nav-tab" onclick="showTab('detail')">
+      📋 Fiche Détail
+    </button>
+    <button class="roth-nav-tab" onclick="showTab('metrics')">
+      📈 Métriques
+    </button>
+  </nav>
+  
+  <!-- Main Content -->
+  <main class="roth-main">
+    <!-- Controls -->
+    <div class="roth-controls">
+      <div class="roth-control-group">
+        <label>Filtrer:</label>
+        <select class="roth-select" id="filter-status" onchange="applyFilters()">
+          <option value="all">Tous les statuts</option>
+          <option value="en_recherche">En recherche</option>
+          <option value="en_validation">En validation</option>
+          <option value="valide">Validé</option>
+          <option value="rejete">Rejeté</option>
+        </select>
+      </div>
+      
+      <div class="roth-control-group">
+        <label>Catégorie:</label>
+        <select class="roth-select" id="filter-category" onchange="applyFilters()">
+          <option value="all">Toutes</option>
+          <option value="Service B2B / Consulting">Service B2B</option>
+          <option value="SaaS / Product">SaaS Product</option>
+          <option value="Service / Agency">Agency</option>
+          <option value="SaaS B2B / Fintech">Fintech</option>
+        </select>
+      </div>
+      
+      <div class="roth-control-group">
+        <label>Score min:</label>
+        <select class="roth-select" id="filter-score" onchange="applyFilters()">
+          <option value="0">Tous</option>
+          <option value="8">8+ (Excellent)</option>
+          <option value="7">7+ (Bon)</option>
+        </select>
+      </div>
+      
+      <button class="roth-btn roth-btn-secondary" onclick="refreshData()">
+        🔄 Refresh
+      </button>
+      
+      <div class="roth-refresh-indicator">
+        <span class="roth-refresh-dot" id="refresh-dot"></span>
+        <span id="refresh-text">Auto-refresh ON (30s)</span>
+      </div>
+    </div>
+    
+    <!-- Metrics Bar -->
+    <div class="roth-metrics-bar">
+      <div class="roth-metric-card">
+        <div class="roth-metric-icon">📊</div>
+        <div class="roth-metric-value" id="metric-total">--</div>
+        <div class="roth-metric-label">Opportunités</div>
+      </div>
+      <div class="roth-metric-card">
+        <div class="roth-metric-icon">⭐</div>
+        <div class="roth-metric-value" id="metric-avg-score">--</div>
+        <div class="roth-metric-label">Score Moyen</div>
+      </div>
+      <div class="roth-metric-card">
+        <div class="roth-metric-icon">💰</div>
+        <div class="roth-metric-value" id="metric-avg-cost">--</div>
+        <div class="roth-metric-label">Coût Moyen</div>
+      </div>
+      <div class="roth-metric-card">
+        <div class="roth-metric-icon">🚀</div>
+        <div class="roth-metric-value" id="metric-high-potential">--</div>
+        <div class="roth-metric-label">High Potential</div>
+      </div>
+      <div class="roth-metric-card">
+        <div class="roth-metric-icon">✅</div>
+        <div class="roth-metric-value" id="metric-validated">--</div>
+        <div class="roth-metric-label">Validées</div>
+      </div>
+    </div>
+    
+    <!-- TAB 1: Pipeline -->
+    <div id="pipeline" class="roth-tab-content active">
+      <div class="roth-pipeline">
+        <!-- Column: En Recherche -->
+        <div class="roth-pipeline-column roth-col-research">
+          <div class="roth-column-header">
+            <span>🔍 En recherche</span>
+            <span class="roth-column-count" id="count-research">0</span>
+          </div>
+          <div class="roth-column-content" id="col-research">
+            <div class="roth-loading">Chargement...</div>
+          </div>
+        </div>
+        
+        <!-- Column: En Validation -->
+        <div class="roth-pipeline-column roth-col-validation">
+          <div class="roth-column-header">
+            <span>⚖️ En validation</span>
+            <span class="roth-column-count" id="count-validation">0</span>
+          </div>
+          <div class="roth-column-content" id="col-validation">
+            <div class="roth-empty">Aucune opportunité en validation</div>
+          </div>
+        </div>
+        
+        <!-- Column: Validé -->
+        <div class="roth-pipeline-column roth-col-validated">
+          <div class="roth-column-header">
+            <span>✅ Validé</span>
+            <span class="roth-column-count" id="count-validated">0</span>
+          </div>
+          <div class="roth-column-content" id="col-validated">
+            <div class="roth-empty">Aucune opportunité validée</div>
+          </div>
+        </div>
+        
+        <!-- Column: Rejeté -->
+        <div class="roth-pipeline-column roth-col-rejected">
+          <div class="roth-column-header">
+            <span>❌ Rejeté</span>
+            <span class="roth-column-count" id="count-rejected">0</span>
+          </div>
+          <div class="roth-column-content" id="col-rejected">
+            <div class="roth-empty">Aucune opportunité rejetée</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- TAB 2: Comparison -->
+    <div id="comparison" class="roth-tab-content">
+      <div class="roth-comparison" id="comparison-container">
+        <div class="roth-loading">Chargement du comparateur...</div>
+      </div>
+    </div>
+    
+    <!-- TAB 3: Detail -->
+    <div id="detail" class="roth-tab-content">
+      <div class="roth-controls">
+        <div class="roth-control-group">
+          <label>Sélectionner:</label>
+          <select class="roth-select" id="detail-select" onchange="showSelectedDetail()">
+            <option value="">Choisir une opportunité...</option>
+          </select>
+        </div>
+      </div>
+      <div class="roth-detail" id="detail-container">
+        <div class="roth-empty">
+          Sélectionnez une opportunité pour voir les détails complets
+        </div>
+      </div>
+    </div>
+    
+    <!-- TAB 4: Metrics -->
+    <div id="metrics" class="roth-tab-content">
+      <div class="roth-detail" id="metrics-container">
+        <div class="roth-detail-section">
+          <h4>📊 Métriques Détaillées</h4>
+          <p>Chargement des métriques...</p>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Last Update -->
+    <div class="roth-last-update">
+      📡 Dernière mise à jour: <span id="last-update-full">--</span> | 
+      Analyste: <strong>Rothschild</strong> | 
+      Pipeline: <strong>Business Intelligence</strong>
+    </div>
+  </main>
+  
+  <script src="js/rothschild-api.js"></script>
+  <script>
+    // Global state
+    let api = new RothschildAPI();
+    let currentData = null;
+    let filteredData = null;
+    let autoRefreshInterval = null;
+    let currentDetailId = null;
+    
+    // Initialize
+    document.addEventListener('DOMContentLoaded', async () => {
+      await loadData();
+      populateDetailSelect();
+      startAutoRefresh();
+      updateTime();
+      setInterval(updateTime, 1000);
+    });
+    
+    // Load data from API
+    async function loadData() {
+      try {
+        currentData = await api.getOpportunities();
+        filteredData = [...currentData];
+        renderAll();
+        updateMetrics();
+        updateLastUpdate();
+      } catch (error) {
+        console.error('Erreur chargement données:', error);
+        showError('Erreur lors du chargement des données');
+      }
+    }
+    
+    // Render all views
+    function renderAll() {
+      renderPipeline();
+      renderComparison();
+      if (currentDetailId) {
+        renderDetail(currentDetailId);
+      }
+    }
+    
+    // Render Pipeline
+    function renderPipeline() {
+      const columns = {
+        en_recherche: document.getElementById('col-research'),
+        en_validation: document.getElementById('col-validation'),
+        valide: document.getElementById('col-validated'),
+        rejete: document.getElementById('col-rejected')
+      };
+      
+      const counts = {
+        en_recherche: document.getElementById('count-research'),
+        en_validation: document.getElementById('count-validation'),
+        valide: document.getElementById('count-validated'),
+        rejete: document.getElementById('count-rejected')
+      };
+      
+      // Clear columns
+      Object.values(columns).forEach(col => col.innerHTML = '');
+      
+      // Count by status
+      const statusCounts = { en_recherche: 0, en_validation: 0, valide: 0, rejete: 0 };
+      
+      filteredData.forEach(opp => {
+        statusCounts[opp.statut]++;
+        if (columns[opp.statut]) {
+          columns[opp.statut].innerHTML += api.generateOpportunityCard(opp, 'pipeline');
+        }
+      });
+      
+      // Update counts
+      Object.keys(counts).forEach(status => {
+        counts[status].textContent = statusCounts[status];
+      });
+      
+      // Empty states
+      Object.keys(columns).forEach(status => {
+        if (statusCounts[status] === 0) {
+          columns[status].innerHTML = '<div class="roth-empty">Aucune opportunité</div>';
+        }
+      });
+    }
+    
+    // Render Comparison Table
+    function renderComparison() {
+      const container = document.getElementById('comparison-container');
+      if (filteredData.length === 0) {
+        container.innerHTML = '<div class="roth-empty">Aucune opportunité à comparer</div>';
+        return;
+      }
+      container.innerHTML = api.generateComparisonTable(filteredData);
+    }
+    
+    // Render Detail
+    function renderDetail(id) {
+      const opp = currentData.find(o => o.id === id);
+      if (!opp) return;
+      
+      currentDetailId = id;
+      document.getElementById('detail-container').innerHTML = api.generateDetailView(opp);
+    }
+    
+    // Show opportunity details
+    function showOpportunityDetails(id) {
+      showTab('detail');
+      document.getElementById('detail-select').value = id;
+      renderDetail(id);
+    }
+    
+    // Populate detail select
+    function populateDetailSelect() {
+      const select = document.getElementById('detail-select');
+      select.innerHTML = '<option value="">Choisir une opportunité...</option>';
+      
+      currentData.forEach(opp => {
+        const option = document.createElement('option');
+        option.value = opp.id;
+        option.textContent = `${opp.nom} (${opp.score}/10)`;
+        select.appendChild(option);
+      });
+    }
+    
+    // Show selected detail
+    function showSelectedDetail() {
+      const id = document.getElementById('detail-select').value;
+      if (id) {
+        renderDetail(id);
+      }
+    }
+    
+    // Update metrics display
+    function updateMetrics() {
+      const metrics = {
+        total: filteredData.length,
+        avgScore: (filteredData.reduce((a, b) => a + (b.score || 0), 0) / filteredData.length).toFixed(1),
+        avgCost: Math.round(filteredData.reduce((a, b) => a + (b.coût_démarrage || 0), 0) / filteredData.length),
+        highPotential: filteredData.filter(o => (o.score || 0) >= 8).length,
+        validated: filteredData.filter(o => o.statut === 'valide').length
+      };
+      
+      document.getElementById('metric-total').textContent = metrics.total;
+      document.getElementById('metric-avg-score').textContent = metrics.avgScore;
+      document.getElementById('metric-avg-cost').textContent = `€${metrics.avgCost}`;
+      document.getElementById('metric-high-potential').textContent = metrics.highPotential;
+      document.getElementById('metric-validated').textContent = metrics.validated;
+    }
+    
+    // Apply filters
+    function applyFilters() {
+      const status = document.getElementById('filter-status').value;
+      const category = document.getElementById('filter-category').value;
+      const minScore = parseInt(document.getElementById('filter-score').value);
+      
+      filteredData = currentData.filter(opp => {
+        if (status !== 'all' && opp.statut !== status) return false;
+        if (category !== 'all' && opp.categorie !== category) return false;
+        if (minScore > 0 && (opp.score || 0) < minScore) return false;
+        return true;
+      });
+      
+      renderAll();
+      updateMetrics();
+    }
+    
+    // Tab switching
+    function showTab(tabName) {
+      document.querySelectorAll('.roth-tab-content').forEach(tab => {
+        tab.classList.remove('active');
+      });
+      document.querySelectorAll('.roth-nav-tab').forEach(tab => {
+        tab.classList.remove('active');
+      });
+      
+      document.getElementById(tabName).classList.add('active');
+      event.target.classList.add('active');
+    }
+    
+    // Refresh data manually
+    async function refreshData() {
+      const btn = event.target;
+      btn.textContent = '🔄 Chargement...';
+      await loadData();
+      btn.textContent = '🔄 Refresh';
+    }
+    
+    // Auto-refresh
+    function startAutoRefresh() {
+      autoRefreshInterval = setInterval(() => {
+        loadData();
+      }, 30000);
+    }
+    
+    // Update time display
+    function updateTime() {
+      const now = new Date();
+      document.getElementById('last-update').textContent = now.toLocaleTimeString('fr-FR');
+    }
+    
+    // Update last update timestamp
+    function updateLastUpdate() {
+      const now = new Date();
+      document.getElementById('last-update-full').textContent = now.toLocaleString('fr-FR');
+    }
+    
+    // Show error
+    function showError(message) {
+      console.error(message);
+      // Could show a toast notification here
+    }
+  </script>
+</body>
+</html>

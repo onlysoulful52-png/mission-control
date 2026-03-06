@@ -1,0 +1,1091 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rothschild Intel Dashboard | Mission Control</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #12121a;
+            --bg-card: #1a1a24;
+            --bg-hover: #222230;
+            --accent-gold: #ffd700;
+            --accent-green: #22c55e;
+            --accent-red: #ef4444;
+            --accent-blue: #3b82f6;
+            --accent-purple: #8b5cf6;
+            --accent-orange: #f97316;
+            --text-primary: #ffffff;
+            --text-secondary: #a1a1aa;
+            --text-muted: #71717a;
+            --border: #27272a;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-primary) 100%);
+            border-bottom: 1px solid var(--border);
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--accent-gold), var(--accent-purple), var(--accent-blue));
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .brand-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--accent-gold), #b8860b);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            box-shadow: 0 4px 20px rgba(255, 215, 0, 0.2);
+        }
+
+        .brand-text h1 {
+            font-size: 1.5rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+        }
+
+        .brand-text p {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+
+        .meta {
+            text-align: right;
+        }
+
+        .meta-date {
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--accent-gold);
+            font-size: 0.875rem;
+        }
+
+        .meta-status {
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            margin-top: 0.25rem;
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Executive Summary */
+        .exec-summary {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(139, 92, 246, 0.05));
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            border-radius: 16px;
+            padding: 1.5rem 2rem;
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .exec-icon {
+            font-size: 2rem;
+        }
+
+        .exec-content h2 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+            color: var(--accent-gold);
+        }
+
+        .exec-content p {
+            color: var(--text-secondary);
+            font-size: 0.9375rem;
+        }
+
+        /* Winner Banner */
+        .winner-banner {
+            background: linear-gradient(135deg, var(--accent-green) 0%, #16a34a 100%);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .winner-banner::before {
+            content: '★';
+            position: absolute;
+            top: -20px;
+            right: -20px;
+            font-size: 150px;
+            opacity: 0.1;
+        }
+
+        .winner-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .winner-title {
+            font-size: 1.75rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+        }
+
+        .winner-subtitle {
+            font-size: 1.125rem;
+            opacity: 0.9;
+            margin-bottom: 1rem;
+        }
+
+        .winner-score {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.25rem;
+            font-weight: 700;
+        }
+
+        .winner-justification {
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            font-size: 0.9375rem;
+            line-height: 1.7;
+            opacity: 0.95;
+        }
+
+        /* Filters */
+        .filters {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.875rem;
+            transition: all 0.2s;
+        }
+
+        .filter-btn:hover, .filter-btn.active {
+            background: var(--bg-hover);
+            color: var(--text-primary);
+            border-color: var(--accent-gold);
+        }
+
+        /* Cards Grid */
+        .opportunities-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .opp-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .opp-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--accent-gold);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .opp-card.winner {
+            border-color: var(--accent-green);
+            box-shadow: 0 0 30px rgba(34, 197, 94, 0.15);
+        }
+
+        .opp-card.winner::before {
+            content: 'RECOMMANDÉ';
+            position: absolute;
+            top: 12px;
+            right: -35px;
+            background: var(--accent-green);
+            color: white;
+            padding: 4px 40px;
+            font-size: 0.625rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            transform: rotate(45deg);
+            z-index: 10;
+        }
+
+        .card-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .card-badges {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.02em;
+        }
+
+        .badge-category {
+            background: rgba(59, 130, 246, 0.2);
+            color: var(--accent-blue);
+        }
+
+        .badge-score {
+            background: rgba(255, 215, 0, 0.2);
+            color: var(--accent-gold);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .badge-difficulty {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .difficulty-1 { background: rgba(34, 197, 94, 0.2); color: var(--accent-green); }
+        .difficulty-2 { background: rgba(34, 197, 94, 0.2); color: #4ade80; }
+        .difficulty-3 { background: rgba(249, 115, 22, 0.2); color: var(--accent-orange); }
+        .difficulty-4 { background: rgba(239, 68, 68, 0.2); color: var(--accent-red); }
+        .difficulty-5 { background: rgba(239, 68, 68, 0.3); color: #f87171; }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .card-id {
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--text-muted);
+            font-size: 0.75rem;
+        }
+
+        .card-body {
+            padding: 1.5rem;
+        }
+
+        .card-description {
+            color: var(--text-secondary);
+            font-size: 0.9375rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .card-metrics {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .metric {
+            background: var(--bg-secondary);
+            padding: 1rem;
+            border-radius: 12px;
+        }
+
+        .metric-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.25rem;
+        }
+
+        .metric-value {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .metric-value.positive {
+            color: var(--accent-green);
+        }
+
+        .card-section {
+            margin-bottom: 1rem;
+        }
+
+        .card-section-title {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.5rem;
+        }
+
+        .stack-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .stack-item {
+            background: var(--bg-secondary);
+            padding: 0.375rem 0.75rem;
+            border-radius: 6px;
+            font-size: 0.8125rem;
+            color: var(--text-secondary);
+        }
+
+        .card-footer {
+            padding: 1rem 1.5rem;
+            border-top: 1px solid var(--border);
+            background: var(--bg-secondary);
+        }
+
+        .pros-cons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            font-size: 0.8125rem;
+        }
+
+        .pros, .cons {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .pros-title { color: var(--accent-green); font-weight: 600; }
+        .cons-title { color: var(--accent-red); font-weight: 600; }
+
+        .pros li, .cons li {
+            color: var(--text-secondary);
+            margin-left: 1rem;
+        }
+
+        /* Comparison Table */
+        .comparison-section {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            overflow-x: auto;
+        }
+
+        .section-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9375rem;
+        }
+
+        .comparison-table th {
+            text-align: left;
+            padding: 1rem;
+            border-bottom: 2px solid var(--border);
+            color: var(--text-muted);
+            font-weight: 600;
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.02em;
+        }
+
+        .comparison-table td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .comparison-table tr:hover td {
+            background: var(--bg-hover);
+        }
+
+        .comparison-table .winner-row td {
+            background: rgba(34, 197, 94, 0.1);
+        }
+
+        .table-opp-name {
+            font-weight: 600;
+        }
+
+        .table-score {
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700;
+        }
+
+        .table-score.high { color: var(--accent-green); }
+        .table-score.medium { color: var(--accent-orange); }
+        .table-score.low { color: var(--accent-red); }
+
+        /* Action Plan */
+        .action-plan {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 2rem;
+        }
+
+        .timeline {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .timeline-item {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .timeline-marker {
+            width: 40px;
+            height: 40px;
+            background: var(--bg-secondary);
+            border: 2px solid var(--accent-gold);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .timeline-content h4 {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .timeline-content p {
+            color: var(--text-secondary);
+            font-size: 0.9375rem;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 3rem 2rem;
+            color: var(--text-muted);
+            font-size: 0.875rem;
+            border-top: 1px solid var(--border);
+            margin-top: 3rem;
+        }
+
+        .footer-brand {
+            font-weight: 700;
+            color: var(--accent-gold);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .opportunities-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .meta {
+                text-align: center;
+            }
+
+            .comparison-table {
+                font-size: 0.8125rem;
+            }
+
+            .comparison-table th,
+            .comparison-table td {
+                padding: 0.75rem 0.5rem;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .opp-card {
+            animation: fadeIn 0.5s ease forwards;
+        }
+
+        .opp-card:nth-child(1) { animation-delay: 0.1s; }
+        .opp-card:nth-child(2) { animation-delay: 0.2s; }
+        .opp-card:nth-child(3) { animation-delay: 0.3s; }
+        .opp-card:nth-child(4) { animation-delay: 0.4s; }
+        .opp-card:nth-child(5) { animation-delay: 0.5s; }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <div class="brand">
+                <div class="brand-icon">◆</div>
+                <div class="brand-text">
+                    <h1>ROTHSCHILD INTEL</h1>
+                    <p>Strategic Market Research & Business Opportunities</p>
+                </div>
+            </div>
+            <div class="meta">
+                <div class="meta-date">2026-03-07</div>
+                <div class="meta-status">CLASSIFIED // FOR YOUR EYES ONLY</div>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- Executive Summary -->
+        <div class="exec-summary">
+            <div class="exec-icon">📊</div>
+            <div class="exec-content">
+                <h2>Executive Summary</h2>
+                <p>4 opportunités business validées identifiées. Toutes avec potentiel €2k-10k/mois en 6-12 mois. Coût d'entrée max €2000. Focus sur modèles récurrents (MRR) avec marges >70%.</p>
+            </div>
+        </div>
+
+        <!-- Winner Banner -->
+        <div class="winner-banner">
+            <div class="winner-label">
+                <span>★</span>
+                <span>OPPORTUNITÉ RECOMMANDÉE</span>
+            </div>
+            <h2 class="winner-title">AI Automation Agency (AAA)</h2>
+            <p class="winner-subtitle">Agence d'automatisation IA pour PME • Service B2B / Consulting</p>
+            <div class="winner-score">
+                <span>SCORE:</span>
+                <span>9/10</span>
+            </div>
+            <div class="winner-justification">
+                <strong>Pourquoi c'est le meilleur choix:</strong> L'AI Automation Agency offre le meilleur équilibre entre risque et rendement. Démarrage ultra-rapide (2-4 semaines), marges exceptionnelles (80%+), et potentiel de revenus rapide (€3k-15k/mois en 6-9 mois). Le marché est en hyper-croissance (45% CAGR) mais encore peu saturé en France/MENA. Contrairement au SaaS qui demande 6-12 mois sans revenu, l'agence génère des cashflows immédiats. Les compétences acquises (IA, automation, vente B2B) transfèrent parfaitement aux autres opportunités.
+            </div>
+        </div>
+
+        <!-- Filters -->
+        <div class="filters">
+            <button class="filter-btn active">Toutes</button>
+            <button class="filter-btn">Service</button>
+            <button class="filter-btn">SaaS</button>
+            <button class="filter-btn">MENA Focus</button>
+        </div>
+
+        <!-- Opportunities Grid -->
+        <div class="opportunities-grid">
+            <!-- Card 1: Winner -->
+            <article class="opp-card winner">
+                <div class="card-header">
+                    <div class="card-badges">
+                        <span class="badge badge-category">Service B2B</span>
+                        <span class="badge badge-score">★ 9/10</span>
+                        <span class="badge badge-difficulty difficulty-3">Difficulté 3/5</span>
+                    </div>
+                    <h3 class="card-title">AI Automation Agency</h3>
+                    <span class="card-id">OPP-001</span>
+                </div>
+                <div class="card-body">
+                    <p class="card-description">
+                        Agence spécialisée dans l'automatisation des processus métiers par l'IA pour PME. Vente de services d'intégration d'agents IA (voice bots, chatbots, automations workflows).
+                    </p>
+                    <div class="card-metrics">
+                        <div class="metric">
+                            <div class="metric-label">Coût Démarrage</div>
+                            <div class="metric-value">€500-1,500</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-label">Potentiel 6-9 mois</div>
+                            <div class="metric-value positive">€3k-15k/mois</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-label">Marge Brute</div>
+                            <div class="metric-value positive">75-90%</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-label">Temps Implémentation</div>
+                            <div class="metric-value">2-8 semaines</div>
+                        </div>
+                    </div>
+                    <div class="card-section">
+                        <div class="card-section-title">Stack Technique</div>
+                        <div class="stack-list">
+                            <span class="stack-item">n8n / Make</span>
+                            <span class="stack-item">OpenAI API</span>
+                            <span class="stack-item">Bland AI</span>
+                            <span class="stack-item">Supabase</span>
+                            <span class="stack-item">Stripe</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <div class="pros-cons">
+                        <ul class="pros">
+                            <span class="pros-title">✓ Avantages</span>
+                            <li>Marges 80%+</li>
+                            <li>Démarrage immédiat</li>
+                            <li>Demande explosive</li>
+                        </ul>
+                        <ul class="cons">
+                            <span class="cons-title">✗ Risques</span>
+                            <li>Commoditisation rapide</li>
+                            <li>Dépendance APIs</li>
+                            <li>Formation continue</li>
+                        </ul>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Card 2 -->
+            <article class="opp-card">
+                <div class="card-header">
+                    <div class="card-badges">
+                        <span class="badge badge-category">WhatsApp Agency</span>
+                        <span class="badge badge-score">8.5/10</span>
+                        <span class="badge badge-difficulty difficulty-2">Difficulté 2/5</span>
+                    </div>
+                    <h3 class="card-title">WhatsApp Business Automation</h3>
+                    <span class="card-id">OPP-003</span>
+                </div>
+                <div class="card-body">
+                    <p class="card-description">
+                        Agence spécialisée dans la mise en place de chatbots WhatsApp, automation marketing, et commerce conversationnel pour e-commerçants et PME en MENA.
+                    </p>
+                    <div class="card-metrics">
+                        <div class="metric">
+                            <div class="metric-label">Coût Démarrage</div>
+                            <div class="metric-value">€800-1,500</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-label">Potentiel 6-12 mois</div>
+                            <div class="metric-value positive">€2k-10k/mois</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-label">Marge Brute</div>
+                            <div class="metric-value positive">65-80%</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-label">Taux Ouverture</div>
+                            <div class="metric-value positive">98%</div>
+                        </div>
+                    </div>
+                    <div class="card-section">
+                        <div class="card-section-title">Stack Technique</div>
+                        <div class="stack-list">
+                            <span class="stack-item">WhatsApp API</span>
+                            <span class="stack-item">Wati / Interakt</span>
+                            <span class="stack-item">ManyChat</span>
+                            <span class="stack-item">Zapier</span>
+                            <span class="stack-item">Shopify</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <div class="pros-cons">
+                        <ul class="pros">
+                            <span class="pros-title">✓ Avantages</span>
+                            <li>WhatsApp dominant MENA</li>
+                            <li>Taux ouverture 98%</li>
+                            <li>Faible concurrence</li>
+                        </ul>
+                        <ul class="cons">
+                            <span class="cons-title">✗ Risques</span>
+                            <li>Dépendance Meta</li>
+                            <li>Changement tarifs 2025</li>
+                            <li>Clients peuvent DIY</li>
+                        </ul>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Card 3 -->
+            <article class="opp-card">
+                <div class="card-header">
+                    <div class="card-badges">
+                        <span class="badge badge-category">SaaS B2B</span>
+                        <span class="badge badge-score">8/10</span>
+                        <span class="badge badge-difficulty difficulty-4">Difficulté 4/5</span>
+                    </div>
+                    <h3 class="card-title">Vertical SaaS "Boring"</h3>
+                    <span class="card-id">OPP-002</span>
+                </div>
+                <div class="card-body">
+                    <p class="card-description">
+                        Micro-SaaS résolvant un problème spécifique dans une industrie traditionnelle sous-digitale. Ex: gestion maintenance immobilière, suivi prescriptions vétérinaires.
+                    </p>
+                    <div class="card-metrics">
+                        <div class="metric">
+                            <div class="metric-label">Coût Démarrage</div>
+                            <div class="metric-value">€1,000-2,000</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-label">Potentiel 12-18 mois</div>
+                            <div class="metric-value positive">€2k-8k MRR</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-label">Marge Brute</div>
+                            <div class="metric-value positive">70-85%</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-label">Churn</div>
+                            <div class="metric-value positive">5-10%</div>
+                        </div>
+                    </div>
+                    <div class="card-section">
+                        <div class="card-section-title">Stack Technique</div>
+                        <div class="stack-list">
+                            <span class="stack-item">Next.js</span>
+                            <span class="stack-item">Supabase</span>
+                            <span class="stack-item">Vercel</span>
+                            <span class="stack-item">Tailwind</span>
+                            <span class="stack-item">Stripe</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <div class="pros-cons">
+                        <ul class="pros">
+                            <span class="pros-title">✓ Avantages</span>
+                            <li>Revenus très stables</li>
+                            <li>Valorisation 4-8x ARR</li>
+                            <li>Faible concurrence</li>
+                        </ul>
+                        <ul class="cons">
+                            <span class="cons-title">✗ Risques</span>
+                            <li>Long avant 1er revenu</li>
+                            <li>Risque mauvaise niche</li>
+                            <li>Maintenance technique</li>
+                        </ul>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Card 4 -->
+            <article class="opp-card">
+                <div class="card-header">
+                    <div class="card-badges">
+                        <span class="badge badge-category">SaaS Content</span>
+                        <span class="badge badge-score">7/10</span>
+                        <span class="badge badge-difficulty difficulty-4">Difficulté 4/5</span>
+                    </div>
+                    <h3 class="card-title">AI Content Suite</h3>
+                    <span class="card-id">OPP-004</span>
+                </div>
+                <div class="card-body">
+                    <p class="card-description">
+                        Suite d'outils IA pour créateurs de contenu: génération posts, planning, analytics, ghostwriting. Marché du creator economy: $250B+ avec croissance 30%+ annuelle.
+                    </p>
+                    <div class="card-metrics">
+                        <div class="metric">
+                            <div class="metric-label">Coût Démarrage</div>
+                            <div class="metric-value">€1,000-1,800</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-label">Potentiel 12-18 mois</div>
+                            <div class="metric-value positive">€2k-12k MRR</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-label">Marge Brute</div>
+                            <div class="metric-value positive">75-85%</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-label">TAM</div>
+                            <div class="metric-value">$250B</div>
+                        </div>
+                    </div>
+                    <div class="card-section">
+                        <div class="card-section-title">Stack Technique</div>
+                        <div class="stack-list">
+                            <span class="stack-item">GPT-4 / Claude</span>
+                            <span class="stack-item">Next.js</span>
+                            <span class="stack-item">Social APIs</span>
+                            <span class="stack-item">Supabase</span>
+                            <span class="stack-item">Zapier</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <div class="pros-cons">
+                        <ul class="pros">
+                            <span class="pros-title">✓ Avantages</span>
+                            <li>Creator economy boom</li>
+                            <li>Viralité possible</li>
+                            <li>Network effects</li>
+                        </ul>
+                        <ul class="cons">
+                            <span class="cons-title">✗ Risques</span>
+                            <li>Concurrence féroce</li>
+                            <li>Dépendance APIs sociaux</li>
+                            <li>Saturation perçue</li>
+                        </ul>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Card 5 -->
+            <article class="opp-card">
+                <div class="card-header">
+                    <div class="card-badges">
+                        <span class="badge badge-category">Fintech B2B</span>
+                        <span class="badge badge-score">7.5/10</span>
+                        <span class="badge badge-difficulty difficulty-5">Difficulté 5/5</span>
+                    </div>
+                    <h3 class="card-title">MENA Fintech Infrastructure</h3>
+                    <span class="card-id">OPP-005</span>
+                </div>
+                <div class="card-body">
+                    <p class="card-description">
+                        Solutions d'infrastructure fintech pour le marché MENA: onboarding KYC, paiements, compliance réglementaire. Marché MENA fintech: levées $700M+ en 2024.
+                    </p>
+                    <div class="card-metrics">
+                        <div class="metric">
+                            <div class="metric-label">Coût Démarrage</div>
+                            <div class="metric-value">€1,500-2,000</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-label">Potentiel 12-18 mois</div>
+                            <div class="metric-value positive">€3k-15k/mois</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-label">Marge Brute</div>
+                            <div class="metric-value positive">60-75%</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-label">Focus</div>
+                            <div class="metric-value">Maroc/Tunisie</div>
+                        </div>
+                    </div>
+                    <div class="card-section">
+                        <div class="card-section-title">Stack Technique</div>
+                        <div class="stack-list">
+                            <span class="stack-item">Node.js/Python</span>
+                            <span class="stack-item">PostgreSQL</span>
+                            <span class="stack-item">AWS/GCP</span>
+                            <span class="stack-item">SumSub KYC</span>
+                            <span class="stack-item">Stripe Connect</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <div class="pros-cons">
+                        <ul class="pros">
+                            <span class="pros-title">✓ Avantages</span>
+                            <li>Marché sous-bancarisé</li>
+                            <li>Barrières réglementaires</li>
+                            <li>Network effects forts</li>
+                        </ul>
+                        <ul class="cons">
+                            <span class="cons-title">✗ Risques</span>
+                            <li>Complexité réglementaire</li>
+                            <li>Besoin capitaux croissance</li>
+                            <li>Risque politique</li>
+                        </ul>
+                    </div>
+                </div>
+            </article>
+        </div>
+
+        <!-- Comparison Table -->
+        <section class="comparison-section">
+            <h2 class="section-title">📊 Comparateur d'Opportunités</h2>
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Opportunité</th>
+                        <th>Catégorie</th>
+                        <th>Coût</th>
+                        <th>Potentiel</th>
+                        <th>Marge</th>
+                        <th>Difficulté</th>
+                        <th>Score</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="winner-row">
+                        <td class="table-opp-name">🏆 AI Automation Agency</td>
+                        <td>Service B2B</td>
+                        <td>€500-1.5k</td>
+                        <td>€3k-15k/mois</td>
+                        <td>75-90%</td>
+                        <td>3/5</td>
+                        <td class="table-score high">9/10</td>
+                    </tr>
+                    <tr>
+                        <td class="table-opp-name">WhatsApp Business Auto</td>
+                        <td>Service</td>
+                        <td>€800-1.5k</td>
+                        <td>€2k-10k/mois</td>
+                        <td>65-80%</td>
+                        <td>2/5</td>
+                        <td class="table-score high">8.5/10</td>
+                    </tr>
+                    <tr>
+                        <td class="table-opp-name">Vertical SaaS B2B</td>
+                        <td>SaaS</td>
+                        <td>€1k-2k</td>
+                        <td>€2k-8k MRR</td>
+                        <td>70-85%</td>
+                        <td>4/5</td>
+                        <td class="table-score high">8/10</td>
+                    </tr>
+                    <tr>
+                        <td class="table-opp-name">MENA Fintech Infra</td>
+                        <td>Fintech B2B</td>
+                        <td>€1.5k-2k</td>
+                        <td>€3k-15k/mois</td>
+                        <td>60-75%</td>
+                        <td>5/5</td>
+                        <td class="table-score medium">7.5/10</td>
+                    </tr>
+                    <tr>
+                        <td class="table-opp-name">AI Content Suite</td>
+                        <td>SaaS Content</td>
+                        <td>€1k-1.8k</td>
+                        <td>€2k-12k MRR</td>
+                        <td>75-85%</td>
+                        <td>4/5</td>
+                        <td class="table-score medium">7/10</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Action Plan -->
+        <section class="action-plan">
+            <h2 class="section-title">🚀 Plan d'Action Recommandé</h2>
+            <p style="color: var(--text-secondary); margin-bottom: 1rem;">Basé sur l'opportunité #1 (AI Automation Agency)</p>
+            
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-marker">1</div>
+                    <div class="timeline-content">
+                        <h4>Semaines 1-2: Formation Intensive</h4>
+                        <p>Formation IA automation (n8n/Make + OpenAI API, ~20h). Maîtriser les bases des workflows et des appels API.</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-marker">2</div>
+                    <div class="timeline-content">
+                        <h4>Semaines 2-3: Validation Marché</h4>
+                        <p>Identifier 3 niches cibles et faire 5 interviews par niche. Comprendre les vrais pains avant de construire.</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-marker">3</div>
+                    <div class="timeline-content">
+                        <h4>Semaines 3-4: Présence & Landing</h4>
+                        <p>Créer landing page simple + cas d'étude fictif. Lancer sur LinkedIn 3x/semaine sur cas d'usage IA.</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-marker">4</div>
+                    <div class="timeline-content">
+                        <h4>Semaines 4-6: Premier Client</h4>
+                        <p>Cold outreach 50 prospects → viser 3 appels découverte → 1er client payant. Objectif: €1k+ de revenu.</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-marker">5</div>
+                    <div class="timeline-content">
+                        <h4>Semaines 6-12: Itération & Retainers</h4>
+                        <p>Livrer 3-5 projets, documenter résultats. Pivoter vers retainer mensuels pour prévisibilité.</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-marker">6</div>
+                    <div class="timeline-content">
+                        <h4>Mois 6+: Scale & Productisation</h4>
+                        <p>Productiser le service le plus demandé. Optionnel: transition vers SaaS (opp-002).</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <p><span class="footer-brand">ROTHSCHILD INTEL</span> — Analyse stratégique pour Mission Control</p>
+        <p>Date: 7 Mars 2026 | Classification: Interne | Next review: Q2 2026</p>
+    </footer>
+
+    <script>
+        // Simple filter functionality
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>

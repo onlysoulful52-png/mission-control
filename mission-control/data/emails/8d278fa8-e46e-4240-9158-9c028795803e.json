@@ -1,0 +1,58 @@
+{
+  "id": "8d278fa8-e46e-4240-9158-9c028795803e",
+  "timestamp": "2026-03-06T11:47:46.821Z",
+  "receivedAt": "2026-03-06T11:47:46.821Z",
+  "raw": {
+    "FromName": "Directeur",
+    "From": "boss@company.com",
+    "Subject": "URGENT: Action requise immédiatement",
+    "TextBody": "Ceci est un message critique qui demande une réponse ASAP.",
+    "Date": "2026-03-06T15:30:00Z",
+    "Attachments": [
+      {
+        "Name": "document.pdf",
+        "ContentType": "application/pdf",
+        "ContentLength": 1024
+      }
+    ]
+  },
+  "classification": {
+    "categories": [
+      "urgent"
+    ],
+    "primaryCategory": "urgent",
+    "scores": {
+      "eqdom": 0,
+      "bobcat": 0,
+      "urgent": 5,
+      "spam": 0
+    }
+  },
+  "attachments": [
+    {
+      "name": "document.pdf",
+      "contentType": "application/pdf",
+      "contentLength": 1024,
+      "hasContent": false,
+      "contentId": null
+    }
+  ],
+  "summary": {
+    "id": "13ba4830-1b63-488c-9239-c24e803b300b",
+    "timestamp": "2026-03-06T11:47:46.821Z",
+    "from": "boss@company.com",
+    "fromName": "Directeur",
+    "subject": "URGENT: Action requise immédiatement",
+    "receivedAt": "2026-03-06T15:30:00Z",
+    "classification": "urgent",
+    "categories": [
+      "urgent"
+    ],
+    "urgencyScore": 5,
+    "hasAttachments": true,
+    "attachmentCount": 1,
+    "bodyPreview": "Ceci est un message critique qui demande une réponse ASAP.",
+    "actionRequired": true,
+    "recommendedAction": "PRIORITAIRE - Action immédiate requise"
+  }
+}
