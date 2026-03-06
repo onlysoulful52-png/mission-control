@@ -888,6 +888,7 @@
         <button class="nav-tab active" onclick="showTab('agents')">🤖 Agents <span class="badge">4</span></button>
         <button class="nav-tab" onclick="showTab('projects')">🏗️ Projets <span class="badge">3</span></button>
         <button class="nav-tab" onclick="showTab('eqdom')">🏦 Eqdom Details</button>
+        <button class="nav-tab" onclick="showTab('rothschild-intel')">🏦 Rothschild Intel <span class="badge" style="background: #ffd700; color: #0a0e1a;">1</span></button>
         <button class="nav-tab" onclick="showTab('raci')">📋 RACI Matrix</button>
         <button class="nav-tab" onclick="showTab('history')">📜 Historique</button>
         <button class="nav-tab" onclick="showTab('logs')">📋 Logs</button>
@@ -1186,6 +1187,175 @@
                         <td class="raci-c">C</td>
                     </tr>
                 </table>
+            </div>
+        </div>
+        
+        <!-- TAB: ROTHCHILD INTEL -->
+        <div id="rothschild-intel" class="tab-content">
+            <div class="rothschild-card" style="margin-bottom: 20px;">
+                <span class="rothschild-badge">🏦 BUSINESS INTELLIGENCE</span>
+                <div class="rothschild-header" style="padding-right: 150px;">
+                    <div class="rothschild-avatar">📊</div>
+                    <div class="rothschild-info">
+                        <h3>Rothschild Research Division</h3>
+                        <div class="rothschild-role">Étude de marché continue — Opportunités business online</div>
+                    </div>
+                </div>
+                <div class="rothschild-status status-strategy">
+                    <span>●</span>
+                    <span>ACTIVE RESEARCH — 1 Opportunité Validée</span>
+                </div>
+                <div class="rothschild-metrics" style="grid-template-columns: repeat(4, 1fr);">
+                    <div class="rothschild-metric">
+                        <div class="rothschild-metric-value" id="intel-total">6</div>
+                        <div class="rothschild-metric-label">Opportunités</div>
+                    </div>
+                    <div class="rothschild-metric">
+                        <div class="rothschild-metric-value" id="intel-validated" style="color: #00ff88;">1</div>
+                        <div class="rothschild-metric-label">Validées</div>
+                    </div>
+                    <div class="rothschild-metric">
+                        <div class="rothschild-metric-value" id="intel-avg-score">8.2</div>
+                        <div class="rothschild-metric-label">Score Moyen</div>
+                    </div>
+                    <div class="rothschild-metric">
+                        <div class="rothschild-metric-value" id="intel-top-score" style="color: #ffd700;">9.5</div>
+                        <div class="rothschild-metric-label">Top Score</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="rothschild-opportunities">
+                <div class="card">
+                    <div class="card-title">🎯 Opportunité Validée — RECOMMANDÉE</div>
+                    
+                    <div style="background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(0, 255, 136, 0.05)); border: 2px solid #ffd700; border-radius: 12px; padding: 20px; margin-bottom: 20px;">
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 15px;">
+                            <div>
+                                <h2 style="color: #ffd700; font-size: 22px; margin-bottom: 5px;">AI Agent Training Studio for SMBs MENA</h2>
+                                <div style="color: #8892a0; font-size: 13px;">Micro SaaS B2B — Créé le 7 Mars 2026</div>
+                            </div>
+                            <div style="text-align: right;">
+                                <div style="font-size: 48px; font-weight: 700; color: #ffd700; line-height: 1;">9.5</div>
+                                <div style="font-size: 12px; color: #8892a0;">Score /10</div>
+                            </div>
+                        </div>
+                        
+                        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 20px;">
+                            <div style="background: rgba(0,0,0,0.2); padding: 15px; border-radius: 8px;">
+                                <div style="font-size: 11px; color: #8892a0; text-transform: uppercase; margin-bottom: 5px;">Coût Démarrage</div>
+                                <div style="font-size: 20px; font-weight: 600; color: #00ff88;">€500-2,000</div>
+                            </div>
+                            <div style="background: rgba(0,0,0,0.2); padding: 15px; border-radius: 8px;">
+                                <div style="font-size: 11px; color: #8892a0; text-transform: uppercase; margin-bottom: 5px;">Potentiel MRR</div>
+                                <div style="font-size: 20px; font-weight: 600; color: #00d4ff;">€5K → €25K</div>
+                            </div>
+                            <div style="background: rgba(0,0,0,0.2); padding: 15px; border-radius: 8px;">
+                                <div style="font-size: 11px; color: #8892a0; text-transform: uppercase; margin-bottom: 5px;">Time to Launch</div>
+                                <div style="font-size: 20px; font-weight: 600; color: #ffd93d;">6-10 semaines</div>
+                            </div>
+                        </div>
+                        
+                        <p style="color: #c9cdd4; line-height: 1.7; margin-bottom: 15px;">
+                            Plateforme no-code pour créer des agents IA personnalisés pour PMEs MENA — service client, ventes, support technique en arabe/français. <strong style="color: #ffd700;">Gap confirmé:</strong> aucune solution PME-friendly avec arabe dialectal natif.
+                        </p>
+                        
+                        <div style="background: rgba(0, 255, 136, 0.1); border-left: 3px solid #00ff88; padding: 15px; border-radius: 0 8px 8px 0; margin-bottom: 15px;">
+                            <div style="font-size: 12px; color: #00ff88; font-weight: 600; margin-bottom: 8px;">✅ VERDICT ROTHCHILD — GO</div>
+                            <div style="font-size: 13px; color: #e4e6eb; line-height: 1.6;">
+                                Marché validé ($5.4B → $15.5B), concurrence faible sur segment PME MENA, unit economics viables. <strong>Recommandation:</strong> Lancer à $49/mois (pas $29) pour LTV:CAC sain dès le départ. Focus Tunisie/Maroc d'abord.
+                            </div>
+                        </div>
+                        
+                        <div style="margin-bottom: 15px;">
+                            <div style="font-size: 12px; color: #8892a0; margin-bottom: 8px;">🎯 PROCHAINES ÉTAPES:</div>
+                            <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+                                <span style="background: rgba(255, 215, 0, 0.2); color: #ffd700; padding: 6px 12px; border-radius: 20px; font-size: 11px;">1. MVP avec GPT-4o-mini</span>
+                                <span style="background: rgba(0, 212, 255, 0.2); color: #00d4ff; padding: 6px 12px; border-radius: 20px; font-size: 11px;">2. Landing page + waitlist</span>
+                                <span style="background: rgba(255, 107, 107, 0.2); color: #ff6b6b; padding: 6px 12px; border-radius: 20px; font-size: 11px;">3. LinkedIn organic build</span>
+                                <span style="background: rgba(78, 205, 196, 0.2); color: #4ecdc4; padding: 6px 12px; border-radius: 20px; font-size: 11px;">4. Partenariats agences web MENA</span>
+                            </div>
+                        </div>
+                        
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                            <div style="font-size: 12px;">
+                                <div style="color: #8892a0; margin-bottom: 5px;">📊 MARCHÉ:</div>
+                                <div style="color: #e4e6eb;">TAM: $750B retail MENA<br>SAM: 500k+ PMEs digitales<br>Chatbot: $5.4B→$15.5B (CAGR 23.3%)</div>
+                            </div>
+                            <div style="font-size: 12px;">
+                                <div style="color: #8892a0; margin-bottom: 5px;">💰 UNIT ECONOMICS:</div>
+                                <div style="color: #e4e6eb;">Pricing: $49/mois (recommandé)<br>LTV:CAC: 1.9:1 → 3.5:1 optimisé<br>Marge: 69% → 95%+ à scale</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-title">🔍 Opportunités en Recherche (5)</div>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 15px;">
+                        
+                        <div style="background: rgba(26, 35, 64, 0.6); border: 1px solid #2a3f5f; border-radius: 12px; padding: 15px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                                <div style="font-weight: 600;">AI Automation Agency</div>
+                                <div style="background: rgba(255, 215, 0, 0.2); color: #ffd700; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600;">9.0</div>
+                            </div>
+                            <div style="font-size: 12px; color: #8892a0; margin-bottom: 10px;">Service B2B / Consulting</div>
+                            <div style="display: flex; gap: 15px; font-size: 11px;">
+                                <span style="color: #00ff88;">€1k démarrage</span>
+                                <span style="color: #00d4ff;">€3k-15k/mois</span>
+                            </div>
+                        </div>
+                        
+                        <div style="background: rgba(26, 35, 64, 0.6); border: 1px solid #2a3f5f; border-radius: 12px; padding: 15px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                                <div style="font-weight: 600;">WhatsApp Business Automation</div>
+                                <div style="background: rgba(255, 215, 0, 0.2); color: #ffd700; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600;">8.5</div>
+                            </div>
+                            <div style="font-size: 12px; color: #8892a0; margin-bottom: 10px;">Service / Agency — MENA focus</div>
+                            <div style="display: flex; gap: 15px; font-size: 11px;">
+                                <span style="color: #00ff88;">€1.1k démarrage</span>
+                                <span style="color: #00d4ff;">€2k-10k/mois</span>
+                            </div>
+                        </div>
+                        
+                        <div style="background: rgba(26, 35, 64, 0.6); border: 1px solid #2a3f5f; border-radius: 12px; padding: 15px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                                <div style="font-weight: 600;">Vertical SaaS B2B</div>
+                                <div style="background: rgba(255, 215, 0, 0.2); color: #ffd700; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600;">8.0</div>
+                            </div>
+                            <div style="font-size: 12px; color: #8892a0; margin-bottom: 10px;">SaaS / Product — Niche "Boring"</div>
+                            <div style="display: flex; gap: 15px; font-size: 11px;">
+                                <span style="color: #00ff88;">€1.5k démarrage</span>
+                                <span style="color: #00d4ff;">€2k-8k MRR</span>
+                            </div>
+                        </div>
+                        
+                        <div style="background: rgba(26, 35, 64, 0.6); border: 1px solid #2a3f5f; border-radius: 12px; padding: 15px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                                <div style="font-weight: 600;">MENA Fintech Infrastructure</div>
+                                <div style="background: rgba(255, 215, 0, 0.2); color: #ffd700; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600;">7.5</div>
+                            </div>
+                            <div style="font-size: 12px; color: #8892a0; margin-bottom: 10px;">SaaS B2B / Fintech — Réglementé</div>
+                            <div style="display: flex; gap: 15px; font-size: 11px;">
+                                <span style="color: #00ff88;">€1.7k démarrage</span>
+                                <span style="color: #00d4ff;">€3k-15k/mois</span>
+                            </div>
+                        </div>
+                        
+                        <div style="background: rgba(26, 35, 64, 0.6); border: 1px solid #2a3f5f; border-radius: 12px; padding: 15px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                                <div style="font-weight: 600;">AI Content Suite</div>
+                                <div style="background: rgba(255, 107, 107, 0.2); color: #ff6b6b; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600;">7.0</div>
+                            </div>
+                            <div style="font-size: 12px; color: #8892a0; margin-bottom: 10px;">SaaS / Content — Creator Economy</div>
+                            <div style="display: flex; gap: 15px; font-size: 11px;">
+                                <span style="color: #00ff88;">€1.4k démarrage</span>
+                                <span style="color: #00d4ff;">€2k-12k MRR</span>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
             </div>
         </div>
         
