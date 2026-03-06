@@ -1,0 +1,42 @@
+{
+  "version": "1.0",
+  "workflow": "business-validation-to-launch",
+  "description": "Quand Rothschild valide une opportunité, générer automatiquement la documentation complète de lancement",
+  
+  "trigger": {
+    "condition": "opportunity.status == 'validated'",
+    "source_file": "mission-control/data/business-opportunities.json"
+  },
+  
+  "actions": [
+    {
+      "step": 1,
+      "action": "spawn_agent",
+      "agent": "main",
+      "label": "Business-Plan-Generator",
+      "task": "Remplir le template de Business Plan complet pour l'opportunité validée"
+    },
+    {
+      "step": 2,
+      "action": "generate_document",
+      "template": "mission-control/templates/business-plan-template.md",
+      "output": "mission-control/business-plans/BUSINESS_NAME-business-plan.md"
+    },
+    {
+      "step": 3,
+      "action": "update_dashboard",
+      "add_link": "business-plan",
+      "target": "dashboard-v3.html"
+    },
+    {
+      "step": 4,
+      "action": "notify_user",
+      "message": "🚀 Nouveau business plan généré: BUSINESS_NAME - Prêt à lancer !"
+    },
+    {
+      "step": 5,
+      "action": "deploy",
+      "command": "git_push_github"
+    }
+  ]
+}
