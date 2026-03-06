@@ -1561,6 +1561,108 @@
                 document.getElementById('modal').classList.remove('active');
             }
         }
+        
+        // 🔄 CHARGEMENT DYNAMIQUE DES DONNÉES MISSION CONTROL
+        let missionData = null;
+        let lastUpdate = null;
+        
+        async function loadMissionData() {
+            try {
+                const response = await fetch('data/mission-state.json?' + Date.now());
+                if (!response.ok) throw new Error('Failed to load');
+                missionData = await response.json();
+                updateDashboardFromData();
+                lastUpdate = new Date();
+                console.log('✅ Mission data loaded:', lastUpdate.toLocaleTimeString());
+            } catch (error) {
+                console.error('❌ Failed to load mission data:', error);
+            }
+        }
+        
+        function updateDashboardFromData() {
+            if (!missionData) return;
+            
+            // Mettre à jour les métriques des agents
+            updateAgentMetrics('henry', missionData.agents.henry);
+            updateAgentMetrics('aiman', missionData.agents.aiman);
+            updateAgentMetrics('junior', missionData.agents.junior);
+            updateAgentMetrics('rothschild', missionData.agents.rothschild);
+            
+            // Mettre à jour les logs
+            updateLogs(missionData.recent_logs);
+            
+            // Mettre à jour les alertes
+            updateAlerts(missionData.alerts);
+        }
+        
+        function updateAgentMetrics(agentId, data) {
+            // Trouver la card de l'agent et mettre à jour
+            const cards = document.querySelectorAll('.agent-card, .rothschild-card');
+            cards.forEach(card => {
+                const nameEl = card.querySelector('.agent-name, .rothschild-info h3');
+                if (nameEl && nameEl.textContent.toLowerCase().includes(agentId)) {
+                    // Mettre à jour le statut
+                    const statusEl = card.querySelector('.agent-current-focus, .rothschild-focus');
+                    if (statusEl && data.current_task) {
+                        statusEl.textContent = data.current_task;
+                    }
+                    
+                    // Mettre à jour la capacité
+                    const capacityFill = card.querySelector('.capacity-fill');
+                    if (capacityFill && data.capacity) {
+                        capacityFill.style.width = data.capacity + '%';
+                        const capacityText = card.querySelector('.agent-capacity span:last-child');
+                        if (capacityText) capacityText.textContent = data.capacity + '%';
+                    }
+                }
+            });
+        }
+        
+        function updateLogs(logs) {
+            const logsContainer = document.querySelector('.log-container');
+            if (!logsContainer || !logs) return;
+            
+            let html = '';
+            logs.slice(0, 10).forEach(log => {
+                const levelClass = log.level === 'error' ? 'error' : 
+                                  log.level === 'warning' ? 'warn' : 
+                                  log.level === 'success' ? 'success' : 'info';
+                html += `
+                    <div class="log-line">
+                        <span class="log-time">${log.time}:00</span>
+                        <span class="log-level ${levelClass}">${log.level.toUpperCase()}</span>
+                        <span class="log-agent">${log.agent}</span>
+                        <span class="log-msg">${log.message}</span>
+                    </div>
+                `;
+            });
+            logsContainer.innerHTML = html;
+        }
+        
+        function updateAlerts(alerts) {
+            const alertsContainer = document.querySelector('.global-alerts');
+            if (!alertsContainer || !alerts) return;
+            
+            let html = '';
+            alerts.forEach(alert => {
+                const alertClass = alert.type === 'critical' ? 'alert-critical' : 'alert-warning';
+                const icon = alert.type === 'critical' ? '🔴' : '🟡';
+                html += `
+                    <div class="alert-banner ${alertClass}">
+                        <span>${icon}</span>
+                        <span><strong>${alert.type.toUpperCase()}:</strong> ${alert.message}</span>
+                    </div>
+                `;
+            });
+            alertsContainer.innerHTML = html;
+        }
+        
+        // Charger les données au démarrage
+        document.addEventListener('DOMContentLoaded', () => {
+            loadMissionData();
+            // Rafraîchir toutes les 30 secondes
+            setInterval(loadMissionData, 30000);
+        });
     </script>
 </body>
 </html>
