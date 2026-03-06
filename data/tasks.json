@@ -1,0 +1,112 @@
+[
+  {
+    "id": "task-001",
+    "title": "Configurer Telegram pour Henry",
+    "agent": "henry",
+    "status": "todo",
+    "priority": "high",
+    "source": "manual",
+    "project": "eqdom",
+    "created": "2026-03-05T10:00:00Z",
+    "updated": "2026-03-05T10:00:00Z"
+  },
+  {
+    "id": "task-002",
+    "title": "Remplir handover Eqdom avec Junior",
+    "agent": "junior",
+    "status": "todo",
+    "priority": "high",
+    "source": "manual",
+    "project": "eqdom",
+    "created": "2026-03-05T10:00:00Z",
+    "updated": "2026-03-05T10:00:00Z"
+  },
+  {
+    "id": "task-003",
+    "title": "Implémenter pre-approval scoring",
+    "agent": "aiman",
+    "status": "todo",
+    "priority": "medium",
+    "source": "manual",
+    "project": "eqdom",
+    "created": "2026-03-05T10:00:00Z",
+    "updated": "2026-03-05T10:00:00Z"
+  },
+  {
+    "id": "task-004",
+    "title": "Créer système de gestion projet",
+    "agent": "junior",
+    "status": "progress",
+    "priority": "high",
+    "source": "manual",
+    "project": "eqdom",
+    "created": "2026-03-05T09:00:00Z",
+    "updated": "2026-03-05T10:30:00Z"
+  },
+  {
+    "id": "task-005",
+    "title": "Setup Mission Control dashboard",
+    "agent": "henry",
+    "status": "progress",
+    "priority": "medium",
+    "source": "manual",
+    "project": "internal",
+    "created": "2026-03-05T09:00:00Z",
+    "updated": "2026-03-05T10:45:00Z"
+  },
+  {
+    "id": "task-006",
+    "title": "Review architecture DSSi",
+    "agent": "aiman",
+    "status": "review",
+    "priority": "high",
+    "source": "manual",
+    "project": "eqdom",
+    "created": "2026-03-04T14:00:00Z",
+    "updated": "2026-03-05T09:00:00Z"
+  },
+  {
+    "id": "task-007",
+    "title": "Créer agents Henry/Aiman/Junior",
+    "agent": "henry",
+    "status": "done",
+    "priority": "high",
+    "source": "manual",
+    "project": "internal",
+    "created": "2026-03-05T08:00:00Z",
+    "updated": "2026-03-05T09:30:00Z"
+  },
+  {
+    "id": "task-008",
+    "title": "Setup cron Morning Brief",
+    "agent": "henry",
+    "status": "done",
+    "priority": "medium",
+    "source": "manual",
+    "project": "internal",
+    "created": "2026-03-05T08:30:00Z",
+    "updated": "2026-03-05T09:00:00Z"
+  },
+  {
+    "id": "task-009",
+    "title": "Analyser neobanques (N26/Revolut)",
+    "agent": "henry",
+    "status": "done",
+    "priority": "medium",
+    "source": "manual",
+    "project": "eqdom",
+    "created": "2026-03-03T10:00:00Z",
+    "updated": "2026-03-04T18:00:00Z"
+  },
+  {
+    "id": "task-010",
+    "title": "Créer Dossier DSSi",
+    "agent": "henry",
+    "status": "done",
+    "priority": "high",
+    "source": "manual",
+    "project": "eqdom",
+    "created": "2026-03-02T09:00:00Z",
+    "updated": "2026-03-04T16:00:00Z"
+  }
+]

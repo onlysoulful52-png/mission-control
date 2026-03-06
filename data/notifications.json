@@ -1,0 +1,26 @@
+[
+  {
+    "id": "notif-001",
+    "type": "info",
+    "message": "🎯 Mission Control initialisé avec succès",
+    "agent": "system",
+    "timestamp": "2026-03-05T10:55:00Z",
+    "read": false
+  },
+  {
+    "id": "notif-002",
+    "type": "success",
+    "message": "✅ 3 agents créés : Henry, Aiman, Junior",
+    "agent": "henry",
+    "timestamp": "2026-03-05T09:30:00Z",
+    "read": false
+  },
+  {
+    "id": "notif-003",
+    "type": "warning",
+    "message": "⚠️ Telegram channel activé mais gateway à redémarrer",
+    "agent": "henry",
+    "timestamp": "2026-03-05T10:30:00Z",
+    "read": false
+  }
+]

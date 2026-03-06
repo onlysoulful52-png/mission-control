@@ -1,0 +1,197 @@
+{
+  "findings": [
+    {
+      "timestamp": "2026-03-07T04:42:00Z",
+      "updated": "2026-03-07T05:15:00Z",
+      "opportunity": {
+        "id": "ai-agent-studio-smb-mena",
+        "name": "AI Agent Training Studio for SMBs",
+        "category": "Micro SaaS",
+        "description": "Plateforme no-code pour créer des agents IA personnalisés pour PMEs MENA - service client, ventes, support technique en arabe/français",
+        "target_market": {
+          "primary": "PMEs Maroc, Tunisie, Algérie (Francophonie)",
+          "secondary": "Gulf countries (anglais/arabe)",
+          "tertiary": "Europe francophone pour outsourcing"
+        },
+        "market_size": {
+          "tam": "$750B retail MENA market",
+          "sam": "50M+ SMBs underbanked/underserved",
+          "som": "500k+ PMEs digitales actives",
+          "sources": ["RedSeer MENA E-commerce Report 2025", "DataReportal Tunisia 2024"]
+        },
+        "problem": "PMEs MENA veulent automatiser mais: 1) ChatGPT trop générique 2) Manque de compétences techniques 3) Solutions existantes chères ($100+/mois) 4) Pas d'agents arabes/français de qualité",
+        "problem_validation": {
+          "source": "Gartner 2024",
+          "finding": "SMBs waste 20-30% working hours managing document-based information",
+          "additional": "Agentfabriek (NL) valide: salons, dentists, retail need 'digital employees' for 24/7 support"
+        },
+        "solution": "Interface drag-and-drop pour entrainer agents IA sur données entreprise (FAQ, produits, procédures) + templates métier pré-configurés",
+        "mvp_features": [
+          "Upload documents entreprise (PDF, CSV)",
+          "3 templates: Support Client, Ventes, FAQ Interne",
+          "Chat widget embeddable",
+          "Réponses en arabe/français/anglais",
+          "Dashboard analytics simple"
+        ],
+        "tech_stack": {
+          "frontend": "Next.js + Tailwind",
+          "backend": "Supabase + Edge Functions",
+          "ai": "OpenAI GPT-4o-mini API (primaire) + GPT-4o backup",
+          "hosting": "Vercel (hobby tier free)",
+          "cost": "$0-20/mois jusqu'à 100 clients"
+        },
+        "pricing": {
+          "starter": "$29/mois - 1 agent, 1000 conversations",
+          "pro": "$79/mois - 3 agents, 10k conversations, analytics",
+          "business": "$199/mois - illimité, API, onboarding",
+          "annual_discount": "20% (améliore cashflow et réduit churn)"
+        },
+        "unit_economics": {
+          "cost_per_customer_starter": {
+            "ai_api_1000_conv_gpt4o_mini": "$1.50",
+            "ai_api_backup_500_conv_gpt4o": "$7.50",
+            "supabase_hobby": "$0",
+            "vercel_hobby": "$0",
+            "total": "$9/mois",
+            "gross_margin": "69%",
+            "at_scale_margin": "95%+ (GPT-4o-mini only)"
+          },
+          "cac": {
+            "referrals": "$150",
+            "organic_seo": "$290-480",
+            "paid_search": "$802",
+            "target_blended": "$400 (focus organic + referrals)"
+          },
+          "ltv": {
+            "arpu": "$45/mois (moyenne pondérée)",
+            "churn_mena_smb": "5-8%/mois",
+            "ltv_raw": "$750",
+            "ltv_cac_ratio": "1.9:1 (sous-optimal)",
+            "ltv_cac_optimized": "3.5:1 (avec prix $49-99 + annual plans)"
+          }
+        },
+        "startup_cost": "$500-2000",
+        "time_to_launch": "6-10 semaines",
+        "revenue_potential": {
+          "conservative": "$5k MRR (65 clients) à 12 mois",
+          "realistic": "$25k MRR (320 clients) à 24 mois",
+          "optimistic": "$100k MRR (1000+ clients) à 36 mois"
+        },
+        "market_validation": {
+          "chatbot_market_growth": "$5.4B (2023) → $15.5B (2028), CAGR 23.3%",
+          "nanovate_egypt": "$1M pre-seed en 9 mois pour Arabic AI",
+          "arabic_ai_advantage": "Native Arabic AI = 40% higher customer satisfaction vs translated bots",
+          "competitive_gap": "Aucune solution ne combine prix abordable ($29-79) + arabe dialectal + facilité PME"
+        },
+        "competitors": [
+          {"name": "Chatbase", "pricing": "$19-399/mois", "weakness": "Crédits imprévisibles, support faible, pas d'handoff humain", "positioning": "Générique"},
+          {"name": "SiteGPT", "pricing": "$29-199/mois", "weakness": "Limité 500 pages, pas d'arabe dialectal", "positioning": "Website focus"},
+          {"name": "Arabot", "pricing": "Enterprise (non public)", "weakness": "Inaccessible PMEs", "positioning": "Enterprise MENA"},
+          {"name": "Teammates.ai", "pricing": "Premium", "weakness": "Focus 20+ dialectes = complexité", "positioning": "Premium MENA"}
+        ],
+        "acquisition_channels": {
+          "priority_1": "LinkedIn organic + content (founder-led)",
+          "priority_2": "Partenariats avec agences web MENA",
+          "priority_3": "WhatsApp Business communities",
+          "priority_4": "SEO: 'chatbot maroc', 'agent IA tunisie'"
+        },
+        "risks": [
+          "Churn MENA plus élevé qu'Occident (business closures, payment issues)",
+          "Qualité arabe dialectal variable selon les LLMs",
+          "Concurrence potentielle de Nanovate/Arabot si descendent sur segment PME",
+          "CAC peut grimper si dépendance aux paid ads"
+        ],
+        "mitigations": [
+          "Annual plans avec 20% discount pour réduire churn",
+          "Focus Maghreb d'abord (français + arabe darija standardisée)",
+          "Build in public pour créer community et réduire CAC",
+          "Templates métiers spécifiques (e-commerce, immobilier, services) pour sticky product"
+        ]
+      },
+      "status": "validated",
+      "confidence": "high",
+      "verdict": "GO - Opportunité validée avec ajustements pricing nécessaires",
+      "notes": "Marché confirmé ($15.5B d'ici 2028), concurrence faible sur segment PME MENA, unit economics viables avec optimisation LTV:CAC. RECOMMANDATION: Lancer à $49/mois (pas $29) pour améliorer LTV:CAC dès le départ. Focus Tunisie/Maroc d'abord (marché testable, francophone)."
+    },
+    {
+      "timestamp": "2026-03-07T04:43:00Z",
+      "opportunity": {
+        "id": "browser-automation-smb",
+        "name": "Browser Automation Mini-Agent for SMBs",
+        "category": "Micro SaaS",
+        "description": "Automatisation visuelle des tâches répétitives web sans code - extraction données, remplissage formulaires, veille",
+        "target_market": {
+          "primary": "PMEs e-commerce MENA",
+          "secondary": "Freelances admin/comptabilité",
+          "tertiary": "Agences marketing digitale"
+        },
+        "market_size": {
+          "tam": "$253M investis e-commerce MENA 2024",
+          "sam": "100k+ vendeurs online",
+          "som": "10k+ vendeurs actifs"
+        },
+        "problem": "PMEs perdent 10-20h/semaine sur tâches répétitives: mise à jour stocks, veille prix concurrents, saisie factures. Zapier trop cher/complexe ($20-100/mois).",
+        "solution": "Extension Chrome + cloud: enregistrer workflows visuellement, exécution cloud programmée, extraction données vers Sheets/Excel",
+        "mvp_features": [
+          "Enregistreur d'actions (clics, saisie)",
+          "10 workflows gratuits",
+          "Extraction tableaux web vers CSV",
+          "Scheduling quotidien/hebdo",
+          "Playwright cloud headless"
+        ],
+        "pricing": {
+          "free": "10 runs/mois",
+          "starter": "$19/mois - 100 runs",
+          "pro": "$49/mois - 500 runs + API",
+          "team": "$99/mois - illimité + collaboration"
+        },
+        "startup_cost": "$300-1000",
+        "time_to_launch": "4-8 semaines",
+        "competitors": [
+          {"name": "Zapier", "pricing": "$20-100/mois", "weakness": "Cher, focus app-connect"},
+          {"name": "Make", "pricing": "€9-16/mois", "weakness": "Complexe"},
+          {"name": "Bardeen", "pricing": "$10/mois", "weakness": "Pas de cloud scheduling"}
+        ]
+      },
+      "status": "investigating",
+      "confidence": "medium",
+      "notes": "Marché validé par succès Zapier/Make. Opportunité: pricing plus agressif pour marchés émergents. Risque: compétition établie."
+    },
+    {
+      "timestamp": "2026-03-07T04:44:00Z",
+      "opportunity": {
+        "id": "digital-talent-platform-mena",
+        "name": "Digital Skills Verification + Outsourcing Platform",
+        "category": "Marketplace B2B",
+        "description": "Plateforme de vérification des compétences digitales + mise en relation talents MENA ↔ entreprises européennes",
+        "target_market": {
+          "primary": "Entreprises européennes cherchent talents tech abordables",
+          "secondary": "Talents tech MENA (Maroc, Tunisie, Sénégal)",
+          "tertiary": "Écoles/bootcamps digitaux"
+        },
+        "market_size": {
+          "tam": "$11.1B formation digitale Afrique 2021-2030",
+          "sam": "100k+ talents tech formés/an",
+          "som": "10k+ talents placeables"
+        },
+        "problem": "Entreprises EU: pénurie devs, coûts élevés locaux. Talents MENA: difficile de prouver compétences, accès marché limité.",
+        "solution": "Tests pratiques validés + portfolio vérifié + mise en relation directe. Focus: cybersecurity, data, dev web/mobile.",
+        "business_model": {
+          "b2b": "15-20% commission sur placements",
+          "b2c": "€50-200 certification + profil premium",
+          "saas": "Abonnement entreprises €299/mois pour sourcing illimité"
+        },
+        "startup_cost": "$2000-5000",
+        "time_to_launch": "10-16 semaines",
+        "competitors": [
+          {"name": "Andela", "pricing": "Enterprise", "weakness": "Focus US, pas individuel"},
+          {"name": "Gebeya", "pricing": "Marketplace", "weakness": "Focus Ethiopie"},
+          {"name": "Turing", "pricing": "$$$", "weakness": "Très sélectif, pas accessible"}
+        ]
+      },
+      "status": "investigating",
+      "confidence": "medium-high",
+      "notes": "Marché validé par Andela ($180M+ levé). Opportunité: focus francophone MENA-Europe. Défi: acquisition talents + entreprises simultanée (chicken-egg)."
+    }
+  ]
+}

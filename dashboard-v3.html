@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎯 Mission Control V3 — Live Dashboard</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: linear-gradient(135deg, #0a0e1a 0%, #0f1823 100%);
+            color: #e4e6eb;
+            min-height: 100vh;
+        }
+        
+        /* Header */
+        .header {
+            background: rgba(26, 31, 58, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 15px 20px;
+            border-bottom: 1px solid #2a3f5f;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .header h1 {
+            font-size: 18px;
+            background: linear-gradient(135deg, #00d4ff, #7b68ee);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .header-stats {
+            display: flex;
+            gap: 20px;
+            font-size: 11px;
+        }
+        
+        .header-stat-value {
+            font-weight: 600;
+            color: #00d4ff;
+        }
+        
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #00ff88;
+            box-shadow: 0 0 10px #00ff88;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        .last-update {
+            font-size: 11px;
+            color: #6b7280;
+            margin-left: 15px;
+        }
+        
+        /* Global Alerts */
+        .global-alerts {
+            margin: 15px 20px;
+        }
+        
+        .alert-banner {
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 13px;
+        }
+        
+        .alert-critical {
+            background: rgba(255, 107, 107, 0.15);
+            border: 1px solid #ff6b6b;
+            color: #ff6b6b;
+        }
+        
+        .alert-warning {
+            background: rgba(255, 217, 61, 0.15);
+            border: 1px solid #ffd93d;
+            color: #ffd93d;
+        }
+        
+        .alert-info {
+            background: rgba(0, 212, 255, 0.15);
+            border: 1px solid #00d4ff;
+            color: #00d4ff;
+        }
+        
+        /* Navigation */
+        .nav-tabs {
+            display: flex;
+            gap: 5px;
+            padding: 15px 20px 0;
+            border-bottom: 1px solid #2a3f5f;
+            background: rgba(15, 20, 32, 0.8);
+            overflow-x: auto;
+        }
+        
+        .nav-tab {
+            padding: 12px 20px;
+            background: transparent;
+            border: none;
+            color: #8892a0;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 500;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+        
+        .nav-tab:hover { color: #e4e6eb; }
+        
+        .nav-tab.active {
+            color: #00d4ff;
+            border-bottom-color: #00d4ff;
+        }
+        
+        .nav-tab .badge {
+            background: #ff6b6b;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 10px;
+            font-size: 9px;
+            margin-left: 5px;
+        }
+        
+        /* Content */
+        .main-content {
+            padding: 20px;
+        }
+        
+        .tab-content { display: none; }
+        .tab-content.active { display: block; animation: fadeIn 0.3s ease; }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Loading */
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 300px;
+            font-size: 14px;
+            color: #8892a0;
+        }
+        
+        .loading::after {
+            content: '';
+            width: 20px;
+            height: 20px;
+            border: 2px solid #2a3f5f;
+            border-top-color: #00d4ff;
+            border-radius: 50%;
+            margin-left: 10px;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        /* Cards */
+        .card {
+            background: rgba(26, 35, 64, 0.6);
+            border: 1px solid #2a3f5f;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .card-title {
+            font-size: 14px;
+            color: #00d4ff;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        /* Agent Cards */
+        .agent-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 15px;
+        }
+        
+        .agent-card {
+            background: linear-gradient(135deg, rgba(26, 35, 64, 0.8) 0%, rgba(15, 24, 35, 0.8) 100%);
+            border: 1px solid #2a3f5f;
+            border-radius: 12px;
+            padding: 15px;
+            position: relative;
+        }
+        
+        .agent-card.online { border-color: #00ff88; }
+        .agent-card.busy { border-color: #ffd93d; }
+        .agent-card.offline { border-color: #6b7280; }
+        
+        .agent-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+        
+        .agent-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            background: linear-gradient(135deg, #1a2340, #2a3f5f);
+        }
+        
+        .agent-name {
+            font-size: 16px;
+            font-weight: 600;
+        }
+        
+        .agent-role {
+            font-size: 11px;
+            color: #8892a0;
+        }
+        
+        .agent-capacity {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            margin-bottom: 10px;
+            padding: 6px 10px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 6px;
+        }
+        
+        .capacity-bar {
+            flex: 1;
+            height: 6px;
+            background: #1a2535;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+        
+        .capacity-fill {
+            height: 100%;
+            border-radius: 3px;
+            transition: width 0.3s ease;
+        }
+        
+        .capacity-fill.green { background: #00ff88; }
+        .capacity-fill.yellow { background: #ffd93d; }
+        .capacity-fill.red { background: #ff6b6b; }
+        
+        .agent-current-focus {
+            font-size: 12px;
+            color: #8892a0;
+            margin-bottom: 10px;
+            padding: 8px;
+            background: rgba(0,0,0,0.2);
+            border-radius: 6px;
+        }
+        
+        .agent-stats {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .agent-stat {
+            flex: 1;
+            text-align: center;
+        }
+        
+        .agent-stat-value {
+            font-size: 16px;
+            font-weight: 600;
+            color: #00d4ff;
+        }
+        
+        .agent-stat-label {
+            font-size: 9px;
+            color: #6b7280;
+            text-transform: uppercase;
+        }
+        
+        /* Logs */
+        .log-container {
+            background: rgba(15, 20, 32, 0.6);
+            border: 1px solid #2a3f5f;
+            border-radius: 8px;
+            padding: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+        
+        .log-line {
+            padding: 6px 0;
+            border-bottom: 1px solid rgba(42, 63, 95, 0.3);
+            display: flex;
+            gap: 10px;
+        }
+        
+        .log-time { color: #6b7280; min-width: 60px; }
+        .log-level { min-width: 60px; font-weight: 600; }
+        .log-level.error { color: #ff6b6b; }
+        .log-level.warn { color: #ffd93d; }
+        .log-level.success { color: #00ff88; }
+        .log-level.info { color: #00d4ff; }
+        .log-level.decision { color: #ffd700; }
+        .log-agent { color: #8892a0; min-width: 80px; }
+        .log-msg { color: #e4e6eb; flex: 1; }
+        
+        /* Timeline */
+        .timeline {
+            position: relative;
+            padding-left: 20px;
+        }
+        
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 5px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: #2a3f5f;
+        }
+        
+        .timeline-item {
+            position: relative;
+            margin-bottom: 15px;
+            padding-left: 20px;
+        }
+        
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -18px;
+            top: 5px;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #2a3f5f;
+        }
+        
+        .timeline-item.critical::before { background: #ff6b6b; }
+        .timeline-item.warning::before { background: #ffd93d; }
+        .timeline-item.success::before { background: #00ff88; }
+        .timeline-item.info::before { background: #00d4ff; }
+        
+        .timeline-time {
+            font-size: 11px;
+            color: #6b7280;
+        }
+        
+        .timeline-title {
+            font-size: 13px;
+            font-weight: 600;
+            margin: 2px 0;
+        }
+        
+        .timeline-desc {
+            font-size: 12px;
+            color: #8892a0;
+        }
+        
+        .timeline-agent {
+            font-size: 10px;
+            color: #6b7280;
+            margin-top: 4px;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .agent-grid { grid-template-columns: 1fr; }
+            .header-stats { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <h1>🎯 Mission Control V3 — Live Dashboard</h1>
+        <div style="display: flex; align-items: center;">
+            <div class="header-stats">
+                <div><span class="status-dot"></span> <span id="system-status">Loading...</span></div>
+                <div>Agents: <span class="header-stat-value" id="agents-count">-</span></div>
+                <div>Tasks: <span class="header-stat-value" id="tasks-count">-</span></div>
+            </div>
+            <div class="last-update" id="last-update">Dernière mise à jour: -</div>
+        </div>
+    </header>
+    
+    <!-- GLOBAL ALERTS -->
+    <div class="global-alerts" id="alerts-container">
+        <div class="loading">Chargement des alertes...</div>
+    </div>
+    
+    <!-- Navigation -->
+    <nav class="nav-tabs">
+        <button class="nav-tab active" onclick="showTab('agents')">🤖 Agents <span class="badge" id="nav-agents-badge">-</span></button>
+        <button class="nav-tab" onclick="showTab('logs')">📋 Logs</button>
+        <button class="nav-tab" onclick="showTab('history')">📜 Historique</button>
+        <button class="nav-tab" onclick="showTab('rothschild-intel')">🏦 Rothschild Intel <span class="badge" style="background: #ffd700; color: #0a0e1a;" id="nav-rothschild-badge">-</span></button>
+    </nav>
+    
+    <main class="main-content">
+        <!-- TAB: AGENTS -->
+        <div id="agents" class="tab-content active">
+            <div class="loading" id="agents-loading">Chargement des agents...</div>
+            <div class="agent-grid" id="agents-grid" style="display: none;"></div>
+        </div>
+        
+        <!-- TAB: LOGS -->
+        <div id="logs" class="tab-content">
+            <div class="loading" id="logs-loading">Chargement des logs...</div>
+            <div class="log-container" id="logs-container" style="display: none;"></div>
+        </div>
+        
+        <!-- TAB: HISTORY -->
+        <div id="history" class="tab-content">
+            <div class="loading" id="history-loading">Chargement de l'historique...</div>
+            <div class="timeline" id="history-container" style="display: none;"></div>
+        </div>
+        
+        <!-- TAB: ROTHCHILD INTEL -->
+        <div id="rothschild-intel" class="tab-content">
+            <div class="loading" id="rothschild-loading">Chargement des opportunités...</div>
+            <div id="rothschild-container" style="display: none;"></div>
+        </div>
+    </main>
+    
+    <script>
+        // 🔄 CHARGEMENT DYNAMIQUE COMPLET
+        let missionData = null;
+        let businessData = null;
+        let lastUpdate = null;
+        
+        async function loadAllData() {
+            try {
+                // Charger les données de mission (agents, logs, etc.)
+                const missionResponse = await fetch('data/mission-state.json?' + Date.now());
+                if (missionResponse.ok) {
+                    missionData = await missionResponse.json();
+                }
+                
+                // Charger les données business (Rothschild)
+                const businessResponse = await fetch('data/business-opportunities.json?' + Date.now());
+                if (businessResponse.ok) {
+                    businessData = await businessResponse.json();
+                }
+                
+                updateDashboard();
+                lastUpdate = new Date();
+                document.getElementById('last-update').textContent = 
+                    'Dernière mise à jour: ' + lastUpdate.toLocaleTimeString('fr-FR');
+                document.getElementById('system-status').textContent = 'Online';
+                
+            } catch (error) {
+                console.error('Erreur chargement données:', error);
+                document.getElementById('system-status').textContent = 'Error';
+            }
+        }
+        
+        function updateDashboard() {
+            if (missionData) {
+                updateHeader();
+                updateAlerts();
+                updateAgents();
+                updateLogs();
+                updateHistory();
+            }
+            if (businessData) {
+                updateRothschildIntel();
+            }
+        }
+        
+        function updateHeader() {
+            if (!missionData.agents) return;
+            
+            const agentCount = Object.keys(missionData.agents).length;
+            const onlineCount = Object.values(missionData.agents).filter(a => a.status !== 'offline').length;
+            document.getElementById('agents-count').textContent = `${onlineCount}/${agentCount}`;
+            
+            const totalTasks = Object.values(missionData.agents).reduce((sum, a) => sum + (a.tasks_completed_today || 0), 0);
+            document.getElementById('tasks-count').textContent = totalTasks;
+            
+            document.getElementById('nav-agents-badge').textContent = agentCount;
+        }
+        
+        function updateAlerts() {
+            const container = document.getElementById('alerts-container');
+            if (!missionData.alerts || missionData.alerts.length === 0) {
+                container.innerHTML = '<div class="alert-banner alert-info"><span>✅</span><span>Aucune alerte active</span></div>';
+                return;
+            }
+            
+            let html = '';
+            missionData.alerts.forEach(alert => {
+                const alertClass = alert.type === 'critical' ? 'alert-critical' : 
+                                  alert.type === 'warning' ? 'alert-warning' : 'alert-info';
+                const icon = alert.type === 'critical' ? '🔴' : 
+                            alert.type === 'warning' ? '🟡' : 'ℹ️';
+                html += `
+                    <div class="alert-banner ${alertClass}">
+                        <span>${icon}</span>
+                        <span><strong>${alert.type.toUpperCase()}:</strong> ${alert.message}</span>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+        }
+        
+        function updateAgents() {
+            const loading = document.getElementById('agents-loading');
+            const grid = document.getElementById('agents-grid');
+            
+            if (!missionData.agents) return;
+            
+            let html = '';
+            Object.entries(missionData.agents).forEach(([id, agent]) => {
+                const statusClass = agent.status === 'online' ? 'online' : 
+                                   agent.status === 'busy' ? 'busy' : 'offline';
+                const capacityColor = agent.capacity > 80 ? 'red' : 
+                                     agent.capacity > 50 ? 'yellow' : 'green';
+                
+                html += `
+                    <div class="agent-card ${statusClass}">
+                        <div class="agent-header">
+                            <div class="agent-avatar">${getAgentEmoji(id)}</div>
+                            <div>
+                                <div class="agent-name">${capitalize(id)}</div>
+                                <div class="agent-role">${agent.current_task || 'En attente'}</div>
+                            </div>
+                        </div>
+                        <div class="agent-capacity">
+                            <span>Capacité:</span>
+                            <div class="capacity-bar">
+                                <div class="capacity-fill ${capacityColor}" style="width: ${agent.capacity || 0}%"></div>
+                            </div>
+                            <span>${agent.capacity || 0}%</span>
+                        </div>
+                        <div class="agent-current-focus">
+                            ${agent.last_activity || 'Aucune activité récente'}
+                        </div>
+                        <div class="agent-stats">
+                            <div class="agent-stat">
+                                <div class="agent-stat-value">${agent.cycle_time || '-'}</div>
+                                <div class="agent-stat-label">Cycle Time</div>
+                            </div>
+                            <div class="agent-stat">
+                                <div class="agent-stat-value">${agent.quality_score || '-'}%</div>
+                                <div class="agent-stat-label">Qualité</div>
+                            </div>
+                            <div class="agent-stat">
+                                <div class="agent-stat-value">${agent.tasks_completed_today || 0}</div>
+                                <div class="agent-stat-label">Tâches</div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            grid.innerHTML = html;
+            loading.style.display = 'none';
+            grid.style.display = 'grid';
+        }
+        
+        function updateLogs() {
+            const loading = document.getElementById('logs-loading');
+            const container = document.getElementById('logs-container');
+            
+            if (!missionData.recent_logs) return;
+            
+            let html = '';
+            missionData.recent_logs.forEach(log => {
+                const levelClass = log.level || 'info';
+                html += `
+                    <div class="log-line">
+                        <span class="log-time">${log.time || '--:--'}</span>
+                        <span class="log-level ${levelClass}">${(log.level || 'INFO').toUpperCase()}</span>
+                        <span class="log-agent">${log.agent || 'system'}</span>
+                        <span class="log-msg">${log.message || ''}</span>
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = html || '<div class="log-line"><span class="log-msg">Aucun log disponible</span></div>';
+            loading.style.display = 'none';
+            container.style.display = 'block';
+        }
+        
+        function updateHistory() {
+            const loading = document.getElementById('history-loading');
+            const container = document.getElementById('history-container');
+            
+            if (!missionData.recent_logs) return;
+            
+            let html = '';
+            // Utiliser les logs comme historique
+            missionData.recent_logs.slice(0, 10).forEach(log => {
+                const type = log.level === 'error' ? 'critical' : 
+                            log.level === 'warning' ? 'warning' : 
+                            log.level === 'success' ? 'success' : 'info';
+                
+                html += `
+                    <div class="timeline-item ${type}">
+                        <div class="timeline-time">${log.time || '--:--'}</div>
+                        <div class="timeline-title">${log.message || ''}</div>
+                        <div class="timeline-agent">${capitalize(log.agent || 'system')}</div>
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = html || '<div class="timeline-item info"><div class="timeline-title">Aucun historique</div></div>';
+            loading.style.display = 'none';
+            container.style.display = 'block';
+        }
+        
+        function updateRothschildIntel() {
+            const loading = document.getElementById('rothschild-loading');
+            const container = document.getElementById('rothschild-container');
+            
+            if (!businessData || !businessData.opportunities) {
+                container.innerHTML = '<div class="card"><div class="card-title">Aucune opportunité</div></div>';
+                loading.style.display = 'none';
+                container.style.display = 'block';
+                return;
+            }
+            
+            const validated = businessData.opportunities.filter(o => o.statut === 'valide');
+            const inResearch = businessData.opportunities.filter(o => o.statut === 'en_recherche');
+            
+            document.getElementById('nav-rothschild-badge').textContent = validated.length;
+            
+            let html = '<div style="margin-bottom: 20px;">';
+            
+            // Opportunités validées
+            if (validated.length > 0) {
+                html += '<div class="card"><div class="card-title">🎯 Opportunités Validées</div>';
+                validated.forEach(opp => {
+                    html += `
+                        <div style="background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(0, 255, 136, 0.05)); border: 2px solid #ffd700; border-radius: 12px; padding: 20px; margin-bottom: 15px;">
+                            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px;">
+                                <h3 style="color: #ffd700; font-size: 18px;">${opp.nom}</h3>
+                                <div style="font-size: 32px; font-weight: 700; color: #ffd700;">${opp.score}/10</div>
+                            </div>
+                            <p style="color: #c9cdd4; margin-bottom: 15px; font-size: 13px;">${opp.description || ''}</p>
+                            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 15px;">
+                                <div style="background: rgba(0,0,0,0.2); padding: 10px; border-radius: 6px;">
+                                    <div style="font-size: 10px; color: #8892a0;">Coût</div>
+                                    <div style="color: #00ff88; font-weight: 600;">${opp.coût_démarrage_range || 'N/A'}</div>
+                                </div>
+                                <div style="background: rgba(0,0,0,0.2); padding: 10px; border-radius: 6px;">
+                                    <div style="font-size: 10px; color: #8892a0;">Potentiel</div>
+                                    <div style="color: #00d4ff; font-weight: 600;">${opp.potentiel_revenus || 'N/A'}</div>
+                                </div>
+                                <div style="background: rgba(0,0,0,0.2); padding: 10px; border-radius: 6px;">
+                                    <div style="font-size: 10px; color: #8892a0;">Délai</div>
+                                    <div style="color: #ffd93d; font-weight: 600;">${opp.temps_implémentation || 'N/A'}</div>
+                                </div>
+                            </div>
+                            <div style="background: rgba(0, 255, 136, 0.1); border-left: 3px solid #00ff88; padding: 10px; border-radius: 0 6px 6px 0;">
+                                <div style="color: #00ff88; font-size: 11px; font-weight: 600;">✅ VERDICT: ${opp.verdict || 'GO'}</div>
+                            </div>
+                        </div>
+                    `;
+                });
+                html += '</div>';
+            }
+            
+            // Opportunités en recherche
+            if (inResearch.length > 0) {
+                html += '<div class="card"><div class="card-title">🔍 En Recherche (' + inResearch.length + ')</div>';
+                html += '<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 10px;">';
+                inResearch.forEach(opp => {
+                    html += `
+                        <div style="background: rgba(26, 35, 64, 0.6); border: 1px solid #2a3f5f; border-radius: 8px; padding: 12px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
+                                <span style="font-weight: 600; font-size: 13px;">${opp.nom}</span>
+                                <span style="background: rgba(255, 215, 0, 0.2); color: #ffd700; padding: 2px 8px; border-radius: 10px; font-size: 10px;">${opp.score}</span>
+                            </div>
+                            <div style="font-size: 11px; color: #8892a0;">${opp.categorie || ''}</div>
+                        </div>
+                    `;
+                });
+                html += '</div></div>';
+            }
+            
+            html += '</div>';
+            container.innerHTML = html;
+            loading.style.display = 'none';
+            container.style.display = 'block';
+        }
+        
+        function getAgentEmoji(id) {
+            const emojis = {
+                henry: '🎯',
+                aiman: '💻',
+                junior: '📊',
+                rothschild: '💼'
+            };
+            return emojis[id] || '🤖';
+        }
+        
+        function capitalize(str) {
+            return str.charAt(0).toUpperCase() + str.slice(1);
+        }
+        
+        function showTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.nav-tab').forEach(tab => tab.classList.remove('active'));
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+        
+        // Charger les données au démarrage
+        document.addEventListener('DOMContentLoaded', () => {
+            loadAllData();
+            // Rafraîchir toutes les 30 secondes
+            setInterval(loadAllData, 30000);
+        });
+    </script>
+</body>
+</html>
