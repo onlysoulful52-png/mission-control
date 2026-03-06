@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🎯 Mission Control V3 — Eqdom Portfolio</title>
+    <title>🎯 Mission Control V3 — Live Dashboard</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
@@ -60,7 +60,13 @@
             50% { opacity: 0.5; }
         }
         
-        /* Global Alerts Section */
+        .last-update {
+            font-size: 11px;
+            color: #6b7280;
+            margin-left: 15px;
+        }
+        
+        /* Global Alerts */
         .global-alerts {
             margin: 15px 20px;
         }
@@ -92,115 +98,6 @@
             border: 1px solid #00d4ff;
             color: #00d4ff;
         }
-        
-        /* EQDOM HERO SECTION */
-        .eqdom-hero {
-            background: linear-gradient(135deg, rgba(0, 212, 255, 0.1) 0%, rgba(123, 104, 238, 0.1) 100%);
-            border: 2px solid #00d4ff;
-            border-radius: 16px;
-            padding: 20px;
-            margin: 20px;
-        }
-        
-        .eqdom-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-        
-        .eqdom-title {
-            font-size: 24px;
-            font-weight: 700;
-            background: linear-gradient(135deg, #00d4ff, #7b68ee);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        
-        .eqdom-badge {
-            background: rgba(0, 255, 136, 0.2);
-            color: #00ff88;
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 11px;
-            font-weight: 600;
-        }
-        
-        .eqdom-kpis {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 15px;
-        }
-        
-        .kpi-card {
-            background: rgba(15, 24, 35, 0.8);
-            border: 1px solid #2a3f5f;
-            border-radius: 12px;
-            padding: 15px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        
-        .kpi-card:hover {
-            border-color: #00d4ff;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 20px rgba(0, 212, 255, 0.2);
-        }
-        
-        .kpi-value {
-            font-size: 28px;
-            font-weight: 700;
-            color: #00d4ff;
-        }
-        
-        .kpi-label {
-            font-size: 10px;
-            color: #8892a0;
-            text-transform: uppercase;
-            margin-top: 4px;
-        }
-        
-        .kpi-change {
-            font-size: 11px;
-            margin-top: 4px;
-        }
-        
-        .kpi-change.up { color: #00ff88; }
-        .kpi-change.down { color: #ff6b6b; }
-        
-        /* Blockers Section */
-        .blockers-section {
-            background: rgba(255, 107, 107, 0.05);
-            border: 1px solid rgba(255, 107, 107, 0.3);
-            border-radius: 12px;
-            padding: 15px;
-            margin-top: 15px;
-        }
-        
-        .blockers-title {
-            font-size: 12px;
-            color: #ff6b6b;
-            text-transform: uppercase;
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        .blocker-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 8px 0;
-            border-bottom: 1px solid rgba(255, 107, 107, 0.1);
-            font-size: 12px;
-        }
-        
-        .blocker-item:last-child { border-bottom: none; }
-        
-        .blocker-text { color: #e4e6eb; }
-        .blocker-meta { color: #8892a0; font-size: 11px; }
         
         /* Navigation */
         .nav-tabs {
@@ -247,7 +144,37 @@
         }
         
         .tab-content { display: none; }
-        .tab-content.active { display: block; }
+        .tab-content.active { display: block; animation: fadeIn 0.3s ease; }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Loading */
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 300px;
+            font-size: 14px;
+            color: #8892a0;
+        }
+        
+        .loading::after {
+            content: '';
+            width: 20px;
+            height: 20px;
+            border: 2px solid #2a3f5f;
+            border-top-color: #00d4ff;
+            border-radius: 50%;
+            margin-left: 10px;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
         
         /* Cards */
         .card {
@@ -267,172 +194,7 @@
             align-items: center;
         }
         
-        /* Rothschild Special Card */
-        .rothschild-card {
-            background: linear-gradient(135deg, rgba(26, 35, 64, 0.9) 0%, rgba(15, 24, 35, 0.9) 100%);
-            border: 2px solid #ffd700;
-            border-radius: 16px;
-            padding: 20px;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .rothschild-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: linear-gradient(90deg, #ffd700, #ffaa00);
-        }
-        
-        .rothschild-badge {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            background: rgba(255, 215, 0, 0.2);
-            color: #ffd700;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 10px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-        
-        .rothschild-header {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            margin-bottom: 15px;
-            padding-right: 100px;
-        }
-        
-        .rothschild-avatar {
-            width: 56px;
-            height: 56px;
-            border-radius: 12px;
-            background: linear-gradient(135deg, #1a2340, #2a3f5f);
-            border: 3px solid #ffd700;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 28px;
-        }
-        
-        .rothschild-info h3 {
-            font-size: 18px;
-            color: #ffd700;
-            margin-bottom: 4px;
-        }
-        
-        .rothschild-role {
-            font-size: 12px;
-            color: #8892a0;
-        }
-        
-        .rothschild-status {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 6px 12px;
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 20px;
-            font-size: 12px;
-            margin-bottom: 15px;
-        }
-        
-        .status-strategy { color: #ffd700; }
-        .status-deep { color: #ff6b6b; }
-        .status-escalation { color: #ff3333; animation: blink 1s infinite; }
-        
-        @keyframes blink {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
-        }
-        
-        .rothschild-focus {
-            background: rgba(0, 0, 0, 0.2);
-            border-radius: 8px;
-            padding: 10px 12px;
-            font-size: 12px;
-            color: #8892a0;
-            margin-bottom: 15px;
-            font-family: monospace;
-        }
-        
-        .rothschild-metrics {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 15px;
-            margin-bottom: 15px;
-        }
-        
-        .rothschild-metric {
-            text-align: center;
-        }
-        
-        .rothschild-metric-value {
-            font-size: 20px;
-            font-weight: 700;
-            color: #ffd700;
-        }
-        
-        .rothschild-metric-label {
-            font-size: 9px;
-            color: #6b7280;
-            text-transform: uppercase;
-            margin-top: 2px;
-        }
-        
-        .rothschild-progress {
-            height: 6px;
-            background: #1a2535;
-            border-radius: 3px;
-            overflow: hidden;
-            margin-top: 4px;
-        }
-        
-        .rothschild-progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #ffd700, #ffaa00);
-            border-radius: 3px;
-        }
-        
-        .rothschild-actions {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-        
-        .rothschild-btn {
-            padding: 8px 16px;
-            border: 1px solid #ffd700;
-            background: rgba(255, 215, 0, 0.1);
-            color: #ffd700;
-            border-radius: 6px;
-            font-size: 11px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-        
-        .rothschild-btn:hover {
-            background: rgba(255, 215, 0, 0.2);
-        }
-        
-        .rothschild-btn.escalate {
-            border-color: #ff6b6b;
-            background: rgba(255, 107, 107, 0.1);
-            color: #ff6b6b;
-        }
-        
-        .rothschild-btn.escalate:hover {
-            background: rgba(255, 107, 107, 0.2);
-        }
-        
-        /* Agent Cards Standard */
+        /* Agent Cards */
         .agent-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -449,7 +211,7 @@
         
         .agent-card.online { border-color: #00ff88; }
         .agent-card.busy { border-color: #ffd93d; }
-        .agent-card.at-risk { border-color: #ff6b6b; }
+        .agent-card.offline { border-color: #6b7280; }
         
         .agent-header {
             display: flex;
@@ -468,10 +230,6 @@
             font-size: 24px;
             background: linear-gradient(135deg, #1a2340, #2a3f5f);
         }
-        
-        .agent-avatar.henry { border: 2px solid #00d4ff; }
-        .agent-avatar.aiman { border: 2px solid #ff6b6b; }
-        .agent-avatar.junior { border: 2px solid #4ecdc4; }
         
         .agent-name {
             font-size: 16px;
@@ -505,6 +263,7 @@
         .capacity-fill {
             height: 100%;
             border-radius: 3px;
+            transition: width 0.3s ease;
         }
         
         .capacity-fill.green { background: #00ff88; }
@@ -512,23 +271,21 @@
         .capacity-fill.red { background: #ff6b6b; }
         
         .agent-current-focus {
-            font-size: 11px;
+            font-size: 12px;
             color: #8892a0;
+            margin-bottom: 10px;
             padding: 8px;
             background: rgba(0,0,0,0.2);
             border-radius: 6px;
-            font-family: monospace;
-            margin-bottom: 10px;
         }
         
         .agent-stats {
             display: flex;
             gap: 15px;
-            padding-top: 10px;
-            border-top: 1px solid #2a3f5f;
         }
         
         .agent-stat {
+            flex: 1;
             text-align: center;
         }
         
@@ -544,1109 +301,225 @@
             text-transform: uppercase;
         }
         
-        /* RACI Matrix */
-        .raci-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 12px;
-        }
-        
-        .raci-table th, .raci-table td {
+        /* Logs */
+        .log-container {
+            background: rgba(15, 20, 32, 0.6);
+            border: 1px solid #2a3f5f;
+            border-radius: 8px;
             padding: 10px;
-            text-align: center;
-            border: 1px solid #2a3f5f;
-        }
-        
-        .raci-table th {
-            background: rgba(0, 212, 255, 0.1);
-            color: #00d4ff;
-        }
-        
-        .raci-r { background: rgba(0, 255, 136, 0.2); color: #00ff88; font-weight: bold; }
-        .raci-a { background: rgba(255, 107, 107, 0.2); color: #ff6b6b; font-weight: bold; }
-        .raci-c { background: rgba(255, 217, 61, 0.2); color: #ffd93d; }
-        .raci-i { color: #6b7280; }
-        
-        /* Project Cards */
-        .project-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 15px;
-        }
-        
-        .project-card {
-            background: linear-gradient(135deg, rgba(26, 35, 64, 0.8) 0%, rgba(15, 24, 35, 0.8) 100%);
-            border: 1px solid #2a3f5f;
-            border-radius: 12px;
-            padding: 15px;
-            position: relative;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        
-        .project-card:hover {
-            border-color: #00d4ff;
-            transform: translateY(-2px);
-        }
-        
-        .project-card::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 0;
-            bottom: 0;
-            width: 4px;
-            border-radius: 12px 0 0 12px;
-        }
-        
-        .project-card.live::before { background: #00ff88; }
-        .project-card.testing::before { background: #ffd93d; }
-        .project-card.backlog::before { background: #8892a0; }
-        
-        .project-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 10px;
-        }
-        
-        .project-name {
-            font-size: 16px;
-            font-weight: 600;
-        }
-        
-        .project-status {
-            padding: 4px 10px;
-            border-radius: 12px;
-            font-size: 10px;
-            font-weight: 600;
-        }
-        
-        .status-live { background: rgba(0, 255, 136, 0.2); color: #00ff88; }
-        .status-testing { background: rgba(255, 217, 61, 0.2); color: #ffd93d; }
-        .status-backlog { background: rgba(136, 146, 160, 0.2); color: #8892a0; }
-        
-        .project-desc {
+            font-family: 'Courier New', monospace;
             font-size: 12px;
-            color: #8892a0;
-            margin-bottom: 12px;
+            max-height: 500px;
+            overflow-y: auto;
         }
         
-        .milestones {
+        .log-line {
+            padding: 6px 0;
+            border-bottom: 1px solid rgba(42, 63, 95, 0.3);
             display: flex;
-            gap: 8px;
-            margin-bottom: 10px;
+            gap: 10px;
         }
         
-        .milestone {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            font-size: 10px;
-        }
-        
-        .milestone.done { color: #00ff88; }
-        .milestone.inprogress { color: #ffd93d; }
-        .milestone.pending { color: #6b7280; }
-        
-        .project-meta {
-            display: flex;
-            justify-content: space-between;
-            font-size: 11px;
-            color: #6b7280;
-        }
+        .log-time { color: #6b7280; min-width: 60px; }
+        .log-level { min-width: 60px; font-weight: 600; }
+        .log-level.error { color: #ff6b6b; }
+        .log-level.warn { color: #ffd93d; }
+        .log-level.success { color: #00ff88; }
+        .log-level.info { color: #00d4ff; }
+        .log-level.decision { color: #ffd700; }
+        .log-agent { color: #8892a0; min-width: 80px; }
+        .log-msg { color: #e4e6eb; flex: 1; }
         
         /* Timeline */
         .timeline {
-            background: rgba(15, 20, 32, 0.6);
-            border: 1px solid #2a3f5f;
-            border-radius: 12px;
-            padding: 15px;
+            position: relative;
+            padding-left: 20px;
+        }
+        
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 5px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: #2a3f5f;
         }
         
         .timeline-item {
-            display: flex;
-            gap: 12px;
-            padding: 12px 0;
-            border-left: 2px solid #2a3f5f;
-            margin-left: 10px;
-            padding-left: 15px;
             position: relative;
+            margin-bottom: 15px;
+            padding-left: 20px;
         }
         
         .timeline-item::before {
             content: '';
             position: absolute;
-            left: -5px;
-            top: 15px;
-            width: 8px;
-            height: 8px;
+            left: -18px;
+            top: 5px;
+            width: 10px;
+            height: 10px;
             border-radius: 50%;
             background: #2a3f5f;
         }
         
+        .timeline-item.critical::before { background: #ff6b6b; }
+        .timeline-item.warning::before { background: #ffd93d; }
         .timeline-item.success::before { background: #00ff88; }
         .timeline-item.info::before { background: #00d4ff; }
-        .timeline-item.warning::before { background: #ffd93d; }
-        .timeline-item.critical::before { background: #ff6b6b; }
         
         .timeline-time {
             font-size: 11px;
             color: #6b7280;
-            min-width: 50px;
-        }
-        
-        .timeline-content {
-            flex: 1;
         }
         
         .timeline-title {
             font-size: 13px;
-            margin-bottom: 2px;
+            font-weight: 600;
+            margin: 2px 0;
         }
         
         .timeline-desc {
-            font-size: 11px;
+            font-size: 12px;
             color: #8892a0;
         }
         
         .timeline-agent {
-            font-size: 9px;
-            padding: 2px 6px;
-            border-radius: 4px;
+            font-size: 10px;
+            color: #6b7280;
             margin-top: 4px;
-            display: inline-block;
-        }
-        
-        .timeline-agent.henry { background: rgba(0, 212, 255, 0.1); color: #00d4ff; }
-        .timeline-agent.aiman { background: rgba(255, 107, 107, 0.1); color: #ff6b6b; }
-        .timeline-agent.junior { background: rgba(78, 205, 196, 0.1); color: #4ecdc4; }
-        .timeline-agent.rothschild { background: rgba(255, 215, 0, 0.1); color: #ffd700; }
-        
-        /* Logs */
-        .log-container {
-            background: #0a0e1a;
-            border: 1px solid #2a3f5f;
-            border-radius: 8px;
-            font-family: monospace;
-            font-size: 11px;
-            max-height: 400px;
-            overflow-y: auto;
-        }
-        
-        .log-line {
-            padding: 8px 12px;
-            border-bottom: 1px solid #1a2535;
-            display: flex;
-            gap: 10px;
-        }
-        
-        .log-time { color: #6b7280; min-width: 70px; }
-        .log-level { min-width: 40px; font-weight: 600; }
-        .log-level.info { color: #00d4ff; }
-        .log-level.warn { color: #ffd93d; }
-        .log-level.error { color: #ff6b6b; }
-        .log-level.success { color: #00ff88; }
-        .log-level.decision { color: #ffd700; }
-        .log-agent { min-width: 60px; color: #8892a0; }
-        .log-msg { flex: 1; }
-        
-        /* Modal */
-        .modal-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.8);
-            z-index: 1000;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-        
-        .modal-overlay.active { display: flex; }
-        
-        .modal {
-            background: #1a2535;
-            border: 1px solid #2a3f5f;
-            border-radius: 16px;
-            padding: 20px;
-            max-width: 500px;
-            width: 100%;
-            max-height: 80vh;
-            overflow-y: auto;
-        }
-        
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-        
-        .modal-title {
-            font-size: 18px;
-            color: #00d4ff;
-        }
-        
-        .modal-close {
-            background: none;
-            border: none;
-            color: #8892a0;
-            font-size: 24px;
-            cursor: pointer;
-        }
-        
-        .modal-content {
-            font-size: 13px;
-            line-height: 1.6;
         }
         
         /* Responsive */
         @media (max-width: 768px) {
-            .eqdom-kpis { grid-template-columns: repeat(2, 1fr); }
             .agent-grid { grid-template-columns: 1fr; }
-            .project-grid { grid-template-columns: 1fr; }
-            .rothschild-metrics { grid-template-columns: 1fr; }
             .header-stats { display: none; }
         }
     </style>
 </head>
 <body>
     <header class="header">
-        <h1>🎯 Mission Control V3 — Eqdom Portfolio</h1>
-        <div class="header-stats">
-            <div><span class="status-dot"></span> System Online</div>
-            <div>Agents: <span class="header-stat-value">4/4</span></div>
-            <div>Active Tasks: <span class="header-stat-value">12</span></div>
+        <h1>🎯 Mission Control V3 — Live Dashboard</h1>
+        <div style="display: flex; align-items: center;">
+            <div class="header-stats">
+                <div><span class="status-dot"></span> <span id="system-status">Loading...</span></div>
+                <div>Agents: <span class="header-stat-value" id="agents-count">-</span></div>
+                <div>Tasks: <span class="header-stat-value" id="tasks-count">-</span></div>
+            </div>
+            <div class="last-update" id="last-update">Dernière mise à jour: -</div>
         </div>
     </header>
     
     <!-- GLOBAL ALERTS -->
-    <div class="global-alerts">
-        <div class="alert-banner alert-critical">
-            <span>🔴</span>
-            <span><strong>CRITICAL:</strong> Payment Gateway v3.1 — Échec transactions sandbox depuis 14h (47 ops pending)</span>
-        </div>
-        <div class="alert-banner alert-warning">
-            <span>🟡</span>
-            <span><strong>WARNING:</strong> Integration KYC API — 72h retard (blocage réglementaire AMF)</span>
-        </div>
-    </div>
-    
-    <!-- EQDOM HERO SECTION -->
-    <div class="eqdom-hero">
-        <div class="eqdom-header">
-            <div class="eqdom-title">🏦 EQDOM — Projet Principal</div>
-            <span class="eqdom-badge">LIVE</span>
-        </div>
-        <div class="eqdom-kpis">
-            <div class="kpi-card" onclick="showKPIDetail('conversion')">
-                <div class="kpi-value">23.4%</div>
-                <div class="kpi-label">Conversion</div>
-                <div class="kpi-change up">↑ 2.1% vs last week</div>
-            </div>
-            <div class="kpi-card" onclick="showKPIDetail('users')">
-                <div class="kpi-value">1,247</div>
-                <div class="kpi-label">Users Actifs</div>
-                <div class="kpi-change up">↑ 18% vs last month</div>
-            </div>
-            <div class="kpi-card" onclick="showKPIDetail('revenue')">
-                <div class="kpi-value">$45.2K</div>
-                <div class="kpi-label">MRR</div>
-                <div class="kpi-change up">↑ 12% vs last month</div>
-            </div>
-            <div class="kpi-card" onclick="showKPIDetail('churn')">
-                <div class="kpi-value">4.2%</div>
-                <div class="kpi-label">Churn</div>
-                <div class="kpi-change down">↓ 0.8% improvement</div>
-            </div>
-        </div>
-        
-        <!-- BLOCKERS SECTION -->
-        <div class="blockers-section">
-            <div class="blockers-title">🚨 Blockers Actifs — Action Requise</div>
-            <div class="blocker-item">
-                <span class="blocker-text">🔴 Payment Gateway — Latence >2000ms (SLA: 800ms)</span>
-                <span class="blocker-meta">Depuis 09:23 · Aiman assigned</span>
-            </div>
-            <div class="blocker-item">
-                <span class="blocker-text">🔴 KYC API Integration — 72h retard</span>
-                <span class="blocker-meta">Deadline AMF: J-4 · Sarah Chen assigned</span>
-            </div>
-            <div class="blocker-item">
-                <span class="blocker-text">🟡 Dev Backend — 140% capacité (2 absences)</span>
-                <span class="blocker-meta">Sous-traitance MarcoPolo en cours</span>
-            </div>
-        </div>
+    <div class="global-alerts" id="alerts-container">
+        <div class="loading">Chargement des alertes...</div>
     </div>
     
     <!-- Navigation -->
     <nav class="nav-tabs">
-        <button class="nav-tab active" onclick="showTab('agents')">🤖 Agents <span class="badge">4</span></button>
-        <button class="nav-tab" onclick="showTab('projects')">🏗️ Projets <span class="badge">3</span></button>
-        <button class="nav-tab" onclick="showTab('eqdom')">🏦 Eqdom Details</button>
-        <button class="nav-tab" onclick="showTab('rothschild-intel')">🏦 Rothschild Intel <span class="badge" style="background: #ffd700; color: #0a0e1a;">1</span></button>
-        <button class="nav-tab" onclick="showTab('raci')">📋 RACI Matrix</button>
-        <button class="nav-tab" onclick="showTab('history')">📜 Historique</button>
+        <button class="nav-tab active" onclick="showTab('agents')">🤖 Agents <span class="badge" id="nav-agents-badge">-</span></button>
         <button class="nav-tab" onclick="showTab('logs')">📋 Logs</button>
+        <button class="nav-tab" onclick="showTab('history')">📜 Historique</button>
+        <button class="nav-tab" onclick="showTab('rothschild-intel')">🏦 Rothschild Intel <span class="badge" style="background: #ffd700; color: #0a0e1a;" id="nav-rothschild-badge">-</span></button>
     </nav>
     
     <main class="main-content">
         <!-- TAB: AGENTS -->
         <div id="agents" class="tab-content active">
-            <div class="agent-grid">
-                <!-- ROTHSCHILD CARD -->
-                <div class="rothschild-card">
-                    <span class="rothschild-badge">EQDOM LEAD</span>
-                    <div class="rothschild-header">
-                        <div class="rothschild-avatar">💼</div>
-                        <div class="rothschild-info">
-                            <h3>Alexander Rothschild</h3>
-                            <div class="rothschild-role">Chef de Projet — McKinsey Partner</div>
-                        </div>
-                    </div>
-                    <div class="rothschild-status status-strategy">
-                        <span>●</span>
-                        <span>STRATEGY REVIEW — Mode Controller Actif</span>
-                    </div>
-                    <div class="rothschild-focus">
-                        Current Focus: Analyse risques Payment Gateway + Décision sous-traitance
-                    </div>
-                    <div class="rothschild-metrics">
-                        <div class="rothschild-metric">
-                            <div class="rothschild-metric-value">87</div>
-                            <div class="rothschild-metric-label">Strategic Leverage</div>
-                            <div class="rothschild-progress"><div class="rothschild-progress-fill" style="width: 87%"></div></div>
-                        </div>
-                        <div class="rothschild-metric">
-                            <div class="rothschild-metric-value">4.2h</div>
-                            <div class="rothschild-metric-label">Decision Velocity</div>
-                            <div class="rothschild-progress"><div class="rothschild-progress-fill" style="width: 70%"></div></div>
-                        </div>
-                        <div class="rothschild-metric">
-                            <div class="rothschild-metric-value">92%</div>
-                            <div class="rothschild-metric-label">Risk Coverage</div>
-                            <div class="rothschild-progress"><div class="rothschild-progress-fill" style="width: 92%"></div></div>
-                        </div>
-                    </div>
-                    <div class="rothschild-actions">
-                        <button class="rothschild-btn" onclick="showRothschildStrategy()">📊 View Strategy</button>
-                        <button class="rothschild-btn" onclick="scheduleRothschildReview()">📅 Schedule Review</button>
-                        <button class="rothschild-btn escalate" onclick="escalateToRothschild()">🚨 Escalate</button>
-                    </div>
-                </div>
-                
-                <!-- HENRY CARD -->
-                <div class="agent-card online">
-                    <div class="agent-header">
-                        <div class="agent-avatar henry">🎯</div>
-                        <div>
-                            <div class="agent-name">Henry</div>
-                            <div class="agent-role">AI Employee Generalist</div>
-                        </div>
-                    </div>
-                    <div class="agent-capacity">
-                        <span>Capacity:</span>
-                        <div class="capacity-bar">
-                            <div class="capacity-fill green" style="width: 60%"></div>
-                        </div>
-                        <span>60%</span>
-                    </div>
-                    <div class="agent-current-focus">
-                        Current Focus: Coordination sous-traitance MarcoPolo
-                    </div>
-                    <div class="agent-stats">
-                        <div class="agent-stat"><div class="agent-stat-value">2.3h</div><div class="agent-stat-label">Cycle Time</div></div>
-                        <div class="agent-stat"><div class="agent-stat-value">94%</div><div class="agent-stat-label">Quality</div></div>
-                        <div class="agent-stat"><div class="agent-stat-value">3/6</div><div class="agent-stat-label">Tasks</div></div>
-                    </div>
-                </div>
-                
-                <!-- AIMAN CARD -->
-                <div class="agent-card busy">
-                    <div class="agent-header">
-                        <div class="agent-avatar aiman">💻</div>
-                        <div>
-                            <div class="agent-name">Aiman</div>
-                            <div class="agent-role">Lead Developer</div>
-                        </div>
-                    </div>
-                    <div class="agent-capacity">
-                        <span>Capacity:</span>
-                        <div class="capacity-bar">
-                            <div class="capacity-fill yellow" style="width: 95%"></div>
-                        </div>
-                        <span>95%</span>
-                    </div>
-                    <div class="agent-current-focus">
-                        🔴 BLOCKED: Payment Gateway — Investigation latence
-                    </div>
-                    <div class="agent-stats">
-                        <div class="agent-stat"><div class="agent-stat-value">4.1h</div><div class="agent-stat-label">Cycle Time</div></div>
-                        <div class="agent-stat"><div class="agent-stat-value">89%</div><div class="agent-stat-label">Quality</div></div>
-                        <div class="agent-stat"><div class="agent-stat-value">8/8</div><div class="agent-stat-label">Tasks</div></div>
-                    </div>
-                </div>
-                
-                <!-- JUNIOR CARD -->
-                <div class="agent-card online">
-                    <div class="agent-header">
-                        <div class="agent-avatar junior">📊</div>
-                        <div>
-                            <div class="agent-name">Junior</div>
-                            <div class="agent-role">PM Consultant</div>
-                        </div>
-                    </div>
-                    <div class="agent-capacity">
-                        <span>Capacity:</span>
-                        <div class="capacity-bar">
-                            <div class="capacity-fill green" style="width: 40%"></div>
-                        </div>
-                        <span>40%</span>
-                    </div>
-                    <div class="agent-current-focus">
-                        Current Focus: Documentation KYC pour AMF
-                    </div>
-                    <div class="agent-stats">
-                        <div class="agent-stat"><div class="agent-stat-value">1.8h</div><div class="agent-stat-label">Cycle Time</div></div>
-                        <div class="agent-stat"><div class="agent-stat-value">85%</div><div class="agent-stat-label">Quality</div></div>
-                        <div class="agent-stat"><div class="agent-stat-value">2/5</div><div class="agent-stat-label">Tasks</div></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- TAB: PROJECTS -->
-        <div id="projects" class="tab-content">
-            <div class="project-grid">
-                <div class="project-card live" onclick="showProjectDetail('eqdom')">
-                    <div class="project-header">
-                        <div class="project-name">🏦 EQDOM</div>
-                        <span class="project-status status-live">LIVE</span>
-                    </div>
-                    <div class="project-desc">Crédit premium — Plateforme CNDP compliant. Next.js, TypeScript, Prisma.</div>
-                    <div class="milestones">
-                        <span class="milestone done">✅ KYC</span>
-                        <span class="milestone done">✅ Auth</span>
-                        <span class="milestone inprogress">🔄 Payment GW</span>
-                        <span class="milestone pending">⏳ Mobile</span>
-                    </div>
-                    <div class="project-meta">
-                        <span>Milestones: 2/4</span>
-                        <span>Rothschild Lead</span>
-                    </div>
-                </div>
-                
-                <div class="project-card testing" onclick="showProjectDetail('bobcat')">
-                    <div class="project-header">
-                        <div class="project-name">⚡ Bobcat Energy</div>
-                        <span class="project-status status-testing">TESTING</span>
-                    </div>
-                    <div class="project-desc">WhatsApp automation pour prospection CEE. Bot conversationnel, qualification leads.</div>
-                    <div class="milestones">
-                        <span class="milestone done">✅ Bot Core</span>
-                        <span class="milestone inprogress">🔄 Integration</span>
-                        <span class="milestone pending">⏳ Deploy</span>
-                    </div>
-                    <div class="project-meta">
-                        <span>Milestones: 1/3</span>
-                        <span>Henry Lead</span>
-                    </div>
-                </div>
-                
-                <div class="project-card backlog" onclick="showProjectDetail('mission-control')">
-                    <div class="project-header">
-                        <div class="project-name">🎯 Mission Control</div>
-                        <span class="project-status status-backlog">BACKLOG</span>
-                    </div>
-                    <div class="project-desc">Dashboard de gestion des agents et projets. Version 3.0 en cours de développement.</div>
-                    <div class="milestones">
-                        <span class="milestone done">✅ V1</span>
-                        <span class="milestone done">✅ V2</span>
-                        <span class="milestone inprogress">🔄 V3</span>
-                    </div>
-                    <div class="project-meta">
-                        <span>Milestones: 2/3</span>
-                        <span>Aiman Lead</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- TAB: EQDOM DETAILS -->
-        <div id="eqdom" class="tab-content">
-            <div class="card">
-                <div class="card-title">🏦 EQDOM — Vue Détaillée</div>
-                <p style="margin-bottom: 15px; color: #8892a0;">Plateforme de crédit premium orientée MENA. Stack technique moderne avec compliance CNDP.</p>
-                
-                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-top: 20px;">
-                    <div class="card">
-                        <div class="card-title">📊 Métriques Clés</div>
-                        <div style="font-size: 13px; line-height: 2;">
-                            <div>👥 Users inscrits: <strong style="color: #00d4ff;">2,847</strong></div>
-                            <div>📈 Taux conversion: <strong style="color: #00ff88;">23.4%</strong></div>
-                            <div>💰 MRR: <strong style="color: #ffd93d;">$45,200</strong></div>
-                            <div>⭐ NPS Score: <strong style="color: #00d4ff;">42</strong></div>
-                        </div>
-                    </div>
-                    
-                    <div class="card">
-                        <div class="card-title">🚀 Roadmap Q1 2026</div>
-                        <div style="font-size: 13px; line-height: 2;">
-                            <div>✅ Dark mode implementation</div>
-                            <div>✅ CNDP compliance audit</div>
-                            <div>🔄 Multi-language support (AR)</div>
-                            <div>⏳ Payment gateway integration</div>
-                            <div>⏳ Mobile app beta</div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="card" style="margin-top: 15px;">
-                    <div class="card-title">👥 Équipe Assignée (RACI)</div>
-                    <div style="display: flex; gap: 15px; flex-wrap: wrap; margin-top: 10px;">
-                        <span style="background: rgba(255,215,0,0.1); border: 1px solid #ffd700; padding: 6px 12px; border-radius: 20px; font-size: 12px;">💼 Rothschild — Lead (A)</span>
-                        <span style="background: rgba(0,212,255,0.1); padding: 6px 12px; border-radius: 20px; font-size: 12px;">🎯 Henry — Coordination (R)</span>
-                        <span style="background: rgba(255,107,107,0.1); padding: 6px 12px; border-radius: 20px; font-size: 12px;">💻 Aiman — Dev (R)</span>
-                        <span style="background: rgba(78,205,196,0.1); padding: 6px 12px; border-radius: 20px; font-size: 12px;">📊 Junior — PM/Docs (R)</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- TAB: RACI MATRIX -->
-        <div id="raci" class="tab-content">
-            <div class="card">
-                <div class="card-title">📋 RACI Matrix — Eqdom</div>
-                <p style="margin-bottom: 15px; color: #8892a0; font-size: 12px;">R = Responsible (exécute) | A = Accountable (décide) | C = Consulted (consulté) | I = Informed (informé)</p>
-                <table class="raci-table">
-                    <tr>
-                        <th>Tâche / Projet</th>
-                        <th>Rothschild</th>
-                        <th>Henry</th>
-                        <th>Aiman</th>
-                        <th>Junior</th>
-                    </tr>
-                    <tr>
-                        <td style="text-align: left;">Stratégie Eqdom</td>
-                        <td class="raci-a">A</td>
-                        <td class="raci-c">C</td>
-                        <td class="raci-c">C</td>
-                        <td class="raci-i">I</td>
-                    </tr>
-                    <tr>
-                        <td style="text-align: left;">Architecture Tech</td>
-                        <td class="raci-c">C</td>
-                        <td class="raci-c">C</td>
-                        <td class="raci-a">A</td>
-                        <td class="raci-i">I</td>
-                    </tr>
-                    <tr>
-                        <td style="text-align: left;">Développement Core</td>
-                        <td class="raci-i">I</td>
-                        <td class="raci-r">R</td>
-                        <td class="raci-r">R</td>
-                        <td class="raci-i">I</td>
-                    </tr>
-                    <tr>
-                        <td style="text-align: left;">Documentation CNDP</td>
-                        <td class="raci-c">C</td>
-                        <td class="raci-i">I</td>
-                        <td class="raci-c">C</td>
-                        <td class="raci-a">A</td>
-                    </tr>
-                    <tr>
-                        <td style="text-align: left;">Review Code</td>
-                        <td class="raci-i">I</td>
-                        <td class="raci-c">C</td>
-                        <td class="raci-a">A</td>
-                        <td class="raci-i">I</td>
-                    </tr>
-                    <tr>
-                        <td style="text-align: left;">QA/Testing</td>
-                        <td class="raci-i">I</td>
-                        <td class="raci-c">C</td>
-                        <td class="raci-c">C</td>
-                        <td class="raci-a">A</td>
-                    </tr>
-                    <tr>
-                        <td style="text-align: left;">Coordination Projet</td>
-                        <td class="raci-a">A</td>
-                        <td class="raci-r">R</td>
-                        <td class="raci-c">C</td>
-                        <td class="raci-c">C</td>
-                    </tr>
-                    <tr>
-                        <td style="text-align: left;">Communication Stakeholders</td>
-                        <td class="raci-a">A</td>
-                        <td class="raci-r">R</td>
-                        <td class="raci-i">I</td>
-                        <td class="raci-c">C</td>
-                    </tr>
-                </table>
-            </div>
-        </div>
-        
-        <!-- TAB: ROTHCHILD INTEL -->
-        <div id="rothschild-intel" class="tab-content">
-            <div class="rothschild-card" style="margin-bottom: 20px;">
-                <span class="rothschild-badge">🏦 BUSINESS INTELLIGENCE</span>
-                <div class="rothschild-header" style="padding-right: 150px;">
-                    <div class="rothschild-avatar">📊</div>
-                    <div class="rothschild-info">
-                        <h3>Rothschild Research Division</h3>
-                        <div class="rothschild-role">Étude de marché continue — Opportunités business online</div>
-                    </div>
-                </div>
-                <div class="rothschild-status status-strategy">
-                    <span>●</span>
-                    <span>ACTIVE RESEARCH — 1 Opportunité Validée</span>
-                </div>
-                <div class="rothschild-metrics" style="grid-template-columns: repeat(4, 1fr);">
-                    <div class="rothschild-metric">
-                        <div class="rothschild-metric-value" id="intel-total">6</div>
-                        <div class="rothschild-metric-label">Opportunités</div>
-                    </div>
-                    <div class="rothschild-metric">
-                        <div class="rothschild-metric-value" id="intel-validated" style="color: #00ff88;">1</div>
-                        <div class="rothschild-metric-label">Validées</div>
-                    </div>
-                    <div class="rothschild-metric">
-                        <div class="rothschild-metric-value" id="intel-avg-score">8.2</div>
-                        <div class="rothschild-metric-label">Score Moyen</div>
-                    </div>
-                    <div class="rothschild-metric">
-                        <div class="rothschild-metric-value" id="intel-top-score" style="color: #ffd700;">9.5</div>
-                        <div class="rothschild-metric-label">Top Score</div>
-                    </div>
-                </div>
-            </div>
-            
-            <div id="rothschild-opportunities">
-                <div class="card">
-                    <div class="card-title">🎯 Opportunité Validée — RECOMMANDÉE</div>
-                    
-                    <div style="background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(0, 255, 136, 0.05)); border: 2px solid #ffd700; border-radius: 12px; padding: 20px; margin-bottom: 20px;">
-                        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 15px;">
-                            <div>
-                                <h2 style="color: #ffd700; font-size: 22px; margin-bottom: 5px;">AI Agent Training Studio for SMBs MENA</h2>
-                                <div style="color: #8892a0; font-size: 13px;">Micro SaaS B2B — Créé le 7 Mars 2026</div>
-                            </div>
-                            <div style="text-align: right;">
-                                <div style="font-size: 48px; font-weight: 700; color: #ffd700; line-height: 1;">9.5</div>
-                                <div style="font-size: 12px; color: #8892a0;">Score /10</div>
-                            </div>
-                        </div>
-                        
-                        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 20px;">
-                            <div style="background: rgba(0,0,0,0.2); padding: 15px; border-radius: 8px;">
-                                <div style="font-size: 11px; color: #8892a0; text-transform: uppercase; margin-bottom: 5px;">Coût Démarrage</div>
-                                <div style="font-size: 20px; font-weight: 600; color: #00ff88;">€500-2,000</div>
-                            </div>
-                            <div style="background: rgba(0,0,0,0.2); padding: 15px; border-radius: 8px;">
-                                <div style="font-size: 11px; color: #8892a0; text-transform: uppercase; margin-bottom: 5px;">Potentiel MRR</div>
-                                <div style="font-size: 20px; font-weight: 600; color: #00d4ff;">€5K → €25K</div>
-                            </div>
-                            <div style="background: rgba(0,0,0,0.2); padding: 15px; border-radius: 8px;">
-                                <div style="font-size: 11px; color: #8892a0; text-transform: uppercase; margin-bottom: 5px;">Time to Launch</div>
-                                <div style="font-size: 20px; font-weight: 600; color: #ffd93d;">6-10 semaines</div>
-                            </div>
-                        </div>
-                        
-                        <p style="color: #c9cdd4; line-height: 1.7; margin-bottom: 15px;">
-                            Plateforme no-code pour créer des agents IA personnalisés pour PMEs MENA — service client, ventes, support technique en arabe/français. <strong style="color: #ffd700;">Gap confirmé:</strong> aucune solution PME-friendly avec arabe dialectal natif.
-                        </p>
-                        
-                        <div style="background: rgba(0, 255, 136, 0.1); border-left: 3px solid #00ff88; padding: 15px; border-radius: 0 8px 8px 0; margin-bottom: 15px;">
-                            <div style="font-size: 12px; color: #00ff88; font-weight: 600; margin-bottom: 8px;">✅ VERDICT ROTHCHILD — GO</div>
-                            <div style="font-size: 13px; color: #e4e6eb; line-height: 1.6;">
-                                Marché validé ($5.4B → $15.5B), concurrence faible sur segment PME MENA, unit economics viables. <strong>Recommandation:</strong> Lancer à $49/mois (pas $29) pour LTV:CAC sain dès le départ. Focus Tunisie/Maroc d'abord.
-                            </div>
-                        </div>
-                        
-                        <div style="margin-bottom: 15px;">
-                            <div style="font-size: 12px; color: #8892a0; margin-bottom: 8px;">🎯 PROCHAINES ÉTAPES:</div>
-                            <div style="display: flex; flex-wrap: wrap; gap: 8px;">
-                                <span style="background: rgba(255, 215, 0, 0.2); color: #ffd700; padding: 6px 12px; border-radius: 20px; font-size: 11px;">1. MVP avec GPT-4o-mini</span>
-                                <span style="background: rgba(0, 212, 255, 0.2); color: #00d4ff; padding: 6px 12px; border-radius: 20px; font-size: 11px;">2. Landing page + waitlist</span>
-                                <span style="background: rgba(255, 107, 107, 0.2); color: #ff6b6b; padding: 6px 12px; border-radius: 20px; font-size: 11px;">3. LinkedIn organic build</span>
-                                <span style="background: rgba(78, 205, 196, 0.2); color: #4ecdc4; padding: 6px 12px; border-radius: 20px; font-size: 11px;">4. Partenariats agences web MENA</span>
-                            </div>
-                        </div>
-                        
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-                            <div style="font-size: 12px;">
-                                <div style="color: #8892a0; margin-bottom: 5px;">📊 MARCHÉ:</div>
-                                <div style="color: #e4e6eb;">TAM: $750B retail MENA<br>SAM: 500k+ PMEs digitales<br>Chatbot: $5.4B→$15.5B (CAGR 23.3%)</div>
-                            </div>
-                            <div style="font-size: 12px;">
-                                <div style="color: #8892a0; margin-bottom: 5px;">💰 UNIT ECONOMICS:</div>
-                                <div style="color: #e4e6eb;">Pricing: $49/mois (recommandé)<br>LTV:CAC: 1.9:1 → 3.5:1 optimisé<br>Marge: 69% → 95%+ à scale</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="card">
-                    <div class="card-title">🔍 Opportunités en Recherche (5)</div>
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 15px;">
-                        
-                        <div style="background: rgba(26, 35, 64, 0.6); border: 1px solid #2a3f5f; border-radius: 12px; padding: 15px;">
-                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-                                <div style="font-weight: 600;">AI Automation Agency</div>
-                                <div style="background: rgba(255, 215, 0, 0.2); color: #ffd700; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600;">9.0</div>
-                            </div>
-                            <div style="font-size: 12px; color: #8892a0; margin-bottom: 10px;">Service B2B / Consulting</div>
-                            <div style="display: flex; gap: 15px; font-size: 11px;">
-                                <span style="color: #00ff88;">€1k démarrage</span>
-                                <span style="color: #00d4ff;">€3k-15k/mois</span>
-                            </div>
-                        </div>
-                        
-                        <div style="background: rgba(26, 35, 64, 0.6); border: 1px solid #2a3f5f; border-radius: 12px; padding: 15px;">
-                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-                                <div style="font-weight: 600;">WhatsApp Business Automation</div>
-                                <div style="background: rgba(255, 215, 0, 0.2); color: #ffd700; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600;">8.5</div>
-                            </div>
-                            <div style="font-size: 12px; color: #8892a0; margin-bottom: 10px;">Service / Agency — MENA focus</div>
-                            <div style="display: flex; gap: 15px; font-size: 11px;">
-                                <span style="color: #00ff88;">€1.1k démarrage</span>
-                                <span style="color: #00d4ff;">€2k-10k/mois</span>
-                            </div>
-                        </div>
-                        
-                        <div style="background: rgba(26, 35, 64, 0.6); border: 1px solid #2a3f5f; border-radius: 12px; padding: 15px;">
-                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-                                <div style="font-weight: 600;">Vertical SaaS B2B</div>
-                                <div style="background: rgba(255, 215, 0, 0.2); color: #ffd700; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600;">8.0</div>
-                            </div>
-                            <div style="font-size: 12px; color: #8892a0; margin-bottom: 10px;">SaaS / Product — Niche "Boring"</div>
-                            <div style="display: flex; gap: 15px; font-size: 11px;">
-                                <span style="color: #00ff88;">€1.5k démarrage</span>
-                                <span style="color: #00d4ff;">€2k-8k MRR</span>
-                            </div>
-                        </div>
-                        
-                        <div style="background: rgba(26, 35, 64, 0.6); border: 1px solid #2a3f5f; border-radius: 12px; padding: 15px;">
-                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-                                <div style="font-weight: 600;">MENA Fintech Infrastructure</div>
-                                <div style="background: rgba(255, 215, 0, 0.2); color: #ffd700; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600;">7.5</div>
-                            </div>
-                            <div style="font-size: 12px; color: #8892a0; margin-bottom: 10px;">SaaS B2B / Fintech — Réglementé</div>
-                            <div style="display: flex; gap: 15px; font-size: 11px;">
-                                <span style="color: #00ff88;">€1.7k démarrage</span>
-                                <span style="color: #00d4ff;">€3k-15k/mois</span>
-                            </div>
-                        </div>
-                        
-                        <div style="background: rgba(26, 35, 64, 0.6); border: 1px solid #2a3f5f; border-radius: 12px; padding: 15px;">
-                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-                                <div style="font-weight: 600;">AI Content Suite</div>
-                                <div style="background: rgba(255, 107, 107, 0.2); color: #ff6b6b; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600;">7.0</div>
-                            </div>
-                            <div style="font-size: 12px; color: #8892a0; margin-bottom: 10px;">SaaS / Content — Creator Economy</div>
-                            <div style="display: flex; gap: 15px; font-size: 11px;">
-                                <span style="color: #00ff88;">€1.4k démarrage</span>
-                                <span style="color: #00d4ff;">€2k-12k MRR</span>
-                            </div>
-                        </div>
-                        
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- TAB: HISTORY -->
-        <div id="history" class="tab-content">
-            <div class="timeline">
-                <div class="timeline-item critical">
-                    <div class="timeline-time">14:00</div>
-                    <div class="timeline-content">
-                        <div class="timeline-title">🔴 Payment Gateway — Échec sandbox</div>
-                        <div class="timeline-desc">47 transactions bloquées, latence >2000ms</div>
-                        <span class="timeline-agent rothschild">Rothschild — Décision sous-traitance</span>
-                    </div>
-                </div>
-                <div class="timeline-item warning">
-                    <div class="timeline-time">10:21</div>
-                    <div class="timeline-content">
-                        <div class="timeline-title">⚠️ Triple point de blocage détecté</div>
-                        <div class="timeline-desc">Gateway + KYC retard + équipe saturée</div>
-                        <span class="timeline-agent rothschild">Rothschild — Escalade</span>
-                    </div>
-                </div>
-                <div class="timeline-item success">
-                    <div class="timeline-time">08:52</div>
-                    <div class="timeline-content">
-                        <div class="timeline-title">✅ Dashboard V2 déployé</div>
-                        <div class="timeline-desc">Section Eqdom hero avec KPIs cliquables</div>
-                        <span class="timeline-agent henry">Henry</span>
-                    </div>
-                </div>
-                <div class="timeline-item info">
-                    <div class="timeline-time">08:35</div>
-                    <div class="timeline-content">
-                        <div class="timeline-title">💼 Rothschild recruté Chef de Projet</div>
-                        <div class="timeline-desc">Mode Controller activé avec pouvoirs décisionnaires</div>
-                        <span class="timeline-agent rothschild">Rothschild</span>
-                    </div>
-                </div>
-                <div class="timeline-item success">
-                    <div class="timeline-time">08:30</div>
-                    <div class="timeline-content">
-                        <div class="timeline-title">✅ Code review complété — PR #42</div>
-                        <div class="timeline-desc">Authentication module approved for merge</div>
-                        <span class="timeline-agent aiman">Aiman</span>
-                    </div>
-                </div>
-            </div>
+            <div class="loading" id="agents-loading">Chargement des agents...</div>
+            <div class="agent-grid" id="agents-grid" style="display: none;"></div>
         </div>
         
         <!-- TAB: LOGS -->
         <div id="logs" class="tab-content">
-            <div class="log-container">
-                <div class="log-line">
-                    <span class="log-time">14:05:00</span>
-                    <span class="log-level decision">DECISION</span>
-                    <span class="log-agent">rothschild</span>
-                    <span class="log-msg">Sous-traitance MarcoPolo approuvée (gateway) — Impact €2.3M/mois si délai</span>
-                </div>
-                <div class="log-line">
-                    <span class="log-time">14:00:00</span>
-                    <span class="log-level error">ERROR</span>
-                    <span class="log-agent">system</span>
-                    <span class="log-msg">Payment Gateway v3.1 — Sandbox failures detected (47 pending)</span>
-                </div>
-                <div class="log-line">
-                    <span class="log-time">10:21:00</span>
-                    <span class="log-level decision">DECISION</span>
-                    <span class="log-agent">rothschild</span>
-                    <span class="log-msg">Escalade CTO + Assignation Sarah Chen (KYC) + Sous-traitance MarcoPolo</span>
-                </div>
-                <div class="log-line">
-                    <span class="log-time">10:21:00</span>
-                    <span class="log-level warn">WARN</span>
-                    <span class="log-agent">rothschild</span>
-                    <span class="log-msg">Triple point de blocage: Gateway + KYC + Saturation équipe</span>
-                </div>
-                <div class="log-line">
-                    <span class="log-time">08:52:00</span>
-                    <span class="log-level success">SUCCESS</span>
-                    <span class="log-agent">henry</span>
-                    <span class="log-msg">Dashboard V2 deployed successfully</span>
-                </div>
-                <div class="log-line">
-                    <span class="log-time">08:35:00</span>
-                    <span class="log-level info">INFO</span>
-                    <span class="log-agent">rothschild</span>
-                    <span class="log-msg">Agent mckinsey-partner initialized — Mode Controller</span>
-                </div>
-            </div>
+            <div class="loading" id="logs-loading">Chargement des logs...</div>
+            <div class="log-container" id="logs-container" style="display: none;"></div>
+        </div>
+        
+        <!-- TAB: HISTORY -->
+        <div id="history" class="tab-content">
+            <div class="loading" id="history-loading">Chargement de l'historique...</div>
+            <div class="timeline" id="history-container" style="display: none;"></div>
+        </div>
+        
+        <!-- TAB: ROTHCHILD INTEL -->
+        <div id="rothschild-intel" class="tab-content">
+            <div class="loading" id="rothschild-loading">Chargement des opportunités...</div>
+            <div id="rothschild-container" style="display: none;"></div>
         </div>
     </main>
     
-    <!-- Modal -->
-    <div class="modal-overlay" id="modal" onclick="closeModal(event)">
-        <div class="modal">
-            <div class="modal-header">
-                <div class="modal-title" id="modal-title">Détail</div>
-                <button class="modal-close" onclick="closeModal()">×</button>
-            </div>
-            <div class="modal-content" id="modal-content">
-                Content here...
-            </div>
-        </div>
-    </div>
-    
     <script>
-        function showTab(tabName) {
-            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
-            document.querySelectorAll('.nav-tab').forEach(tab => tab.classList.remove('active'));
-            document.getElementById(tabName).classList.add('active');
-            event.target.classList.add('active');
-        }
-        
-        function showKPIDetail(kpi) {
-            const details = {
-                conversion: {
-                    title: '📈 Conversion Rate Analysis',
-                    content: '<strong>Current: 23.4%</strong><br><br>• <strong>+2.1%</strong> vs last week<br>• Industry benchmark: 18-22%<br>• Trend: ↗️ Improving<br><br><strong>Key drivers:</strong><br>• New onboarding flow (+15% completion)<br>• Reduced form fields (5 → 3)<br>• Added trust badges'
-                },
-                users: {
-                    title: '👥 Active Users',
-                    content: '<strong>Current: 1,247</strong><br><br>• <strong>+18%</strong> vs last month<br>• Daily active: 892 (71%)<br>• Weekly active: 1,105 (89%)<br><br><strong>Segmentation:</strong><br>• New users (30d): 312<br>• Returning: 935<br>• Power users: 156'
-                },
-                revenue: {
-                    title: '💰 Monthly Recurring Revenue',
-                    content: '<strong>Current MRR: $45,200</strong><br><br>• <strong>+12%</strong> vs last month<br>• ARPU: $36.25<br>• Growth rate: 12% MoM'
-                },
-                churn: {
-                    title: '📉 Churn Rate',
-                    content: '<strong>Current: 4.2%</strong><br><br>• <strong>-0.8%</strong> improvement<br>• Industry avg: 5-7%<br>• Status: 🟢 Excellent'
-                }
-            };
-            
-            const detail = details[kpi];
-            document.getElementById('modal-title').innerHTML = detail.title;
-            document.getElementById('modal-content').innerHTML = detail.content;
-            document.getElementById('modal').classList.add('active');
-        }
-        
-        function showRothschildStrategy() {
-            document.getElementById('modal-title').innerHTML = '💼 Rothschild Strategy Deck';
-            document.getElementById('modal-content').innerHTML = `
-                <strong>Strategic Priorities Eqdom:</strong><br><br>
-                1. <strong>CNDP Compliance by Design</strong><br>
-                Passer l'audit du premier coup, zero rework<br><br>
-                2. <strong>Product-Market Fit Validation</strong><br>
-                3 preuves concrètes que le marché MENA veut ce crédit<br><br>
-                3. <strong>Scalable Architecture</strong><br>
-                Codebase supporte 10x users sans refonte<br><br>
-                <strong>Current Focus:</strong> Resolution Payment Gateway + KYC compliance
-            `;
-            document.getElementById('modal').classList.add('active');
-        }
-        
-        function scheduleRothschildReview() {
-            document.getElementById('modal-title').innerHTML = '📅 Schedule Review with Rothschild';
-            document.getElementById('modal-content').innerHTML = `
-                <strong>Weekly Strategic Brief:</strong> Lundi 8h<br>
-                <strong>Bi-weekly Deep Dive:</strong> 1er & 15 du mois<br>
-                <strong>Ad-hoc Escalation:</strong> Immédiat<br><br>
-                Contact: Via ce dashboard ou demande directe
-            `;
-            document.getElementById('modal').classList.add('active');
-        }
-        
-        function escalateToRothschild() {
-            document.getElementById('modal-title').innerHTML = '🚨 Escalate to Rothschild';
-            document.getElementById('modal-content').innerHTML = `
-                <strong>Escalation triggered!</strong><br><br>
-                Rothschild will analyze the issue and decide on:<br>
-                • Immediate actions<br>
-                • Resource reallocation<br>
-                • External support if needed<br><br>
-                <em>A decision will be logged within 15 minutes.</em>
-            `;
-            document.getElementById('modal').classList.add('active');
-        }
-        
-        function showProjectDetail(project) {
-            const details = {
-                eqdom: {
-                    title: '🏦 EQDOM — Deep Dive',
-                    content: 'Full project analysis available.<br><br>Lead: Rothschild<br>Status: LIVE<br>Priority: 🔴 Critical (Payment Gateway issue)'
-                },
-                bobcat: {
-                    title: '⚡ Bobcat Energy — Deep Dive',
-                    content: 'WhatsApp automation project.<br><br>Lead: Henry<br>Status: TESTING<br>Next milestone: Integration'
-                },
-                'mission-control': {
-                    title: '🎯 Mission Control — Deep Dive',
-                    content: 'Internal dashboard project.<br><br>Lead: Aiman<br>Status: V3 deployed<br>Current: Active monitoring'
-                }
-            };
-            
-            const detail = details[project];
-            document.getElementById('modal-title').innerHTML = detail.title;
-            document.getElementById('modal-content').innerHTML = detail.content;
-            document.getElementById('modal').classList.add('active');
-        }
-        
-        function closeModal(event) {
-            if (!event || event.target.id === 'modal' || event.target.classList.contains('modal-close')) {
-                document.getElementById('modal').classList.remove('active');
-            }
-        }
-        
-        // 🔄 CHARGEMENT DYNAMIQUE DES DONNÉES MISSION CONTROL
+        // 🔄 CHARGEMENT DYNAMIQUE COMPLET
         let missionData = null;
+        let businessData = null;
         let lastUpdate = null;
         
-        async function loadMissionData() {
+        async function loadAllData() {
             try {
-                const response = await fetch('data/mission-state.json?' + Date.now());
-                if (!response.ok) throw new Error('Failed to load');
-                missionData = await response.json();
-                updateDashboardFromData();
+                // Charger les données de mission (agents, logs, etc.)
+                const missionResponse = await fetch('data/mission-state.json?' + Date.now());
+                if (missionResponse.ok) {
+                    missionData = await missionResponse.json();
+                }
+                
+                // Charger les données business (Rothschild)
+                const businessResponse = await fetch('data/business-opportunities.json?' + Date.now());
+                if (businessResponse.ok) {
+                    businessData = await businessResponse.json();
+                }
+                
+                updateDashboard();
                 lastUpdate = new Date();
-                console.log('✅ Mission data loaded:', lastUpdate.toLocaleTimeString());
+                document.getElementById('last-update').textContent = 
+                    'Dernière mise à jour: ' + lastUpdate.toLocaleTimeString('fr-FR');
+                document.getElementById('system-status').textContent = 'Online';
+                
             } catch (error) {
-                console.error('❌ Failed to load mission data:', error);
+                console.error('Erreur chargement données:', error);
+                document.getElementById('system-status').textContent = 'Error';
             }
         }
         
-        function updateDashboardFromData() {
-            if (!missionData) return;
-            
-            // Mettre à jour les métriques des agents
-            updateAgentMetrics('henry', missionData.agents.henry);
-            updateAgentMetrics('aiman', missionData.agents.aiman);
-            updateAgentMetrics('junior', missionData.agents.junior);
-            updateAgentMetrics('rothschild', missionData.agents.rothschild);
-            
-            // Mettre à jour les logs
-            updateLogs(missionData.recent_logs);
-            
-            // Mettre à jour les alertes
-            updateAlerts(missionData.alerts);
+        function updateDashboard() {
+            if (missionData) {
+                updateHeader();
+                updateAlerts();
+                updateAgents();
+                updateLogs();
+                updateHistory();
+            }
+            if (businessData) {
+                updateRothschildIntel();
+            }
         }
         
-        function updateAgentMetrics(agentId, data) {
-            // Trouver la card de l'agent et mettre à jour
-            const cards = document.querySelectorAll('.agent-card, .rothschild-card');
-            cards.forEach(card => {
-                const nameEl = card.querySelector('.agent-name, .rothschild-info h3');
-                if (nameEl && nameEl.textContent.toLowerCase().includes(agentId)) {
-                    // Mettre à jour le statut
-                    const statusEl = card.querySelector('.agent-current-focus, .rothschild-focus');
-                    if (statusEl && data.current_task) {
-                        statusEl.textContent = data.current_task;
-                    }
-                    
-                    // Mettre à jour la capacité
-                    const capacityFill = card.querySelector('.capacity-fill');
-                    if (capacityFill && data.capacity) {
-                        capacityFill.style.width = data.capacity + '%';
-                        const capacityText = card.querySelector('.agent-capacity span:last-child');
-                        if (capacityText) capacityText.textContent = data.capacity + '%';
-                    }
-                }
-            });
+        function updateHeader() {
+            if (!missionData.agents) return;
+            
+            const agentCount = Object.keys(missionData.agents).length;
+            const onlineCount = Object.values(missionData.agents).filter(a => a.status !== 'offline').length;
+            document.getElementById('agents-count').textContent = `${onlineCount}/${agentCount}`;
+            
+            const totalTasks = Object.values(missionData.agents).reduce((sum, a) => sum + (a.tasks_completed_today || 0), 0);
+            document.getElementById('tasks-count').textContent = totalTasks;
+            
+            document.getElementById('nav-agents-badge').textContent = agentCount;
         }
         
-        function updateLogs(logs) {
-            const logsContainer = document.querySelector('.log-container');
-            if (!logsContainer || !logs) return;
+        function updateAlerts() {
+            const container = document.getElementById('alerts-container');
+            if (!missionData.alerts || missionData.alerts.length === 0) {
+                container.innerHTML = '<div class="alert-banner alert-info"><span>✅</span><span>Aucune alerte active</span></div>';
+                return;
+            }
             
             let html = '';
-            logs.slice(0, 10).forEach(log => {
-                const levelClass = log.level === 'error' ? 'error' : 
-                                  log.level === 'warning' ? 'warn' : 
-                                  log.level === 'success' ? 'success' : 'info';
-                html += `
-                    <div class="log-line">
-                        <span class="log-time">${log.time}:00</span>
-                        <span class="log-level ${levelClass}">${log.level.toUpperCase()}</span>
-                        <span class="log-agent">${log.agent}</span>
-                        <span class="log-msg">${log.message}</span>
-                    </div>
-                `;
-            });
-            logsContainer.innerHTML = html;
-        }
-        
-        function updateAlerts(alerts) {
-            const alertsContainer = document.querySelector('.global-alerts');
-            if (!alertsContainer || !alerts) return;
-            
-            let html = '';
-            alerts.forEach(alert => {
-                const alertClass = alert.type === 'critical' ? 'alert-critical' : 'alert-warning';
-                const icon = alert.type === 'critical' ? '🔴' : '🟡';
+            missionData.alerts.forEach(alert => {
+                const alertClass = alert.type === 'critical' ? 'alert-critical' : 
+                                  alert.type === 'warning' ? 'alert-warning' : 'alert-info';
+                const icon = alert.type === 'critical' ? '🔴' : 
+                            alert.type === 'warning' ? '🟡' : 'ℹ️';
                 html += `
                     <div class="alert-banner ${alertClass}">
                         <span>${icon}</span>
@@ -1654,14 +527,217 @@
                     </div>
                 `;
             });
-            alertsContainer.innerHTML = html;
+            container.innerHTML = html;
+        }
+        
+        function updateAgents() {
+            const loading = document.getElementById('agents-loading');
+            const grid = document.getElementById('agents-grid');
+            
+            if (!missionData.agents) return;
+            
+            let html = '';
+            Object.entries(missionData.agents).forEach(([id, agent]) => {
+                const statusClass = agent.status === 'online' ? 'online' : 
+                                   agent.status === 'busy' ? 'busy' : 'offline';
+                const capacityColor = agent.capacity > 80 ? 'red' : 
+                                     agent.capacity > 50 ? 'yellow' : 'green';
+                
+                html += `
+                    <div class="agent-card ${statusClass}">
+                        <div class="agent-header">
+                            <div class="agent-avatar">${getAgentEmoji(id)}</div>
+                            <div>
+                                <div class="agent-name">${capitalize(id)}</div>
+                                <div class="agent-role">${agent.current_task || 'En attente'}</div>
+                            </div>
+                        </div>
+                        <div class="agent-capacity">
+                            <span>Capacité:</span>
+                            <div class="capacity-bar">
+                                <div class="capacity-fill ${capacityColor}" style="width: ${agent.capacity || 0}%"></div>
+                            </div>
+                            <span>${agent.capacity || 0}%</span>
+                        </div>
+                        <div class="agent-current-focus">
+                            ${agent.last_activity || 'Aucune activité récente'}
+                        </div>
+                        <div class="agent-stats">
+                            <div class="agent-stat">
+                                <div class="agent-stat-value">${agent.cycle_time || '-'}</div>
+                                <div class="agent-stat-label">Cycle Time</div>
+                            </div>
+                            <div class="agent-stat">
+                                <div class="agent-stat-value">${agent.quality_score || '-'}%</div>
+                                <div class="agent-stat-label">Qualité</div>
+                            </div>
+                            <div class="agent-stat">
+                                <div class="agent-stat-value">${agent.tasks_completed_today || 0}</div>
+                                <div class="agent-stat-label">Tâches</div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            grid.innerHTML = html;
+            loading.style.display = 'none';
+            grid.style.display = 'grid';
+        }
+        
+        function updateLogs() {
+            const loading = document.getElementById('logs-loading');
+            const container = document.getElementById('logs-container');
+            
+            if (!missionData.recent_logs) return;
+            
+            let html = '';
+            missionData.recent_logs.forEach(log => {
+                const levelClass = log.level || 'info';
+                html += `
+                    <div class="log-line">
+                        <span class="log-time">${log.time || '--:--'}</span>
+                        <span class="log-level ${levelClass}">${(log.level || 'INFO').toUpperCase()}</span>
+                        <span class="log-agent">${log.agent || 'system'}</span>
+                        <span class="log-msg">${log.message || ''}</span>
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = html || '<div class="log-line"><span class="log-msg">Aucun log disponible</span></div>';
+            loading.style.display = 'none';
+            container.style.display = 'block';
+        }
+        
+        function updateHistory() {
+            const loading = document.getElementById('history-loading');
+            const container = document.getElementById('history-container');
+            
+            if (!missionData.recent_logs) return;
+            
+            let html = '';
+            // Utiliser les logs comme historique
+            missionData.recent_logs.slice(0, 10).forEach(log => {
+                const type = log.level === 'error' ? 'critical' : 
+                            log.level === 'warning' ? 'warning' : 
+                            log.level === 'success' ? 'success' : 'info';
+                
+                html += `
+                    <div class="timeline-item ${type}">
+                        <div class="timeline-time">${log.time || '--:--'}</div>
+                        <div class="timeline-title">${log.message || ''}</div>
+                        <div class="timeline-agent">${capitalize(log.agent || 'system')}</div>
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = html || '<div class="timeline-item info"><div class="timeline-title">Aucun historique</div></div>';
+            loading.style.display = 'none';
+            container.style.display = 'block';
+        }
+        
+        function updateRothschildIntel() {
+            const loading = document.getElementById('rothschild-loading');
+            const container = document.getElementById('rothschild-container');
+            
+            if (!businessData || !businessData.opportunities) {
+                container.innerHTML = '<div class="card"><div class="card-title">Aucune opportunité</div></div>';
+                loading.style.display = 'none';
+                container.style.display = 'block';
+                return;
+            }
+            
+            const validated = businessData.opportunities.filter(o => o.statut === 'valide');
+            const inResearch = businessData.opportunities.filter(o => o.statut === 'en_recherche');
+            
+            document.getElementById('nav-rothschild-badge').textContent = validated.length;
+            
+            let html = '<div style="margin-bottom: 20px;">';
+            
+            // Opportunités validées
+            if (validated.length > 0) {
+                html += '<div class="card"><div class="card-title">🎯 Opportunités Validées</div>';
+                validated.forEach(opp => {
+                    html += `
+                        <div style="background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(0, 255, 136, 0.05)); border: 2px solid #ffd700; border-radius: 12px; padding: 20px; margin-bottom: 15px;">
+                            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px;">
+                                <h3 style="color: #ffd700; font-size: 18px;">${opp.nom}</h3>
+                                <div style="font-size: 32px; font-weight: 700; color: #ffd700;">${opp.score}/10</div>
+                            </div>
+                            <p style="color: #c9cdd4; margin-bottom: 15px; font-size: 13px;">${opp.description || ''}</p>
+                            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 15px;">
+                                <div style="background: rgba(0,0,0,0.2); padding: 10px; border-radius: 6px;">
+                                    <div style="font-size: 10px; color: #8892a0;">Coût</div>
+                                    <div style="color: #00ff88; font-weight: 600;">${opp.coût_démarrage_range || 'N/A'}</div>
+                                </div>
+                                <div style="background: rgba(0,0,0,0.2); padding: 10px; border-radius: 6px;">
+                                    <div style="font-size: 10px; color: #8892a0;">Potentiel</div>
+                                    <div style="color: #00d4ff; font-weight: 600;">${opp.potentiel_revenus || 'N/A'}</div>
+                                </div>
+                                <div style="background: rgba(0,0,0,0.2); padding: 10px; border-radius: 6px;">
+                                    <div style="font-size: 10px; color: #8892a0;">Délai</div>
+                                    <div style="color: #ffd93d; font-weight: 600;">${opp.temps_implémentation || 'N/A'}</div>
+                                </div>
+                            </div>
+                            <div style="background: rgba(0, 255, 136, 0.1); border-left: 3px solid #00ff88; padding: 10px; border-radius: 0 6px 6px 0;">
+                                <div style="color: #00ff88; font-size: 11px; font-weight: 600;">✅ VERDICT: ${opp.verdict || 'GO'}</div>
+                            </div>
+                        </div>
+                    `;
+                });
+                html += '</div>';
+            }
+            
+            // Opportunités en recherche
+            if (inResearch.length > 0) {
+                html += '<div class="card"><div class="card-title">🔍 En Recherche (' + inResearch.length + ')</div>';
+                html += '<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 10px;">';
+                inResearch.forEach(opp => {
+                    html += `
+                        <div style="background: rgba(26, 35, 64, 0.6); border: 1px solid #2a3f5f; border-radius: 8px; padding: 12px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
+                                <span style="font-weight: 600; font-size: 13px;">${opp.nom}</span>
+                                <span style="background: rgba(255, 215, 0, 0.2); color: #ffd700; padding: 2px 8px; border-radius: 10px; font-size: 10px;">${opp.score}</span>
+                            </div>
+                            <div style="font-size: 11px; color: #8892a0;">${opp.categorie || ''}</div>
+                        </div>
+                    `;
+                });
+                html += '</div></div>';
+            }
+            
+            html += '</div>';
+            container.innerHTML = html;
+            loading.style.display = 'none';
+            container.style.display = 'block';
+        }
+        
+        function getAgentEmoji(id) {
+            const emojis = {
+                henry: '🎯',
+                aiman: '💻',
+                junior: '📊',
+                rothschild: '💼'
+            };
+            return emojis[id] || '🤖';
+        }
+        
+        function capitalize(str) {
+            return str.charAt(0).toUpperCase() + str.slice(1);
+        }
+        
+        function showTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.nav-tab').forEach(tab => tab.classList.remove('active'));
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
         }
         
         // Charger les données au démarrage
         document.addEventListener('DOMContentLoaded', () => {
-            loadMissionData();
+            loadAllData();
             // Rafraîchir toutes les 30 secondes
-            setInterval(loadMissionData, 30000);
+            setInterval(loadAllData, 30000);
         });
     </script>
 </body>
