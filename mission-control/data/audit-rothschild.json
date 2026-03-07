@@ -1,0 +1,298 @@
+{
+  "audit_id": "rothschild-audit-2026-03-07",
+  "auditeur": "Rothschild (CEO/Stratège)",
+  "date_heure": "2026-03-07T11:53:00+08:00",
+  "version_dashboard": "v4",
+  "severite_globale": "HIGH",
+  
+  "problemes_trouves": [
+    {
+      "id": "P1-CRITICAL",
+      "severite": "HIGH",
+      "categorie": "UI/UX",
+      "probleme": "Titre HTML incorrect - Dashboard affiche 'V3' au lieu de 'V4'",
+      "fichier": "dashboard-v4.html",
+      "ligne": 398,
+      "impact": "Confusion version, perte de crédibilité",
+      "preuve": "<h1>🎯 Mission Control V3 — Live Dashboard</h1> dans fichier dashboard-v4.html"
+    },
+    {
+      "id": "P2-CRITICAL", 
+      "severite": "HIGH",
+      "categorie": "DATA_INTEGRITY",
+      "probleme": "Fichiers de données inexistants - Le dashboard tente de charger des fichiers qui n'existent pas",
+      "fichiers_manquants": [
+        "mission-control/data/mission-state.json",
+        "mission-control/data/business-opportunities.json"
+      ],
+      "impact": "Dashboard vide, erreurs 404 en console, mauvaise UX",
+      "recommandation": "Créer les fichiers ou adapter le code pour utiliser les données existantes"
+    },
+    {
+      "id": "P3-CRITICAL",
+      "severite": "HIGH",
+      "categorie": "DATA_SYNC",
+      "probleme": "Horodatages non synchronisés entre fichiers",
+      "details": {
+        "agents-status.json": "2026-03-07T11:18:00+08:00",
+        "veille-rothschild.json": "2026-03-07T11:15:00+08:00",
+        "logs-complet.json": "2026-03-07T11:18:00+08:00",
+        "delta_max": "3 minutes"
+      },
+      "impact": "Incohérence perçue, difficulté à établir timeline réelle"
+    },
+    {
+      "id": "P4-HIGH",
+      "severite": "HIGH",
+      "categorie": "RESSOURCES",
+      "probleme": "Agents en standby non productifs depuis plus d'1 heure",
+      "agents_concernes": [
+        {
+          "agent": "Junior",
+          "status": "standby",
+          "derniere_activite": "2026-03-07T10:50:00+08:00",
+          "temps_inactif": "63 minutes"
+        },
+        {
+          "agent": "QAnon",
+          "status": "standby",
+          "derniere_activite": "2026-03-07T10:50:00+08:00",
+          "temps_inactif": "63 minutes"
+        }
+      ],
+      "impact": "Gaspillage capacité, ROI négatif sur ces ressources"
+    },
+    {
+      "id": "P5-HIGH",
+      "severite": "HIGH",
+      "categorie": "CONNECTIVITE",
+      "probleme": "WhatsApp Bot déconnecté/inactif mais marqué 'active'",
+      "details": {
+        "derniere_activite": "2026-03-07T10:21:00+08:00",
+        "statut_affiche": "active",
+        "statut_reel": "disconnected",
+        "temps_sans_activite": "92 minutes"
+      },
+      "impact": "Fausse alerte, notification WhatsApp ne fonctionnent probablement pas"
+    },
+    {
+      "id": "P6-MEDIUM",
+      "severite": "MEDIUM",
+      "categorie": "CODE_QUALITY",
+      "probleme": "Incohérence naming convention - camelCase vs snake_case",
+      "exemples": [
+        "currentTask (JSON) vs current_task (JS ligne 543)",
+        "lastActivity (JSON) vs last_activity (JS ligne 543)",
+        "tasks_completed_today (snake_case)"
+      ],
+      "impact": "Bugs potentiels, maintenance difficile"
+    },
+    {
+      "id": "P7-MEDIUM",
+      "severite": "MEDIUM",
+      "categorie": "DATA_QUALITY",
+      "probleme": "Propriétés optionnelles inconsistantes entre agents",
+      "exemples": [
+        "Henry: capacity absent",
+        "Rothschild: capacity absent",
+        "Certains agents ont 'channel', d'autres non"
+      ],
+      "impact": "Affichage incohérent, erreurs JS potentielles"
+    },
+    {
+      "id": "P8-MEDIUM",
+      "severite": "MEDIUM",
+      "categorie": "LOGIQUE_METIER",
+      "probleme": "Écart tâches déclarées vs tâches loguées",
+      "details": {
+        "Rothschild_tasks_declarees": 3,
+        "Rothschild_tasks_loguees": 1,
+        "difference": "+2 tâches non documentées"
+      },
+      "impact": "Manque traçabilité, impossible d'auditer le travail réel"
+    },
+    {
+      "id": "P9-MEDIUM",
+      "severite": "MEDIUM",
+      "categorie": "STANDARDISATION",
+      "probleme": "Valeurs de statut non standardisées",
+      "valeurs_utilisees": ["active", "standby", "online", "monitoring", "working", "offline"],
+      "recommandation": "Standardiser sur: online, busy, offline, error"
+    },
+    {
+      "id": "P10-LOW",
+      "severite": "LOW",
+      "categorie": "FONCTIONNALITE",
+      "probleme": "Données veille Rothschild riches mais non affichées",
+      "fichier": "veille-rothschild.json",
+      "taille": "~15KB de data business stratégique",
+      "impact": "Dashboard sous-utilisé, valeur business cachée"
+    },
+    {
+      "id": "P11-LOW",
+      "severite": "LOW",
+      "categorie": "PERFORMANCE",
+      "probleme": "CSS inline répétitif dans le HTML",
+      "exemples": ["ligne 691-693", "ligne 707-709"],
+      "impact": "Maintenance difficile, taille fichier inutilement grand"
+    },
+    {
+      "id": "P12-LOW",
+      "severite": "LOW",
+      "categorie": "FONCTIONNALITE",
+      "probleme": "Pas de métriques système (health, latence, erreurs)",
+      "metriques_manquantes": [
+        "Temps réponse moyen",
+        "Taux d'erreur",
+        "Uptime",
+        "Latence réseau"
+      ]
+    }
+  ],
+  
+  "suggestions_amelioration": [
+    {
+      "id": "S1",
+      "priorite": "HIGH",
+      "categorie": "ARCHITECTURE",
+      "suggestion": "Unifier les sources de données",
+      "description": "Créer un seul fichier mission-state.json qui agrège tous les états, ou adapter le dashboard pour lire les fichiers existants individuellement",
+      "effort": "2-3 heures"
+    },
+    {
+      "id": "S2",
+      "priorite": "HIGH",
+      "categorie": "DATA",
+      "suggestion": "Implémenter un timestamp unique de référence",
+      "description": "Tous les fichiers doivent synchroniser leur lastUpdate sur le même timestamp système",
+      "effort": "30 minutes"
+    },
+    {
+      "id": "S3",
+      "priorite": "HIGH",
+      "categorie": "AUTOMATION",
+      "suggestion": "Assigner des missions automatiques aux agents en standby",
+      "description": "Junior et QAnon devraient avoir des tâches par défaut (veille, QA, documentation) au lieu de rester inactifs",
+      "effort": "1 heure"
+    },
+    {
+      "id": "S4",
+      "priorite": "MEDIUM",
+      "categorie": "MONITORING",
+      "suggestion": "Ajouter health check WhatsApp Bot",
+      "description": "Vérifier toutes les 5 minutes si WhatsApp Bot répond, changer statut si inactif > 15 min",
+      "effort": "1 heure"
+    },
+    {
+      "id": "S5",
+      "priorite": "MEDIUM",
+      "categorie": "CODE",
+      "suggestion": "Standardiser naming convention",
+      "description": "Passer tout en camelCase: currentTask, lastActivity, tasksCompletedToday",
+      "effort": "30 minutes"
+    },
+    {
+      "id": "S6",
+      "priorite": "MEDIUM",
+      "categorie": "UI",
+      "suggestion": "Afficher les données veille Rothschild",
+      "description": "Nouvel onglet ou section dédiée avec les opportunités business, TAM/SAM/SOM, VCs identifiés",
+      "effort": "2-3 heures"
+    },
+    {
+      "id": "S7",
+      "priorite": "MEDIUM",
+      "categorie": "FONCTIONNALITE",
+      "suggestion": "Ajouter actions sur agents",
+      "description": "Boutons: 'Assigner mission', 'Redémarrer', 'Voir logs', 'Mettre en pause'",
+      "effort": "2-3 heures"
+    },
+    {
+      "id": "S8",
+      "priorite": "LOW",
+      "categorie": "VISUALISATION",
+      "suggestion": "Ajouter graphiques tendances",
+      "description": "Courbe tâches/jour, camembert statuts agents, bar chart funding MENA",
+      "effort": "3-4 heures"
+    },
+    {
+      "id": "S9",
+      "priorite": "LOW",
+      "categorie": "FILTRES",
+      "suggestion": "Permettre filtrage des logs",
+      "description": "Filtres par agent, niveau (error/warn/info), période",
+      "effort": "1-2 heures"
+    },
+    {
+      "id": "S10",
+      "priorite": "LOW",
+      "categorie": "ARCHITECTURE",
+      "suggestion": "WebSocket pour temps réel",
+      "description": "Remplacer le polling 30s par WebSocket pour mises à jour instantanées",
+      "effort": "4-5 heures"
+    }
+  ],
+  
+  "priorite_changements": {
+    "HIGH": [
+      "Corriger titre V3 → V4",
+      "Créer/agréger fichiers de données manquants",
+      "Synchroniser timestamps",
+      "Assigner tâches aux agents standby"
+    ],
+    "MEDIUM": [
+      "Standardiser naming convention",
+      "Ajouter health check WhatsApp",
+      "Afficher données veille Rothschild",
+      "Ajouter actions agents"
+    ],
+    "LOW": [
+      "Nettoyer CSS inline",
+      "Ajouter graphiques",
+      "Implémenter WebSocket",
+      "Ajouter filtres logs"
+    ]
+  },
+  
+  "recommandations_aiman": {
+    "immediate": [
+      "Corriger le titre HTML ligne 398: 'V3' → 'V4'",
+      "Créer mission-state.json avec structure unifiée OU modifier dashboard pour lire agents-status.json directement",
+      "Standardiser tous les lastUpdate sur même timestamp",
+      "Donner mission à Junior: compléter les données manquantes des logs pour Rothschild",
+      "Donner mission à QAnon: tester health check WhatsApp Bot"
+    ],
+    "cette_semaine": [
+      "Implémenter health monitoring WhatsApp (statut réel vs déclaré)",
+      "Créer nouvel onglet 'Veille Rothschild' avec les données business stratégiques",
+      "Standardiser naming convention camelCase",
+      "Ajouter métriques système (uptime, erreurs, latence)"
+    ],
+    "ce_mois": [
+      "Architecture WebSocket pour temps réel",
+      "Ajouter visualisations graphiques (Chart.js)",
+      "Système d'actions sur agents (boutons interactifs)",
+      "Dashboard mobile responsive (test sur smartphone)"
+    ],
+    "architecture_future": [
+      "Considérer une base de données légère (SQLite) au lieu de fichiers JSON",
+      "Système de notifications push pour alertes critiques",
+      "API REST pour interactions agents-dashboard",
+      "Système de plugins pour nouveaux agents"
+    ]
+  },
+  
+  "metriques_audit": {
+    "fichiers_analyses": 4,
+    "lignes_code_html": 742,
+    "taille_data_json": "~45KB total",
+    "problemes_critiques": 5,
+    "problemes_majeurs": 4,
+    "problemes_mineurs": 3,
+    "score_qualite": "6.5/10",
+    "score_fonctionnalite": "5/10",
+    "score_maintenabilite": "4/10"
+  },
+  
+  "verdict_final": "Le dashboard a une bonne base visuelle mais souffre de problèmes d'architecture données critiques. La valeur business des données veille n'est pas exploitée. Priorité immédiate: unifier les sources de données et corriger les bugs d'affichage. Potentiel élevé une fois ces problèmes résolus."
+}
