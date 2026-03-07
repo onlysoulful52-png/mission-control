@@ -15,12 +15,13 @@
       "name": "Rothschild",
       "role": "CEO / Stratège",
       "status": "active",
-      "statusText": "Double mission active",
-      "currentTask": "Veille opportunités (30min) + Audit dashboard (1h)",
-      "lastActivity": "2026-03-08T03:02:00+08:00",
-      "channel": "2 missions en continu",
+      "statusText": "Full power dashboard",
+      "currentTask": "Veille opportunités + Améliorations UX/UI directes",
+      "lastActivity": "2026-03-08T03:12:00+08:00",
+      "channel": "Modifications directes autorisées",
       "tasks_completed_today": 0,
-      "missions": ["veille-opportunites", "audit-dashboard"]
+      "missions": ["veille-opportunites", "amelioration-dashboard-direct"],
+      "permissions": ["read", "write", "edit", "deploy"]
     },
     "junior": {
       "name": "Junior",
