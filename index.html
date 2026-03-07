@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="refresh" content="0; url=mission-control/dashboard-v4.html">
+    <title>Mission Control V4</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: linear-gradient(135deg, #0a0e1a 0%, #0f1823 100%);
+            color: #e4e6eb;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            text-align: center;
+            padding: 40px;
+        }
+        h1 {
+            background: linear-gradient(135deg, #00d4ff, #7b68ee);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 20px;
+        }
+        a {
+            color: #00d4ff;
+            text-decoration: none;
+        }
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid #2a3f5f;
+            border-top-color: #00d4ff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎯 Mission Control V4</h1>
+        <div class="spinner"></div>
+        <p>Redirection vers le dashboard...</p>
+        <p><a href="mission-control/dashboard-v4.html">Cliquez ici si la redirection ne fonctionne pas</a></p>
+    </div>
+</body>
+</html>
