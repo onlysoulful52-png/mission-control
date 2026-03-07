@@ -20,6 +20,9 @@ FILES_TO_CHECK=(
     "mission-control/data/mission-state.json"
     "mission-control/data/tasks.json"
     "mission-control/data/agents-status.json"
+    "mission-control/data/logs-complet.json"
+    "mission-control/data/veille-rothschild.json"
+    "mission-control/data/rothschild-status.json"
     "AGENTS_TEAM.md"
 )
 
@@ -34,11 +37,18 @@ for file in "${FILES_TO_CHECK[@]}"; do
     fi
 done
 
-# Vérifier aussi les personas
+# Vérifier aussi les personas ET tout le dossier data
 if [ -d "agents/personas" ]; then
     if ! git diff --quiet agents/personas/ 2>/dev/null; then
         CHANGED=true
         echo "  → Changement détecté: agents/personas/" >> "$LOG_FILE"
+    fi
+fi
+
+if [ -d "mission-control/data" ]; then
+    if ! git diff --quiet mission-control/data/ 2>/dev/null; then
+        CHANGED=true
+        echo "  → Changement détecté: mission-control/data/" >> "$LOG_FILE"
     fi
 fi
 
