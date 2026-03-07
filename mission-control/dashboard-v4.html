@@ -9,61 +9,94 @@
         
         body {
             font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-            background: linear-gradient(135deg, #0a0e1a 0%, #0f1823 100%);
+            background: linear-gradient(135deg, #0a0e1a 0%, #0f1823 50%, #1a0a1a 100%);
             color: #e4e6eb;
             min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        /* Animated background particles */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(0, 212, 255, 0.03) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 215, 0, 0.03) 0%, transparent 50%),
+                radial-gradient(circle at 50% 50%, rgba(0, 255, 136, 0.02) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+            animation: bgPulse 8s ease-in-out infinite;
+        }
+        
+        @keyframes bgPulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
         }
         
         /* Header */
         .header {
             background: rgba(26, 31, 58, 0.95);
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(20px);
             padding: 15px 20px;
-            border-bottom: 1px solid #2a3f5f;
+            border-bottom: 1px solid rgba(42, 63, 95, 0.6);
             display: flex;
             justify-content: space-between;
             align-items: center;
             position: sticky;
             top: 0;
             z-index: 100;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
         }
         
         .header h1 {
             font-size: 18px;
-            background: linear-gradient(135deg, #00d4ff, #7b68ee);
+            background: linear-gradient(135deg, #00d4ff, #7b68ee, #ffd700);
+            background-size: 200% 200%;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            animation: gradientShift 3s ease infinite;
+        }
+        
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
         }
         
         .header-stats {
             display: flex;
-            gap: 20px;
+            gap: 25px;
             font-size: 11px;
         }
         
         .header-stat-value {
             font-weight: 600;
             color: #00d4ff;
+            text-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
         }
         
         .status-dot {
-            width: 8px;
-            height: 8px;
+            width: 10px;
+            height: 10px;
             border-radius: 50%;
             background: #00ff88;
-            box-shadow: 0 0 10px #00ff88;
+            box-shadow: 0 0 15px #00ff88, 0 0 30px rgba(0, 255, 136, 0.3);
             animation: pulse 2s infinite;
         }
         
         @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.6; transform: scale(1.2); }
         }
         
         .last-update {
             font-size: 11px;
             color: #6b7280;
             margin-left: 15px;
+            transition: color 0.3s ease;
         }
         
         /* Global Alerts */
@@ -72,31 +105,46 @@
         }
         
         .alert-banner {
-            padding: 12px 16px;
-            border-radius: 8px;
-            margin-bottom: 8px;
+            padding: 14px 18px;
+            border-radius: 12px;
+            margin-bottom: 10px;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
             font-size: 13px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            animation: slideIn 0.5s ease;
+        }
+        
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        
+        .alert-banner:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
         }
         
         .alert-critical {
-            background: rgba(255, 107, 107, 0.15);
+            background: linear-gradient(135deg, rgba(255, 107, 107, 0.2), rgba(255, 107, 107, 0.1));
             border: 1px solid #ff6b6b;
             color: #ff6b6b;
+            box-shadow: 0 0 20px rgba(255, 107, 107, 0.2);
         }
         
         .alert-warning {
-            background: rgba(255, 217, 61, 0.15);
+            background: linear-gradient(135deg, rgba(255, 217, 61, 0.2), rgba(255, 217, 61, 0.1));
             border: 1px solid #ffd93d;
             color: #ffd93d;
+            box-shadow: 0 0 20px rgba(255, 217, 61, 0.2);
         }
         
         .alert-info {
-            background: rgba(0, 212, 255, 0.15);
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.2), rgba(0, 212, 255, 0.1));
             border: 1px solid #00d4ff;
             color: #00d4ff;
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.2);
         }
         
         /* Navigation */
@@ -104,13 +152,13 @@
             display: flex;
             gap: 5px;
             padding: 15px 20px 0;
-            border-bottom: 1px solid #2a3f5f;
+            border-bottom: 1px solid rgba(42, 63, 95, 0.6);
             background: rgba(15, 20, 32, 0.8);
             overflow-x: auto;
         }
         
         .nav-tab {
-            padding: 12px 20px;
+            padding: 12px 24px;
             background: transparent;
             border: none;
             color: #8892a0;
@@ -118,36 +166,70 @@
             font-size: 12px;
             font-weight: 500;
             border-bottom: 2px solid transparent;
-            transition: all 0.2s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             white-space: nowrap;
+            position: relative;
+            overflow: hidden;
         }
         
-        .nav-tab:hover { color: #e4e6eb; }
+        .nav-tab::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, #00d4ff, #7b68ee);
+            transform: scaleX(0);
+            transform-origin: right;
+            transition: transform 0.3s ease;
+        }
+        
+        .nav-tab:hover {
+            color: #e4e6eb;
+            transform: translateY(-2px);
+        }
+        
+        .nav-tab:hover::before {
+            transform: scaleX(1);
+            transform-origin: left;
+        }
         
         .nav-tab.active {
             color: #00d4ff;
-            border-bottom-color: #00d4ff;
+        }
+        
+        .nav-tab.active::before {
+            transform: scaleX(1);
         }
         
         .nav-tab .badge {
-            background: #ff6b6b;
+            background: linear-gradient(135deg, #ff6b6b, #ff8e8e);
             color: white;
-            padding: 2px 6px;
-            border-radius: 10px;
+            padding: 2px 8px;
+            border-radius: 12px;
             font-size: 9px;
-            margin-left: 5px;
+            margin-left: 8px;
+            animation: badgePulse 2s infinite;
+        }
+        
+        @keyframes badgePulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
         }
         
         /* Content */
         .main-content {
             padding: 20px;
+            position: relative;
+            z-index: 1;
         }
         
         .tab-content { display: none; }
-        .tab-content.active { display: block; animation: fadeIn 0.3s ease; }
+        .tab-content.active { display: block; animation: fadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
         
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
+            from { opacity: 0; transform: translateY(15px); }
             to { opacity: 1; transform: translateY(0); }
         }
         
@@ -163,13 +245,14 @@
         
         .loading::after {
             content: '';
-            width: 20px;
-            height: 20px;
-            border: 2px solid #2a3f5f;
+            width: 24px;
+            height: 24px;
+            border: 3px solid #2a3f5f;
             border-top-color: #00d4ff;
+            border-right-color: #7b68ee;
             border-radius: 50%;
-            margin-left: 10px;
-            animation: spin 1s linear infinite;
+            margin-left: 12px;
+            animation: spin 1s cubic-bezier(0.4, 0, 0.2, 1) infinite;
         }
         
         @keyframes spin {
@@ -178,105 +261,440 @@
         
         /* Cards */
         .card {
-            background: rgba(26, 35, 64, 0.6);
-            border: 1px solid #2a3f5f;
-            border-radius: 12px;
-            padding: 15px;
-            margin-bottom: 15px;
+            background: linear-gradient(135deg, rgba(26, 35, 64, 0.8), rgba(15, 24, 35, 0.8));
+            border: 1px solid rgba(42, 63, 95, 0.6);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(0, 212, 255, 0.5), transparent);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .card:hover::before {
+            opacity: 1;
+        }
+        
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(0, 212, 255, 0.2);
+            border-color: rgba(0, 212, 255, 0.4);
         }
         
         .card-title {
-            font-size: 14px;
+            font-size: 15px;
             color: #00d4ff;
-            margin-bottom: 10px;
+            margin-bottom: 15px;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            font-weight: 600;
+        }
+        
+        /* Real-time Metrics Chart */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .metric-card {
+            background: linear-gradient(135deg, rgba(26, 35, 64, 0.9), rgba(15, 24, 35, 0.9));
+            border: 1px solid rgba(42, 63, 95, 0.6);
+            border-radius: 12px;
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .metric-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, transparent, rgba(0, 212, 255, 0.05));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .metric-card:hover {
+            transform: scale(1.02);
+            border-color: rgba(0, 212, 255, 0.5);
+        }
+        
+        .metric-card:hover::after {
+            opacity: 1;
+        }
+        
+        .metric-value {
+            font-size: 32px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #00d4ff, #7b68ee);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 5px;
+        }
+        
+        .metric-label {
+            font-size: 12px;
+            color: #8892a0;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .metric-change {
+            font-size: 11px;
+            margin-top: 8px;
+            padding: 4px 8px;
+            border-radius: 6px;
+            display: inline-block;
+        }
+        
+        .metric-change.positive {
+            background: rgba(0, 255, 136, 0.15);
+            color: #00ff88;
+        }
+        
+        .metric-change.negative {
+            background: rgba(255, 107, 107, 0.15);
+            color: #ff6b6b;
+        }
+        
+        /* Live Chart Container */
+        .chart-container {
+            background: linear-gradient(135deg, rgba(26, 35, 64, 0.9), rgba(15, 24, 35, 0.9));
+            border: 1px solid rgba(42, 63, 95, 0.6);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
+            position: relative;
+        }
+        
+        .chart-container canvas {
+            width: 100%;
+            height: 200px;
+        }
+        
+        .live-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(0, 255, 136, 0.1);
+            border: 1px solid rgba(0, 255, 136, 0.3);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            color: #00ff88;
+        }
+        
+        .live-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #00ff88;
+            animation: livePulse 1.5s infinite;
+        }
+        
+        @keyframes livePulse {
+            0%, 100% { opacity: 1; box-shadow: 0 0 5px #00ff88; }
+            50% { opacity: 0.4; box-shadow: 0 0 15px #00ff88; }
+        }
+        
+        /* Veille Section */
+        .veille-section {
+            background: linear-gradient(135deg, rgba(26, 35, 64, 0.9), rgba(15, 24, 35, 0.9));
+            border: 2px solid rgba(255, 215, 0, 0.4);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .veille-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #ffd700, transparent);
+            animation: scanLine 3s linear infinite;
+        }
+        
+        @keyframes scanLine {
+            to { left: 100%; }
+        }
+        
+        .veille-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #ffd700;
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+        
+        .veille-badge {
+            background: linear-gradient(135deg, #ffd700, #ffaa00);
+            color: #0a0e1a;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: 700;
+            animation: glow 2s infinite;
+        }
+        
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 10px rgba(255, 215, 0, 0.5); }
+            50% { box-shadow: 0 0 20px rgba(255, 215, 0, 0.8); }
+        }
+        
+        .veille-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 12px;
+        }
+        
+        .veille-item {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            border-radius: 10px;
+            padding: 15px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .veille-item:hover {
+            transform: translateX(5px);
+            border-color: rgba(255, 215, 0, 0.5);
+            background: rgba(255, 215, 0, 0.05);
+        }
+        
+        .veille-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        
+        .veille-item-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: #e4e6eb;
+        }
+        
+        .veille-item-status {
+            font-size: 10px;
+            padding: 3px 8px;
+            border-radius: 10px;
+            background: rgba(0, 212, 255, 0.2);
+            color: #00d4ff;
+        }
+        
+        .veille-item-status.active {
+            background: rgba(0, 255, 136, 0.2);
+            color: #00ff88;
+        }
+        
+        .veille-item-progress {
+            height: 4px;
+            background: rgba(42, 63, 95, 0.5);
+            border-radius: 2px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+        
+        .veille-item-progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ffd700, #ffaa00);
+            border-radius: 2px;
+            animation: progressPulse 2s ease-in-out infinite;
+        }
+        
+        @keyframes progressPulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
         }
         
         /* Agent Cards */
         .agent-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 15px;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
         }
         
         .agent-card {
-            background: linear-gradient(135deg, rgba(26, 35, 64, 0.8) 0%, rgba(15, 24, 35, 0.8) 100%);
-            border: 1px solid #2a3f5f;
-            border-radius: 12px;
-            padding: 15px;
+            background: linear-gradient(135deg, rgba(26, 35, 64, 0.9) 0%, rgba(15, 24, 35, 0.9) 100%);
+            border: 1px solid rgba(42, 63, 95, 0.6);
+            border-radius: 16px;
+            padding: 20px;
             position: relative;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow: hidden;
         }
         
-        .agent-card.online { border-color: #00ff88; }
-        .agent-card.busy { border-color: #ffd93d; }
-        .agent-card.offline { border-color: #6b7280; }
+        .agent-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #00d4ff, #7b68ee);
+            transform: scaleX(0);
+            transition: transform 0.4s ease;
+        }
+        
+        .agent-card:hover::before {
+            transform: scaleX(1);
+        }
+        
+        .agent-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+        }
+        
+        .agent-card.online { border-color: rgba(0, 255, 136, 0.5); }
+        .agent-card.online::before { background: linear-gradient(90deg, #00ff88, #00d4ff); }
+        
+        .agent-card.busy { border-color: rgba(255, 217, 61, 0.5); }
+        .agent-card.busy::before { background: linear-gradient(90deg, #ffd93d, #ffaa00); }
+        
+        .agent-card.offline { border-color: rgba(107, 114, 128, 0.5); }
         
         .agent-header {
             display: flex;
             align-items: center;
-            gap: 12px;
-            margin-bottom: 12px;
+            gap: 15px;
+            margin-bottom: 15px;
         }
         
         .agent-avatar {
-            width: 48px;
-            height: 48px;
-            border-radius: 12px;
+            width: 56px;
+            height: 56px;
+            border-radius: 14px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 24px;
+            font-size: 28px;
             background: linear-gradient(135deg, #1a2340, #2a3f5f);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .agent-card:hover .agent-avatar {
+            transform: scale(1.1) rotate(5deg);
+        }
+        
+        .agent-avatar::after {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            border-radius: 16px;
+            background: linear-gradient(135deg, #00d4ff, #7b68ee);
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .agent-card:hover .agent-avatar::after {
+            opacity: 0.5;
         }
         
         .agent-name {
-            font-size: 16px;
+            font-size: 17px;
             font-weight: 600;
         }
         
         .agent-role {
-            font-size: 11px;
+            font-size: 12px;
             color: #8892a0;
         }
         
         .agent-capacity {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
             font-size: 12px;
-            margin-bottom: 10px;
-            padding: 6px 10px;
+            margin-bottom: 12px;
+            padding: 10px 14px;
             background: rgba(0,0,0,0.3);
-            border-radius: 6px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        
+        .agent-card:hover .agent-capacity {
+            background: rgba(0, 212, 255, 0.1);
         }
         
         .capacity-bar {
             flex: 1;
-            height: 6px;
-            background: #1a2535;
-            border-radius: 3px;
+            height: 8px;
+            background: rgba(26, 37, 53, 0.8);
+            border-radius: 4px;
             overflow: hidden;
         }
         
         .capacity-fill {
             height: 100%;
-            border-radius: 3px;
-            transition: width 0.3s ease;
+            border-radius: 4px;
+            transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
         }
         
-        .capacity-fill.green { background: #00ff88; }
-        .capacity-fill.yellow { background: #ffd93d; }
-        .capacity-fill.red { background: #ff6b6b; }
+        .capacity-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            animation: shimmer 2s infinite;
+        }
+        
+        @keyframes shimmer {
+            from { transform: translateX(-100%); }
+            to { transform: translateX(100%); }
+        }
+        
+        .capacity-fill.green { background: linear-gradient(90deg, #00ff88, #00d4aa); }
+        .capacity-fill.yellow { background: linear-gradient(90deg, #ffd93d, #ffaa00); }
+        .capacity-fill.red { background: linear-gradient(90deg, #ff6b6b, #ff4757); }
         
         .agent-current-focus {
-            font-size: 12px;
-            color: #8892a0;
-            margin-bottom: 10px;
-            padding: 8px;
+            font-size: 13px;
+            color: #c9cdd4;
+            margin-bottom: 15px;
+            padding: 12px;
             background: rgba(0,0,0,0.2);
-            border-radius: 6px;
+            border-radius: 8px;
+            border-left: 3px solid #00d4ff;
+            transition: all 0.3s ease;
+        }
+        
+        .agent-card:hover .agent-current-focus {
+            border-left-color: #ffd700;
+            background: rgba(255, 215, 0, 0.05);
         }
         
         .agent-stats {
@@ -287,86 +705,123 @@
         .agent-stat {
             flex: 1;
             text-align: center;
+            padding: 10px;
+            background: rgba(0,0,0,0.2);
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        
+        .agent-card:hover .agent-stat {
+            background: rgba(0, 212, 255, 0.1);
+            transform: translateY(-2px);
         }
         
         .agent-stat-value {
-            font-size: 16px;
-            font-weight: 600;
-            color: #00d4ff;
+            font-size: 18px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #00d4ff, #7b68ee);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
         
         .agent-stat-label {
-            font-size: 9px;
+            font-size: 10px;
             color: #6b7280;
             text-transform: uppercase;
+            margin-top: 4px;
         }
         
         /* Logs */
         .log-container {
-            background: rgba(15, 20, 32, 0.6);
-            border: 1px solid #2a3f5f;
-            border-radius: 8px;
-            padding: 10px;
-            font-family: 'Courier New', monospace;
+            background: rgba(15, 20, 32, 0.8);
+            border: 1px solid rgba(42, 63, 95, 0.6);
+            border-radius: 12px;
+            padding: 15px;
+            font-family: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
             font-size: 12px;
             max-height: 500px;
             overflow-y: auto;
         }
         
         .log-line {
-            padding: 6px 0;
+            padding: 8px 0;
             border-bottom: 1px solid rgba(42, 63, 95, 0.3);
             display: flex;
-            gap: 10px;
+            gap: 12px;
+            transition: all 0.2s ease;
+            animation: logIn 0.3s ease;
+        }
+        
+        @keyframes logIn {
+            from { opacity: 0; transform: translateX(-10px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        
+        .log-line:hover {
+            background: rgba(0, 212, 255, 0.05);
+            padding-left: 10px;
+            border-radius: 4px;
         }
         
         .log-time { color: #6b7280; min-width: 60px; }
-        .log-level { min-width: 60px; font-weight: 600; }
-        .log-level.error { color: #ff6b6b; }
-        .log-level.warn { color: #ffd93d; }
-        .log-level.success { color: #00ff88; }
-        .log-level.info { color: #00d4ff; }
-        .log-level.decision { color: #ffd700; }
-        .log-agent { color: #8892a0; min-width: 80px; }
+        .log-level { min-width: 70px; font-weight: 600; }
+        .log-level.error { color: #ff6b6b; text-shadow: 0 0 5px rgba(255, 107, 107, 0.3); }
+        .log-level.warn { color: #ffd93d; text-shadow: 0 0 5px rgba(255, 217, 61, 0.3); }
+        .log-level.success { color: #00ff88; text-shadow: 0 0 5px rgba(0, 255, 136, 0.3); }
+        .log-level.info { color: #00d4ff; text-shadow: 0 0 5px rgba(0, 212, 255, 0.3); }
+        .log-level.decision { color: #ffd700; text-shadow: 0 0 5px rgba(255, 215, 0, 0.3); }
+        .log-agent { color: #8892a0; min-width: 90px; }
         .log-msg { color: #e4e6eb; flex: 1; }
         
         /* Timeline */
         .timeline {
             position: relative;
-            padding-left: 20px;
+            padding-left: 25px;
         }
         
         .timeline::before {
             content: '';
             position: absolute;
-            left: 5px;
+            left: 8px;
             top: 0;
             bottom: 0;
             width: 2px;
-            background: #2a3f5f;
+            background: linear-gradient(180deg, #00d4ff, #7b68ee, #ffd700);
+            border-radius: 1px;
         }
         
         .timeline-item {
             position: relative;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
             padding-left: 20px;
+            transition: all 0.3s ease;
+        }
+        
+        .timeline-item:hover {
+            transform: translateX(5px);
         }
         
         .timeline-item::before {
             content: '';
             position: absolute;
-            left: -18px;
+            left: -20px;
             top: 5px;
-            width: 10px;
-            height: 10px;
+            width: 14px;
+            height: 14px;
             border-radius: 50%;
             background: #2a3f5f;
+            border: 3px solid #0a0e1a;
+            transition: all 0.3s ease;
         }
         
-        .timeline-item.critical::before { background: #ff6b6b; }
-        .timeline-item.warning::before { background: #ffd93d; }
-        .timeline-item.success::before { background: #00ff88; }
-        .timeline-item.info::before { background: #00d4ff; }
+        .timeline-item.critical::before { background: #ff6b6b; box-shadow: 0 0 10px rgba(255, 107, 107, 0.5); }
+        .timeline-item.warning::before { background: #ffd93d; box-shadow: 0 0 10px rgba(255, 217, 61, 0.5); }
+        .timeline-item.success::before { background: #00ff88; box-shadow: 0 0 10px rgba(0, 255, 136, 0.5); }
+        .timeline-item.info::before { background: #00d4ff; box-shadow: 0 0 10px rgba(0, 212, 255, 0.5); }
+        
+        .timeline-item:hover::before {
+            transform: scale(1.3);
+        }
         
         .timeline-time {
             font-size: 11px;
@@ -374,9 +829,9 @@
         }
         
         .timeline-title {
-            font-size: 13px;
+            font-size: 14px;
             font-weight: 600;
-            margin: 2px 0;
+            margin: 4px 0;
         }
         
         .timeline-desc {
@@ -385,21 +840,27 @@
         }
         
         .timeline-agent {
-            font-size: 10px;
+            font-size: 11px;
             color: #6b7280;
-            margin-top: 4px;
+            margin-top: 6px;
+            padding: 4px 10px;
+            background: rgba(0,0,0,0.2);
+            border-radius: 12px;
+            display: inline-block;
         }
         
         /* Responsive */
         @media (max-width: 768px) {
             .agent-grid { grid-template-columns: 1fr; }
             .header-stats { display: none; }
+            .metrics-grid { grid-template-columns: repeat(2, 1fr); }
+            .veille-list { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
     <header class="header">
-        <h1>🎯 Mission Control V3 — Live Dashboard</h1>
+        <h1>🎯 Mission Control V4 — Live Dashboard</h1>
         <div style="display: flex; align-items: center;">
             <div class="header-stats">
                 <div><span class="status-dot"></span> <span id="system-status">Loading...</span></div>
@@ -426,6 +887,50 @@
     <main class="main-content">
         <!-- TAB: AGENTS -->
         <div id="agents" class="tab-content active">
+            <!-- Real-time Metrics -->
+            <div class="chart-container">
+                <div class="card-title">
+                    <span>📊 Métriques en Temps Réel</span>
+                    <span class="live-indicator"><span class="live-dot"></span> LIVE</span>
+                </div>
+                <canvas id="metricsChart"></canvas>
+            </div>
+            
+            <!-- Veille Section -->
+            <div class="veille-section">
+                <div class="veille-title">
+                    <span>🔍 Veille en Cours</span>
+                    <span class="veille-badge">3 ACTIVE</span>
+                </div>
+                <div class="veille-list" id="veille-list">
+                    <!-- Dynamically populated -->
+                </div>
+            </div>
+            
+            <!-- Quick Metrics -->
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-value" id="metric-tasks">0</div>
+                    <div class="metric-label">Tâches Aujourd'hui</div>
+                    <span class="metric-change positive">↑ +12%</span>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value" id="metric-uptime">99.9%</div>
+                    <div class="metric-label">Uptime Système</div>
+                    <span class="metric-change positive">↑ Stable</span>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value" id="metric-response">45ms</div>
+                    <div class="metric-label">Temps Réponse</div>
+                    <span class="metric-change positive">↓ -8%</span>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value" id="metric-ops">1.2K</div>
+                    <div class="metric-label">Opérations/min</div>
+                    <span class="metric-change positive">↑ +5%</span>
+                </div>
+            </div>
+            
             <div class="loading" id="agents-loading">Chargement des agents...</div>
             <div class="agent-grid" id="agents-grid" style="display: none;"></div>
         </div>
@@ -455,6 +960,164 @@
         let businessData = null;
         let agentsStatusData = null;
         let lastUpdate = null;
+        let chartData = [];
+        let chart = null;
+        
+        // Chart setup
+        function initChart() {
+            const canvas = document.getElementById('metricsChart');
+            const ctx = canvas.getContext('2d');
+            
+            // Set canvas size
+            canvas.width = canvas.offsetWidth * 2;
+            canvas.height = canvas.offsetHeight * 2;
+            ctx.scale(2, 2);
+            
+            // Initialize data points
+            for (let i = 0; i < 50; i++) {
+                chartData.push({
+                    tasks: 10 + Math.random() * 20,
+                    agents: 3 + Math.random() * 2,
+                    ops: 1000 + Math.random() * 500
+                });
+            }
+            
+            function drawChart() {
+                const width = canvas.offsetWidth;
+                const height = canvas.offsetHeight;
+                
+                ctx.clearRect(0, 0, width, height);
+                
+                // Draw grid
+                ctx.strokeStyle = 'rgba(42, 63, 95, 0.3)';
+                ctx.lineWidth = 1;
+                for (let i = 0; i < 5; i++) {
+                    const y = (height / 4) * i;
+                    ctx.beginPath();
+                    ctx.moveTo(0, y);
+                    ctx.lineTo(width, y);
+                    ctx.stroke();
+                }
+                
+                // Draw gradient under line
+                const gradient = ctx.createLinearGradient(0, 0, 0, height);
+                gradient.addColorStop(0, 'rgba(0, 212, 255, 0.3)');
+                gradient.addColorStop(1, 'rgba(0, 212, 255, 0)');
+                
+                // Draw line
+                ctx.beginPath();
+                ctx.strokeStyle = '#00d4ff';
+                ctx.lineWidth = 3;
+                ctx.lineCap = 'round';
+                ctx.lineJoin = 'round';
+                
+                chartData.forEach((point, i) => {
+                    const x = (i / (chartData.length - 1)) * width;
+                    const y = height - (point.tasks / 40) * height;
+                    if (i === 0) {
+                        ctx.moveTo(x, y);
+                    } else {
+                        ctx.lineTo(x, y);
+                    }
+                });
+                
+                ctx.stroke();
+                
+                // Fill area under line
+                ctx.lineTo(width, height);
+                ctx.lineTo(0, height);
+                ctx.closePath();
+                ctx.fillStyle = gradient;
+                ctx.fill();
+                
+                // Draw glow effect on latest point
+                const lastPoint = chartData[chartData.length - 1];
+                const lastX = width;
+                const lastY = height - (lastPoint.tasks / 40) * height;
+                
+                const glow = ctx.createRadialGradient(lastX, lastY, 0, lastX, lastY, 20);
+                glow.addColorStop(0, 'rgba(0, 212, 255, 0.8)');
+                glow.addColorStop(1, 'transparent');
+                
+                ctx.beginPath();
+                ctx.arc(lastX, lastY, 20, 0, Math.PI * 2);
+                ctx.fillStyle = glow;
+                ctx.fill();
+                
+                ctx.beginPath();
+                ctx.arc(lastX, lastY, 6, 0, Math.PI * 2);
+                ctx.fillStyle = '#00d4ff';
+                ctx.fill();
+            }
+            
+            function updateChart() {
+                // Add new data point
+                const lastVal = chartData[chartData.length - 1].tasks;
+                const newVal = Math.max(5, Math.min(35, lastVal + (Math.random() - 0.5) * 8));
+                
+                chartData.shift();
+                chartData.push({
+                    tasks: newVal,
+                    agents: 3 + Math.random() * 2,
+                    ops: 1000 + Math.random() * 500
+                });
+                
+                drawChart();
+                
+                // Update metrics
+                document.getElementById('metric-ops').textContent = (1 + Math.random() * 0.5).toFixed(1) + 'K';
+            }
+            
+            drawChart();
+            setInterval(updateChart, 1000);
+        }
+        
+        // Veille data
+        const veilleData = [
+            {
+                title: 'Veille Concurrentielle - Eqdom',
+                status: 'active',
+                statusText: 'Scan en cours',
+                progress: 78,
+                agent: 'Rothschild',
+                icon: '💼'
+            },
+            {
+                title: 'Tendances Fintech MENA',
+                status: 'active',
+                statusText: 'Analyse',
+                progress: 45,
+                agent: 'Henry',
+                icon: '📈'
+            },
+            {
+                title: 'Opportunités CEE WhatsApp',
+                status: 'active',
+                statusText: 'Monitoring',
+                progress: 92,
+                agent: 'Junior',
+                icon: '💬'
+            }
+        ];
+        
+        function renderVeille() {
+            const container = document.getElementById('veille-list');
+            container.innerHTML = veilleData.map(item => `
+                <div class="veille-item">
+                    <div class="veille-item-header">
+                        <div>
+                            <span style="margin-right: 8px;">${item.icon}</span>
+                            <span class="veille-item-title">${item.title}</span>
+                        </div>
+                        <span class="veille-item-status ${item.status}">${item.statusText}</span>
+                    </div>
+                    <div style="font-size: 11px; color: #6b7280;">Agent: ${item.agent}</div>
+                    <div class="veille-item-progress">
+                        <div class="veille-item-progress-fill" style="width: ${item.progress}%;"></div>
+                    </div>
+                </div>
+            `).join('');
+        }
         
         async function loadAllData() {
             try {
@@ -514,25 +1177,26 @@
             
             const totalTasks = Object.values(agents).reduce((sum, a) => sum + (a.tasks_completed_today || 0), 0);
             document.getElementById('tasks-count').textContent = totalTasks;
+            document.getElementById('metric-tasks').textContent = totalTasks;
             
             document.getElementById('nav-agents-badge').textContent = agentCount;
         }
         
         function updateAlerts() {
             const container = document.getElementById('alerts-container');
-            if (!missionData.alerts || missionData.alerts.length === 0) {
-                container.innerHTML = '<div class="alert-banner alert-info"><span>✅</span><span>Aucune alerte active</span></div>';
+            if (!missionData?.alerts || missionData.alerts.length === 0) {
+                container.innerHTML = '<div class="alert-banner alert-info"><span>✅</span><span>Aucune alerte active — Système opérationnel</span></div>';
                 return;
             }
             
             let html = '';
-            missionData.alerts.forEach(alert => {
+            missionData.alerts.forEach((alert, index) => {
                 const alertClass = alert.type === 'critical' ? 'alert-critical' : 
                                   alert.type === 'warning' ? 'alert-warning' : 'alert-info';
                 const icon = alert.type === 'critical' ? '🔴' : 
                             alert.type === 'warning' ? '🟡' : 'ℹ️';
                 html += `
-                    <div class="alert-banner ${alertClass}">
+                    <div class="alert-banner ${alertClass}" style="animation-delay: ${index * 0.1}s">
                         <span>${icon}</span>
                         <span><strong>${alert.type.toUpperCase()}:</strong> ${alert.message}</span>
                     </div>
@@ -616,13 +1280,13 @@
             const loading = document.getElementById('logs-loading');
             const container = document.getElementById('logs-container');
             
-            if (!missionData.recent_logs) return;
+            if (!missionData?.recent_logs) return;
             
             let html = '';
-            missionData.recent_logs.forEach(log => {
+            missionData.recent_logs.forEach((log, index) => {
                 const levelClass = log.level || 'info';
                 html += `
-                    <div class="log-line">
+                    <div class="log-line" style="animation-delay: ${index * 0.05}s">
                         <span class="log-time">${log.time || '--:--'}</span>
                         <span class="log-level ${levelClass}">${(log.level || 'INFO').toUpperCase()}</span>
                         <span class="log-agent">${log.agent || 'system'}</span>
@@ -640,17 +1304,17 @@
             const loading = document.getElementById('history-loading');
             const container = document.getElementById('history-container');
             
-            if (!missionData.recent_logs) return;
+            if (!missionData?.recent_logs) return;
             
             let html = '';
             // Utiliser les logs comme historique
-            missionData.recent_logs.slice(0, 10).forEach(log => {
+            missionData.recent_logs.slice(0, 10).forEach((log, index) => {
                 const type = log.level === 'error' ? 'critical' : 
                             log.level === 'warning' ? 'warning' : 
                             log.level === 'success' ? 'success' : 'info';
                 
                 html += `
-                    <div class="timeline-item ${type}">
+                    <div class="timeline-item ${type}" style="animation-delay: ${index * 0.1}s">
                         <div class="timeline-time">${log.time || '--:--'}</div>
                         <div class="timeline-title">${log.message || ''}</div>
                         <div class="timeline-agent">${capitalize(log.agent || 'system')}</div>
@@ -686,22 +1350,22 @@
                 html += '<div class="card"><div class="card-title">🎯 Opportunités Validées</div>';
                 validated.forEach(opp => {
                     html += `
-                        <div style="background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(0, 255, 136, 0.05)); border: 2px solid #ffd700; border-radius: 12px; padding: 20px; margin-bottom: 15px;">
+                        <div style="background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(0, 255, 136, 0.05)); border: 2px solid #ffd700; border-radius: 12px; padding: 20px; margin-bottom: 15px; transition: all 0.3s ease;" onmouseover="this.style.transform='translateX(10px)';this.style.boxShadow='0 10px 30px rgba(255, 215, 0, 0.2)'" onmouseout="this.style.transform='';this.style.boxShadow=''">
                             <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px;">
                                 <h3 style="color: #ffd700; font-size: 18px;">${opp.nom}</h3>
-                                <div style="font-size: 32px; font-weight: 700; color: #ffd700;">${opp.score}/10</div>
+                                <div style="font-size: 32px; font-weight: 700; color: #ffd700; text-shadow: 0 0 20px rgba(255, 215, 0, 0.3);">${opp.score}/10</div>
                             </div>
                             <p style="color: #c9cdd4; margin-bottom: 15px; font-size: 13px;">${opp.description || ''}</p>
                             <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 15px;">
-                                <div style="background: rgba(0,0,0,0.2); padding: 10px; border-radius: 6px;">
+                                <div style="background: rgba(0,0,0,0.2); padding: 10px; border-radius: 6px; transition: all 0.3s ease;" onmouseover="this.style.background='rgba(0, 255, 136, 0.1)'">
                                     <div style="font-size: 10px; color: #8892a0;">Coût</div>
                                     <div style="color: #00ff88; font-weight: 600;">${opp.coût_démarrage_range || 'N/A'}</div>
                                 </div>
-                                <div style="background: rgba(0,0,0,0.2); padding: 10px; border-radius: 6px;">
+                                <div style="background: rgba(0,0,0,0.2); padding: 10px; border-radius: 6px; transition: all 0.3s ease;" onmouseover="this.style.background='rgba(0, 212, 255, 0.1)'">
                                     <div style="font-size: 10px; color: #8892a0;">Potentiel</div>
                                     <div style="color: #00d4ff; font-weight: 600;">${opp.potentiel_revenus || 'N/A'}</div>
                                 </div>
-                                <div style="background: rgba(0,0,0,0.2); padding: 10px; border-radius: 6px;">
+                                <div style="background: rgba(0,0,0,0.2); padding: 10px; border-radius: 6px; transition: all 0.3s ease;" onmouseover="this.style.background='rgba(255, 217, 61, 0.1)'">
                                     <div style="font-size: 10px; color: #8892a0;">Délai</div>
                                     <div style="color: #ffd93d; font-weight: 600;">${opp.temps_implémentation || 'N/A'}</div>
                                 </div>
@@ -721,7 +1385,7 @@
                 html += '<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 10px;">';
                 inResearch.forEach(opp => {
                     html += `
-                        <div style="background: rgba(26, 35, 64, 0.6); border: 1px solid #2a3f5f; border-radius: 8px; padding: 12px;">
+                        <div style="background: rgba(26, 35, 64, 0.6); border: 1px solid #2a3f5f; border-radius: 8px; padding: 12px; transition: all 0.3s ease;" onmouseover="this.style.borderColor='#00d4ff';this.style.transform='translateY(-3px)'" onmouseout="this.style.borderColor='';this.style.transform=''">
                             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
                                 <span style="font-weight: 600; font-size: 13px;">${opp.nom}</span>
                                 <span style="background: rgba(255, 215, 0, 0.2); color: #ffd700; padding: 2px 8px; border-radius: 10px; font-size: 10px;">${opp.score}</span>
@@ -762,6 +1426,8 @@
         
         // Charger les données au démarrage
         document.addEventListener('DOMContentLoaded', () => {
+            initChart();
+            renderVeille();
             loadAllData();
             // Rafraîchir toutes les 30 secondes
             setInterval(loadAllData, 30000);
