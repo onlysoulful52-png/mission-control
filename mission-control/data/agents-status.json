@@ -14,12 +14,12 @@
     "rothschild": {
       "name": "Rothschild",
       "role": "CEO / Stratège",
-      "status": "standby",
-      "statusText": "En attente de mission",
-      "currentTask": null,
-      "lastActivity": "2026-03-07T10:50:00+08:00",
-      "channel": "Disponible sur demande",
-      "tasks_completed_today": 3
+      "status": "active",
+      "statusText": "Veille continue activée",
+      "currentTask": "Recherche opportunités business",
+      "lastActivity": "2026-03-07T11:10:00+08:00",
+      "channel": "Auto-veille toutes les heures",
+      "tasks_completed_today": 1
     },
     "junior": {
       "name": "Junior",
