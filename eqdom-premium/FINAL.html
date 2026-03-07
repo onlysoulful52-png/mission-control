@@ -1,0 +1,1114 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Eqdom - Crédit Premium</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    :root {
+      --saham-navy: #0F1823;
+      --saham-light: #1A2433;
+      --eqdom-red: #AB0017;
+      --eqdom-red-hover: #8A0012;
+      --text-primary: #FFFFFF;
+      --text-secondary: #86868B;
+      --border: rgba(255,255,255,0.1);
+      --success: #16A34A;
+    }
+    
+    html {
+      scroll-behavior: smooth;
+      scroll-snap-type: y mandatory;
+    }
+    
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      background: var(--saham-navy);
+      color: var(--text-primary);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+    
+    /* Progress bar */
+    .progress-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: rgba(255,255,255,0.05);
+      z-index: 1000;
+    }
+    
+    .progress-bar {
+      height: 100%;
+      background: linear-gradient(90deg, var(--eqdom-red), #D41830);
+      transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    /* Navigation dots */
+    .nav-dots {
+      position: fixed;
+      right: 30px;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    
+    .nav-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.2);
+      cursor: pointer;
+      transition: all 0.3s;
+      position: relative;
+    }
+    
+    .nav-dot::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 0;
+      height: 0;
+      border-radius: 50%;
+      background: var(--eqdom-red);
+      transition: all 0.3s;
+    }
+    
+    .nav-dot.active::before {
+      width: 100%;
+      height: 100%;
+    }
+    
+    .nav-dot-label {
+      position: absolute;
+      right: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      white-space: nowrap;
+      font-size: 11px;
+      color: var(--text-secondary);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    
+    .nav-dot:hover .nav-dot-label {
+      opacity: 1;
+    }
+    
+    /* Sections */
+    .section {
+      min-height: 100vh;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 80px 40px;
+      scroll-snap-align: start;
+      position: relative;
+    }
+    
+    .container {
+      max-width: 1200px;
+      width: 100%;
+      margin: 0 auto;
+    }
+    
+    /* Typography */
+    .brand {
+      color: var(--eqdom-red);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      font-weight: 600;
+      margin-bottom: 20px;
+    }
+    
+    h1 {
+      font-size: clamp(40px, 5vw, 64px);
+      font-weight: 700;
+      line-height: 1.1;
+      margin-bottom: 20px;
+    }
+    
+    h1 span {
+      color: var(--eqdom-red);
+    }
+    
+    h2 {
+      font-size: clamp(28px, 4vw, 40px);
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
+    
+    h2 span {
+      color: var(--eqdom-red);
+    }
+    
+    p {
+      color: var(--text-secondary);
+      font-size: 17px;
+      line-height: 1.7;
+    }
+    
+    /* Cards */
+    .card {
+      background: var(--saham-light);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 32px;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(171,0,23,0.3);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+    }
+    
+    .card-highlight {
+      background: linear-gradient(135deg, var(--saham-light), rgba(171,0,23,0.05));
+      border-color: rgba(171,0,23,0.2);
+    }
+    
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--eqdom-red);
+      color: white;
+      border: none;
+      padding: 16px 32px;
+      border-radius: 12px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.3s;
+    }
+    
+    .btn:hover {
+      background: var(--eqdom-red-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(171,0,23,0.3);
+    }
+    
+    .btn-secondary {
+      background: transparent;
+      border: 1px solid var(--border);
+      margin-left: 12px;
+    }
+    
+    .btn-secondary:hover {
+      background: rgba(255,255,255,0.05);
+      border-color: rgba(255,255,255,0.2);
+    }
+    
+    .btn:disabled {
+      background: #333;
+      color: #666;
+      cursor: not-allowed;
+      transform: none;
+    }
+    
+    /* Two column layout */
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+    }
+    
+    @media (max-width: 968px) {
+      .two-col {
+        grid-template-columns: 1fr;
+        gap: 40px;
+      }
+      .nav-dots {
+        display: none;
+      }
+    }
+    
+    /* Range slider */
+    .slider-container {
+      margin: 28px 0;
+    }
+    
+    input[type="range"] {
+      width: 100%;
+      -webkit-appearance: none;
+      height: 6px;
+      background: var(--border);
+      border-radius: 3px;
+      outline: none;
+      margin: 20px 0;
+    }
+    
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 24px;
+      height: 24px;
+      background: var(--eqdom-red);
+      border-radius: 50%;
+      cursor: pointer;
+      box-shadow: 0 0 0 4px rgba(171,0,23,0.2);
+      transition: transform 0.2s;
+    }
+    
+    input[type="range"]::-webkit-slider-thumb:hover {
+      transform: scale(1.1);
+    }
+    
+    .amount-display {
+      font-size: 42px;
+      font-weight: 700;
+      margin: 12px 0;
+      background: linear-gradient(135deg, white, var(--eqdom-red));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    /* Duration buttons */
+    .duration-grid {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 16px;
+    }
+    
+    .duration-btn {
+      flex: 1;
+      min-width: 70px;
+      padding: 14px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: var(--text-secondary);
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    
+    .duration-btn:hover {
+      background: rgba(255,255,255,0.1);
+      border-color: rgba(255,255,255,0.2);
+    }
+    
+    .duration-btn.active {
+      background: var(--eqdom-red);
+      border-color: var(--eqdom-red);
+      color: white;
+      font-weight: 600;
+    }
+    
+    /* Form inputs */
+    input[type="text"],
+    input[type="tel"],
+    input[type="email"] {
+      width: 100%;
+      background: var(--saham-navy);
+      border: 1px solid var(--border);
+      padding: 16px;
+      border-radius: 12px;
+      color: white;
+      font-size: 16px;
+      margin-bottom: 12px;
+      transition: all 0.3s;
+    }
+    
+    input:focus {
+      outline: none;
+      border-color: var(--eqdom-red);
+      box-shadow: 0 0 0 3px rgba(171,0,23,0.1);
+    }
+    
+    /* Consent checkboxes */
+    .consent-box {
+      background: var(--saham-navy);
+      border-radius: 16px;
+      padding: 24px;
+      margin-top: 24px;
+    }
+    
+    .consent-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--eqdom-red);
+      font-weight: 600;
+      font-size: 13px;
+      margin-bottom: 16px;
+    }
+    
+    .checkbox-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    
+    .checkbox-item:last-child {
+      border-bottom: none;
+    }
+    
+    .checkbox-item input {
+      width: 18px;
+      height: 18px;
+      margin-top: 2px;
+      accent-color: var(--eqdom-red);
+    }
+    
+    .checkbox-item label {
+      color: var(--text-secondary);
+      font-size: 13px;
+      line-height: 1.5;
+      cursor: pointer;
+    }
+    
+    /* Document items */
+    .doc-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px;
+      background: var(--saham-navy);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      margin-bottom: 12px;
+      transition: all 0.3s;
+    }
+    
+    .doc-item.uploaded {
+      border-color: var(--success);
+      background: rgba(22,163,74,0.05);
+    }
+    
+    .doc-info {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    
+    .doc-icon {
+      width: 48px;
+      height: 48px;
+      background: rgba(255,255,255,0.05);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+    }
+    
+    .doc-item.uploaded .doc-icon {
+      background: rgba(22,163,74,0.1);
+    }
+    
+    .doc-name {
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+    
+    .doc-status {
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+    
+    .doc-btn {
+      padding: 10px 20px;
+      background: rgba(255,255,255,0.1);
+      border: none;
+      border-radius: 8px;
+      color: white;
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    
+    .doc-btn:hover {
+      background: rgba(255,255,255,0.15);
+    }
+    
+    /* Timeline */
+    .timeline {
+      display: flex;
+      justify-content: space-between;
+      max-width: 700px;
+      margin: 40px auto;
+      position: relative;
+    }
+    
+    .timeline::before {
+      content: '';
+      position: absolute;
+      top: 20px;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: var(--border);
+    }
+    
+    .timeline-step {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .timeline-dot {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--saham-light);
+      border: 2px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      transition: all 0.3s;
+    }
+    
+    .timeline-step.active .timeline-dot {
+      background: var(--eqdom-red);
+      border-color: var(--eqdom-red);
+      animation: pulse 2s infinite;
+    }
+    
+    .timeline-step.completed .timeline-dot {
+      background: var(--success);
+      border-color: var(--success);
+    }
+    
+    @keyframes pulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(171,0,23,0.4); }
+      50% { box-shadow: 0 0 0 10px rgba(171,0,23,0); }
+    }
+    
+    .timeline-label {
+      font-size: 12px;
+      color: var(--text-secondary);
+      text-align: center;
+    }
+    
+    /* Success badge */
+    .badge-success {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(22,163,74,0.1);
+      color: var(--success);
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 24px;
+    }
+    
+    /* Success icon */
+    .success-icon {
+      width: 100px;
+      height: 100px;
+      background: var(--success);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 24px;
+      font-size: 50px;
+      animation: scaleIn 0.5s ease-out;
+    }
+    
+    @keyframes scaleIn {
+      0% { transform: scale(0); }
+      50% { transform: scale(1.1); }
+      100% { transform: scale(1); }
+    }
+    
+    /* Reference box */
+    .ref-box {
+      display: inline-block;
+      background: var(--saham-light);
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-family: monospace;
+      font-size: 15px;
+      margin: 16px 0;
+    }
+    
+    /* Reveal animations */
+    .reveal {
+      opacity: 0;
+      transform: translateY(50px);
+      transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .reveal.active {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    
+    .reveal-left {
+      opacity: 0;
+      transform: translateX(-60px);
+      transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .reveal-left.active {
+      opacity: 1;
+      transform: translateX(0);
+    }
+    
+    .reveal-right {
+      opacity: 0;
+      transform: translateX(60px);
+      transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .reveal-right.active {
+      opacity: 1;
+      transform: translateX(0);
+    }
+    
+    .reveal-scale {
+      opacity: 0;
+      transform: scale(0.9);
+      transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .reveal-scale.active {
+      opacity: 1;
+      transform: scale(1);
+    }
+  </style>
+</head>
+<body>
+  <!-- Progress Bar -->
+  <div class="progress-container">
+    <div class="progress-bar" id="progressBar" style="width: 14%"></div>
+  </div>
+
+  <!-- Navigation Dots -->
+  <div class="nav-dots">
+    <div class="nav-dot active" onclick="scrollToSection(0)">
+      <span class="nav-dot-label">Accueil</span>
+    </div>
+    <div class="nav-dot" onclick="scrollToSection(1)">
+      <span class="nav-dot-label">Simulation</span>
+    </div>
+    <div class="nav-dot" onclick="scrollToSection(2)">
+      <span class="nav-dot-label">Contact</span>
+    </div>
+    <div class="nav-dot" onclick="scrollToSection(3)">
+      <span class="nav-dot-label">Documents</span>
+    </div>
+    <div class="nav-dot" onclick="scrollToSection(4)">
+      <span class="nav-dot-label">Suivi</span>
+    </div>
+    <div class="nav-dot" onclick="scrollToSection(5)">
+      <span class="nav-dot-label">Offre</span>
+    </div>
+    <div class="nav-dot" onclick="scrollToSection(6)">
+      <span class="nav-dot-label">Succès</span>
+    </div>
+  </div>
+
+  <!-- SECTION 1: HERO -->
+  <section class="section" id="section-0">
+    <div class="container">
+      <div class="two-col">
+        <div class="reveal-left">
+          <div class="brand">Groupe Saham</div>
+          <h1>Votre projet,<br><span>notre financement.</span></h1>
+          <p>Une solution de crédit sur mesure, 100% en ligne. Obtenez une réponse en quelques minutes, recevez vos fonds sous 48h.</p>
+          <div style="margin-top: 40px;">
+            <button class="btn" onclick="scrollToSection(1)">Démarrer ma simulation →</button>
+          </div>
+          <div style="margin-top: 48px; display: flex; gap: 48px;">
+            <div>
+              <div style="font-size: 32px; font-weight: 700; color: var(--eqdom-red);">5min</div>
+              <div style="font-size: 13px; color: var(--text-secondary);">Simulation</div>
+            </div>
+            <div>
+              <div style="font-size: 32px; font-weight: 700; color: var(--eqdom-red);">48h</div>
+              <div style="font-size: 13px; color: var(--text-secondary);">Déblocage</div>
+            </div>
+            <div>
+              <div style="font-size: 32px; font-weight: 700; color: var(--eqdom-red);">4.9%</div>
+              <div style="font-size: 13px; color: var(--text-secondary);">TAEG min</div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="reveal-right">
+          <div class="card card-highlight">
+            <div style="text-align: center;">
+              <div style="color: var(--eqdom-red); font-size: 24px; margin-bottom: 16px;">💳</div>
+              <div style="font-size: 14px; color: var(--text-secondary); margin-bottom: 8px;">Crédit Personnel</div>
+              <div style="font-size: 36px; font-weight: 700;">50 000 DH</div>
+              <div style="margin-top: 24px; padding-top: 24px; border-top: 1px solid var(--border);">
+                <div style="display: flex; justify-content: space-between;">
+                  <div style="text-align: left;">
+                    <div style="font-size: 12px; color: var(--text-secondary);">Mensualité</div>
+                    <div style="font-size: 20px; font-weight: 600; color: var(--eqdom-red);">2 396 DH</div>
+                  </div>
+                  <div style="text-align: right;">
+                    <div style="font-size: 12px; color: var(--text-secondary);">Durée</div>
+                    <div style="font-size: 20px; font-weight: 600;">24 mois</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 2: SIMULATION -->
+  <section class="section" id="section-1">
+    <div class="container">
+      <div class="two-col">
+        <div class="reveal-left">
+          <div class="brand">Simulation</div>
+          <h2>Quel est votre <span>projet</span> ?</h2>
+          <p>Ajustez le montant et la durée selon vos besoins. Obtenez une estimation instantanée de vos mensualités.</p>
+          <div style="margin-top: 40px;">
+            <div class="card">
+              <div style="display: flex; align-items: center; gap: 16px;">
+                <div style="font-size: 32px;">⚡</div>
+                <div>
+                  <div style="font-weight: 600;">Réponse immédiate</div>
+                  <div style="font-size: 13px; color: var(--text-secondary);">Découvrez votre taux personnalisé en quelques secondes</div>
+                </div>
+              </div>
+            </div>
+            <div class="card" style="margin-top: 16px;">
+              <div style="display: flex; align-items: center; gap: 16px;">
+                <div style="font-size: 32px;">🔒</div>
+                <div>
+                  <div style="font-weight: 600;">Sans engagement</div>
+                  <div style="font-size: 13px; color: var(--text-secondary);">La simulation est gratuite et sans impact sur votre score</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="reveal-right">
+          <div class="card">
+            <div class="slider-container">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                <span style="font-size: 13px; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 1px;">Montant souhaité</span>
+              </div>
+              <div class="amount-display" id="amountDisplay">50 000 DH</div>
+              <input type="range" id="amountSlider" min="5000" max="500000" step="5000" value="50000" oninput="updateSimulation()">
+              <div style="display: flex; justify-content: space-between; font-size: 13px; color: var(--text-secondary);">
+                <span>5 000 DH</span>
+                <span>500 000 DH</span>
+              </div>
+            </div>
+            
+            <div style="margin-top: 32px;">
+              <span style="font-size: 13px; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 1px;">Durée</span>
+              <div class="duration-grid">
+                <button class="duration-btn" onclick="setDuration(12, this)">12m</button>
+                <button class="duration-btn active" onclick="setDuration(24, this)">24m</button>
+                <button class="duration-btn" onclick="setDuration(36, this)">36m</button>
+                <button class="duration-btn" onclick="setDuration(48, this)">48m</button>
+                <button class="duration-btn" onclick="setDuration(60, this)">60m</button>
+              </div>
+            </div>
+            
+            <div class="card card-highlight" style="margin-top: 32px;">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                  <div style="font-size: 13px; color: var(--text-secondary);">Mensualité estimée</div>
+                  <div style="font-size: 36px; font-weight: 700; color: var(--eqdom-red);" id="monthlyResult">2 396 DH</div>
+                </div>
+                <div style="text-align: right;">
+                  <div style="font-size: 13px; color: var(--text-secondary);">TAEG</div>
+                  <div style="font-size: 24px; font-weight: 700;">4.9%</div>
+                </div>
+              </div>
+            </div>
+            
+            <button class="btn" style="width: 100%; margin-top: 24px;" onclick="scrollToSection(2)">Continuer →</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 3: CONTACT -->
+  <section class="section" id="section-2">
+    <div class="container">
+      <div class="two-col">
+        <div class="reveal-left">
+          <div class="brand">Coordonnées</div>
+          <h2>Vos <span>informations</span></h2>
+          <p>Nous avons besoin de ces informations pour finaliser votre dossier. Un conseiller vous contactera si nécessaire.</p>
+          
+          <div class="card" style="margin-top: 32px;">
+            <div style="display: flex; align-items: center; gap: 16px;">
+              <div style="width: 48px; height: 48px; background: rgba(171,0,23,0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 24px;">🔐</div>
+              <div>
+                <div style="font-weight: 600;">Protection de vos données</div>
+                <div style="font-size: 13px; color: var(--text-secondary);">Conforme à la loi 09-08 sur la protection des données</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="reveal-right">
+          <div class="card">
+            <input type="text" placeholder="Prénom *" id="firstName" oninput="validateContact()">
+            <input type="text" placeholder="Nom *" id="lastName" oninput="validateContact()">
+            <input type="tel" placeholder="Téléphone *" id="phone" oninput="validateContact()">
+            <input type="email" placeholder="Email (optionnel)" id="email">
+            
+            <div class="consent-box">
+              <div class="consent-header">⚠ Consentements obligatoires (CNDP)</div>
+              
+              <div class="checkbox-item">
+                <input type="checkbox" id="consent1" onchange="validateContact()">
+                <label for="consent1">J'accepte la vérification de mon identité et la consultation du Bureau de Crédit pour l'étude de ma demande.</label>
+              </div>
+              
+              <div class="checkbox-item">
+                <input type="checkbox" id="consent2" onchange="validateContact()">
+                <label for="consent2">J'accepte le traitement de mes données personnelles dans le cadre de ma demande de crédit conformément à la loi 09-08.</label>
+              </div>
+              
+              <div class="checkbox-item">
+                <input type="checkbox" id="consent3" onchange="validateContact()">
+                <label for="consent3">J'accepte de recevoir des informations sur les produits et services du groupe Saham.</label>
+              </div>
+            </div>
+            
+            <button class="btn" id="contactBtn" style="width: 100%; margin-top: 24px;" onclick="scrollToSection(3)" disabled>
+              Veuillez remplir tous les champs
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 4: DOCUMENTS -->
+  <section class="section" id="section-3">
+    <div class="container" style="max-width: 800px;">
+      <div class="reveal" style="text-align: center;">
+        <div class="brand">Documents</div>
+        <h2>Vos <span>justificatifs</span></h2>
+        <p>Téléchargez les documents demandés pour finaliser votre dossier.</p>
+      </div>
+      
+      <div style="margin-top: 48px;">
+        <div class="doc-item reveal-scale" id="doc-cin1">
+          <div class="doc-info">
+            <div class="doc-icon">🪪</div>
+            <div>
+              <div class="doc-name">CIN - Recto</div>
+              <div class="doc-status">Carte d'identité (face avant)</div>
+            </div>
+          </div>
+          <button class="doc-btn" onclick="uploadDoc('cin1')">Télécharger</button>
+        </div>
+        
+        <div class="doc-item reveal-scale" style="transition-delay: 0.1s;" id="doc-cin2">
+          <div class="doc-info">
+            <div class="doc-icon">🪪</div>
+            <div>
+              <div class="doc-name">CIN - Verso</div>
+              <div class="doc-status">Carte d'identité (face arrière)</div>
+            </div>
+          </div>
+          <button class="doc-btn" onclick="uploadDoc('cin2')">Télécharger</button>
+        </div>
+        
+        <div class="doc-item reveal-scale" style="transition-delay: 0.2s;" id="doc-rib">
+          <div class="doc-info">
+            <div class="doc-icon">🏦</div>
+            <div>
+              <div class="doc-name">RIB</div>
+              <div class="doc-status">Relevé d'Identité Bancaire</div>
+            </div>
+          </div>
+          <button class="doc-btn" onclick="uploadDoc('rib')">Télécharger</button>
+        </div>
+      </div>
+      
+      <div class="reveal" style="text-align: center; margin-top: 40px;">
+        <button class="btn" id="submitDocsBtn" onclick="scrollToSection(4)" disabled>
+          Charger les documents
+        </button>
+        <p style="margin-top: 16px; font-size: 14px;">
+          <a href="#" style="color: var(--eqdom-red); text-decoration: none;">Sauvegarder et reprendre plus tard</a>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 5: WAITING / STATUS -->
+  <section class="section" id="section-4">
+    <div class="container" style="max-width: 800px; text-align: center;">
+      <div class="reveal">
+        <div style="font-size: 64px; margin-bottom: 24px;">⏳</div>
+        
+        <h2>Votre dossier est en <span>cours d'étude</span></h2>
+        <p>Référence : </ p>
+        <div class="ref-box" id="refNumber">EQD-8F3D9A2E</div>
+        
+        <div class="timeline reveal-scale" style="margin-top: 48px;">
+          <div class="timeline-step completed">
+            <div class="timeline-dot">✓</div>
+            <div class="timeline-label">Documents<br>reçus</div>
+          </div>
+          
+          <div class="timeline-step completed">
+            <div class="timeline-dot">✓</div>
+            <div class="timeline-label">Vérification<br>identité</div>
+          </div>
+          
+          <div class="timeline-step active">
+            <div class="timeline-dot">⏳</div>
+            <div class="timeline-label">Analyse<br>crédit</div>
+          </div>
+          
+          <div class="timeline-step">
+            <div class="timeline-dot">○</div>
+            <div class="timeline-label">Décision<br>finale</div>
+          </div>
+        </div>
+        
+        <div class="card" style="margin-top: 48px; max-width: 500px; margin-left: auto; margin-right: auto;">
+          <div style="display: flex; align-items: center; gap: 16px;">
+            <div style="width: 48px; height: 48px; background: rgba(171,0,23,0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 24px;">⏱️</div>
+            <div style="text-align: left;">
+              <div style="font-weight: 600;">Temps estimé</div>
+              <div style="font-size: 14px; color: var(--text-secondary);">4 à 24 heures</div>
+            </div>
+          </div>
+        </div>
+        
+        <button class="btn" style="margin-top: 40px;" onclick="scrollToSection(5)">Voir l'offre (simulation) →</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 6: OFFER -->
+  <section class="section" id="section-5">
+    <div class="container" style="max-width: 600px; text-align: center;">
+      <div class="reveal">
+        <div class="badge-success">✓ Crédit approuvé</div>
+        
+        <h2>Votre <span>offre</span> de crédit</h2>
+        <p>Félicitations ! Voici les conditions personnalisées de votre crédit.</p>
+        
+        <div class="card card-highlight reveal-scale" style="margin-top: 40px; text-align: left;">
+          <div style="display: flex; justify-content: space-between; padding: 20px 0; border-bottom: 1px solid var(--border);">
+            <span style="color: var(--text-secondary);">Montant du crédit</span>
+            <span style="font-weight: 600;" id="offerAmount">50 000 DH</span>
+          </div>
+          
+          <div style="display: flex; justify-content: space-between; padding: 20px 0; border-bottom: 1px solid var(--border);">
+            <span style="color: var(--text-secondary);">Durée</span>
+            <span style="font-weight: 600;" id="offerDuration">24 mois</span>
+          </div>
+          
+          <div style="display: flex; justify-content: space-between; padding: 20px 0; border-bottom: 1px solid var(--border);">
+            <span style="color: var(--text-secondary);">Mensualité</span>
+            <span style="font-weight: 700; color: var(--eqdom-red); font-size: 24px;" id="offerMonthly">2 396 DH</span>
+          </div>
+          
+          <div style="display: flex; justify-content: space-between; padding: 20px 0; border-bottom: 1px solid var(--border);">
+            <span style="color: var(--text-secondary);">TAEG</span>
+            <span style="font-weight: 600;">4.9%</span>
+          </div>
+          
+          <div style="display: flex; justify-content: space-between; padding: 20px 0;">
+            <span style="color: var(--text-secondary);">Première échéance</span>
+            <span style="font-weight: 600;">05 avril 2026</span>
+          </div>
+        </div>
+        
+        <div style="margin-top: 40px;">
+          <button class="btn" onclick="scrollToSection(6)">Accepter et signer →</button>
+          <button class="btn btn-secondary">Télécharger le contrat</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 7: SUCCESS -->
+  <section class="section" id="section-6">
+    <div class="container" style="max-width: 600px; text-align: center;">
+      <div class="reveal">
+        <div class="success-icon">✓</div>
+        
+        <h1>Crédit <span>confirmé</span> !</h1>
+        <p>Votre dossier a été signé avec succès. Vos fonds seront débloqués sous peu.</p>
+        
+        <div class="card reveal-scale" style="margin-top: 40px; text-align: left;">
+          <div style="display: flex; justify-content: space-between; padding: 16px 0; border-bottom: 1px solid var(--border);">
+            <span style="color: var(--text-secondary);">Référence</span>
+            <span style="font-family: monospace;">EQD-8F3D9A2E</span>
+          </div>
+          
+          <div style="display: flex; justify-content: space-between; padding: 16px 0; border-bottom: 1px solid var(--border);">
+            <span style="color: var(--text-secondary);">Montant</span>
+            <span>50 000 DH</span>
+          </div>
+          
+          <div style="display: flex; justify-content: space-between; padding: 16px 0;">
+            <span style="color: var(--text-secondary);">Déblocage des fonds</span>
+            <span>24 à 48 heures</span>
+          </div>
+        </div>
+        
+        <div style="margin-top: 40px;">
+          <button class="btn">Télécharger le contrat</button>
+          <button class="btn btn-secondary" onclick="scrollToSection(0)">Nouvelle simulation</button>
+        </div>
+        
+        <p style="margin-top: 40px; font-size: 14px;">
+          📧 Un email de confirmation a été envoyé<br>
+          📱 Vous recevrez un SMS quand les fonds seront débloqués
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    // Scroll reveal
+    const reveals = document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale');
+    
+    function checkReveal() {
+      reveals.forEach(element => {
+        const windowHeight = window.innerHeight;
+        const elementTop = element.getBoundingClientRect().top;
+        const elementVisible = 100;
+        
+        if (elementTop < windowHeight - elementVisible) {
+          element.classList.add('active');
+        }
+      });
+    }
+    
+    window.addEventListener('scroll', checkReveal);
+    checkReveal();
+    
+    // Navigation
+    function scrollToSection(index) {
+      document.getElementById('section-' + index).scrollIntoView({ behavior: 'smooth' });
+      updateProgress(index);
+      updateNavDots(index);
+    }
+    
+    function updateProgress(index) {
+      const progress = ((index + 1) / 7) * 100;
+      document.getElementById('progressBar').style.width = progress + '%';
+    }
+    
+    function updateNavDots(index) {
+      document.querySelectorAll('.nav-dot').forEach((dot, i) => {
+        dot.classList.toggle('active', i === index);
+      });
+    }
+    
+    // Update on scroll
+    window.addEventListener('scroll', () => {
+      const sections = document.querySelectorAll('.section');
+      let current = 0;
+      
+      sections.forEach((section, index) => {
+        const rect = section.getBoundingClientRect();
+        if (rect.top <= window.innerHeight / 2) {
+          current = index;
+        }
+      });
+      
+      updateProgress(current);
+      updateNavDots(current);
+    });
+    
+    // Simulation
+    let currentAmount = 50000;
+    let currentDuration = 24;
+    
+    function updateSimulation() {
+      currentAmount = parseInt(document.getElementById('amountSlider').value);
+      const monthly = Math.round((currentAmount / currentDuration) * 1.15);
+      
+      document.getElementById('amountDisplay').textContent = currentAmount.toLocaleString('fr-FR') + ' DH';
+      document.getElementById('monthlyResult').textContent = monthly.toLocaleString('fr-FR') + ' DH';
+      
+      // Update offer section
+      document.getElementById('offerAmount').textContent = currentAmount.toLocaleString('fr-FR') + ' DH';
+      document.getElementById('offerMonthly').textContent = monthly.toLocaleString('fr-FR') + ' DH';
+    }
+    
+    function setDuration(months, btn) {
+      currentDuration = months;
+      document.querySelectorAll('.duration-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      updateSimulation();
+      document.getElementById('offerDuration').textContent = months + ' mois';
+    }
+    
+    // Contact validation
+    function validateContact() {
+      const firstName = document.getElementById('firstName').value;
+      const lastName = document.getElementById('lastName').value;
+      const phone = document.getElementById('phone').value;
+      const consent1 = document.getElementById('consent1').checked;
+      const consent2 = document.getElementById('consent2').checked;
+      const consent3 = document.getElementById('consent3').checked;
+      
+      const isValid = firstName && lastName && phone && consent1 && consent2 && consent3;
+      
+      const btn = document.getElementById('contactBtn');
+      btn.disabled = !isValid;
+      btn.textContent = isValid ? 'Continuer vers les documents →' : 'Veuillez remplir tous les champs';
+    }
+    
+    // Document upload
+    const docs = { cin1: false, cin2: false, rib: false };
+    
+    function uploadDoc(docId) {
+      docs[docId] = true;
+      
+      const docEl = document.getElementById('doc-' + docId);
+      docEl.classList.add('uploaded');
+      docEl.querySelector('.doc-status').textContent = 'Document reçu';
+      docEl.querySelector('.doc-btn').outerHTML = '<span style="color: var(--success); font-weight: 600;">✓ Reçu</span>';
+      
+      checkAllDocsUploaded();
+    }
+    
+    function checkAllDocsUploaded() {
+      const allUploaded = Object.values(docs).every(v => v);
+      const btn = document.getElementById('submitDocsBtn');
+      
+      btn.disabled = !allUploaded;
+      
+      const uploadedCount = Object.values(docs).filter(v => v).length;
+      btn.textContent = allUploaded ? 'Soumettre ma demande →' : `${uploadedCount}/3 documents chargés`;
+    }
+  </script>
+</body>
+</html>

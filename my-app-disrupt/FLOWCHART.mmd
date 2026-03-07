@@ -1,0 +1,110 @@
+flowchart TB
+    %% Points d'entrée
+    START([START]) --> LANDING[Landing Page]
+    START --> QR[QR Code Agence]
+    START --> SMS[SMS Campagne]
+    
+    %% Check existant
+    LANDING --> CHECK{Cookie ?}
+    QR --> CHECK
+    SMS --> CHECK
+    
+    CHECK -->|OUI| REPRISE[Écran Reprise
+    Dossier existant]
+    CHECK -->|NON| SIMU[1. Simulation]
+    
+    REPRISE -->|Reprendre| SIMU
+    REPRISE -->|Nouveau| SIMU
+    
+    %% Phase 1-2 Synchrone
+    SIMU -->|Sauvegarde auto| BROUILLON[(LocalStorage
+    Brouillon)]
+    SIMU --> CONTACT[2. Contact Min]
+    
+    CONTACT -->|Exit 3| RELANCE1[Relance SMS J+1]
+    CONTACT --> CONSENT[Consentements
+    CNDP Obligatoires]
+    
+    CONSENT -->|Non coché| CONTACT
+    CONSENT --> UPLOAD[3. Upload Docs]
+    
+    %% Phase 3 Documents
+    UPLOAD -->|Exit 4| SAUVEPART[Sauvegarde Partielle
+    Token magique]
+    UPLOAD -->|Exit 5| ABANDON1[Abandon
+    Email J+2]
+    UPLOAD -->|Soumettre| ATTENTE[4. En Attente
+    Vérification]
+    
+    SAUVEPART --> RELANCE2[Relance J+1
+    Lien magique]
+    
+    %% Phase 4 Asynchrone Backend
+    ATTENTE -->|Exit 6| NOTIF1[Notification
+    SMS quand résultat]
+    ATTENTE --> BACKEND{Traitement
+    Backend}
+    
+    %% Branches Backend
+    BACKEND -->|Docs OK
+    Scoring OK| APPROUVE[🟢 APPROUVÉ]
+    BACKEND -->|Docs incomplets
+    Scoring OK| ACOMPLETER[🟡 À COMPLÉTER]
+    BACKEND -->|Docs invalides
+    OU Scoring NOK| REFUSE[🔴 REFUSÉ]
+    
+    %% Scénario A: Approuvé
+    APPROUVE --> OFFRE[5. Offre
+    Présentée]
+    OFFRE -->|Exit 7| CONTRAT[6. Contrat
+    & Signature]
+    
+    CONTRAT -->|Exit 10| ANNUL[Annulation
+    Email confirm]
+    CONTRAT --> SIGN[Signature
+    Canvas]
+    SIGN --> CONFIRM[7. Confirmé
+    🎉 Succès]
+    CONFIRM -->|Exit 11| FIDEL[Programme
+    Fidélité]
+    
+    %% Scénario B: À compléter
+    ACOMPLETER --> NOTIF2[Notification
+    Docs manquants]
+    NOTIF2 --> COMPLETION[Retour Upload
+    Docs spécifiques]
+    COMPLETION -->|Exit 8| UPLOAD
+    COMPLETION -->|Complété| BACKEND
+    
+    %% Scénario C: Refus
+    REFUSE --> NOTIF3[Notification
+    Décision]
+    NOTIF3 -->|Motif affiché| DECISION{Lire décision}
+    DECISION -->|Accepte| FINREFUS[Fin
+    Archivage 30j]
+    DECISION -->|Contre-propo| CONTREPROP[Proposition
+    Réduite]
+    CONTREPROP --> OFFRE
+    
+    %% Relances
+    RELANCE1 --> SIMU
+    RELANCE2 --> UPLOAD
+    
+    %% Styles
+    classDef entry fill:#AB0017,stroke:#fff,color:#fff,stroke-width:2px
+    classDef process fill:#1A1A1A,stroke:#AB0017,color:#fff
+    classDef decision fill:#333,stroke:#FFB800,color:#fff
+    classDef exit fill:#555,stroke:#888,color:#fff,stroke-dasharray: 5 5
+    classDef success fill:#00FF88,stroke:#fff,color:#000
+    classDef warning fill:#FFB800,stroke:#fff,color:#000
+    classDef error fill:#AB0017,stroke:#fff,color:#fff
+    classDef storage fill:#0F1823,stroke:#888,color:#fff
+    
+    class START,LANDING,QR,SMS entry
+    class SIMU,CONTACT,UPLOAD,ATTENTE,CONTRAT process
+    class CHECK,BACKEND,DECISION decision
+    class BROUILLON,SAUVEPART storage
+    class APPROUVE,CONFIRM success
+    class ACOMPLETER,COMPLETION warning
+    class REFUSE,ABANDON1,ANNUL error
+    class RELANCE1,RELANCE2,NOTIF1,NOTIF2,NOTIF3,FIDEL exit

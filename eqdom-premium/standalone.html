@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Eqdom - Crédit en ligne</title>
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Inter', sans-serif; background: #0F1823; color: white; min-height: 100vh; }
+    .container { max-width: 480px; margin: 0 auto; padding: 20px; min-height: 100vh; display: flex; flex-direction: column; justify-content: center; }
+    .header { text-align: center; margin-bottom: 40px; }
+    .header span { color: #AB0017; font-size: 12px; text-transform: uppercase; letter-spacing: 2px; }
+    h1 { font-size: 36px; line-height: 1.2; margin: 20px 0; }
+    h1 span { color: #AB0017; }
+    p { color: #86868B; font-size: 16px; margin-bottom: 30px; }
+    .btn { background: #AB0017; color: white; border: none; padding: 16px 32px; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; width: 100%; transition: background 0.2s; }
+    .btn:hover { background: #8A0012; }
+    .btn:disabled { background: #333; color: #666; cursor: not-allowed; }
+    .btn-secondary { background: transparent; border: 1px solid rgba(255,255,255,0.2); margin-top: 12px; }
+    .card { background: #1A2433; border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 24px; margin-bottom: 20px; }
+    input[type="text"], input[type="tel"], input[type="email"] {
+      width: 100%; background: #0F1823; border: 1px solid rgba(255,255,255,0.1); padding: 14px; border-radius: 8px; color: white; font-size: 16px; margin-bottom: 12px;
+    }
+    input:focus { outline: none; border-color: #AB0017; }
+    input[type="range"] { width: 100%; accent-color: #AB0017; margin: 20px 0; }
+    label { display: block; color: #86868B; font-size: 14px; margin-bottom: 8px; }
+    .amount { font-size: 36px; font-weight: 700; margin: 10px 0; }
+    .duration-options { display: flex; gap: 10px; flex-wrap: wrap; margin: 16px 0; }
+    .duration-btn { flex: 1; min-width: 70px; padding: 12px; background: rgba(255,255,255,0.05); border: none; border-radius: 8px; color: #86868B; cursor: pointer; transition: all 0.2s; }
+    .duration-btn.active { background: #AB0017; color: white; }
+    .checkbox-container { display: flex; align-items: flex-start; gap: 12px; margin: 16px 0; }
+    .checkbox-container input { width: 20px; height: 20px; margin-top: 2px; accent-color: #AB0017; }
+    .checkbox-container label { color: #86868B; font-size: 13px; margin: 0; }
+    .doc-item { display: flex; align-items: center; justify-content: space-between; padding: 16px; background: #0F1823; border-radius: 8px; margin-bottom: 12px; }
+    .doc-item.uploaded { border: 1px solid #16A34A; }
+    .doc-info { display: flex; align-items: center; gap: 12px; }
+    .doc-icon { width: 40px; height: 40px; background: rgba(255,255,255,0.05); border-radius: 8px; display: flex; align-items: center; justify-content: center; }
+    .doc-icon.uploaded { background: rgba(22,163,74,0.1); }
+    .upload-btn { padding: 8px 16px; background: rgba(255,255,255,0.05); border: none; border-radius: 6px; color: white; font-size: 14px; cursor: pointer; }
+    .status-badge { padding: 4px 12px; border-radius: 4px; font-size: 12px; font-weight: 600; }
+    .status-waiting { background: rgba(171,0,23,0.1); color: #AB0017; }
+    .status-success { background: rgba(22,163,74,0.1); color: #16A34A; }
+    .progress-bar { width: 100%; height: 4px; background: rgba(255,255,255,0.1); border-radius: 2px; margin: 20px 0; }
+    .progress-fill { height: 100%; background: #AB0017; border-radius: 2px; transition: width 0.5s; }
+    .hidden { display: none !important; }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  
+  <script type="text/babel">
+    const { useState, useEffect } = React;
+
+    const App = () => {
+      const [step, setStep] = useState('hero');
+      const [amount, setAmount] = useState(50000);
+      const [duration, setDuration] = useState(24);
+      const [monthly, setMonthly] = useState(2396);
+      const [contact, setContact] = useState({ firstName: '', lastName: '', phone: '', email: '' });
+      const [consents, setConsents] = useState([false, false, false]);
+      const [docs, setDocs] = useState([
+        { id: 'cin1', name: 'CIN - Recto', status: 'pending' },
+        { id: 'cin2', name: 'CIN - Verso', status: 'pending' },
+        { id: 'rib', name: 'RIB', status: 'pending' }
+      ]);
+      const [ref, setRef] = useState('');
+
+      useEffect(() => {
+        setMonthly(Math.round((amount / duration) * 1.15));
+      }, [amount, duration]);
+
+      const formatCurrency = (val) => new Intl.NumberFormat('fr-MA', { style: 'currency', currency: 'MAD', maximumFractionDigits: 0 }).format(val);
+
+      const uploadDoc = (id) => {
+        setDocs(docs.map(d => d.id === id ? { ...d, status: 'uploaded' } : d));
+      };
+
+      const allDocsUploaded = docs.every(d => d.status === 'uploaded');
+
+      const submitDocs = () => {
+        setRef('EQD-' + Math.random().toString(36).substr(2, 8).toUpperCase());
+        setStep('waiting');
+        setTimeout(() => setStep('offer'), 5000);
+      };
+
+      const canContinue = contact.firstName && contact.lastName && contact.phone && consents[0] && consents[1] && consents[2];
+
+      const renderHero = () => (
+        <div className="container">
+          <div className="header">
+            <span>Groupe Saham</span>
+            <h1>Votre projet,<br/><span>notre financement.</span></h1>
+            <p>Une solution de crédit sur mesure, 100% en ligne, en quelques minutes.</p>
+            <button className="btn" onClick={() => setStep('simulation')}>Démarrer ma simulation</button>
+          </div>
+        </div>
+      );
+
+      const renderSimulation = () => (
+        <div className="container">
+          <div className="card">
+            <button onClick={() => setStep('hero')} style={{color: '#86868B', marginBottom: 20, background: 'none', border: 'none'}}>← Retour</button>
+            <h2 style={{marginBottom: 8}}>Simulez votre crédit</h2>
+            <p style={{marginBottom: 24}}>Ajustez le montant et la durée selon vos besoins.</p>
+            
+            <label>Montant souhaité</label>
+            <div className="amount">{formatCurrency(amount)}</div>
+            <input type="range" min="5000" max="500000" step="5000" value={amount} onChange={(e) => setAmount(parseInt(e.target.value))} />
+            
+            <label style={{marginTop: 24}}>Durée de remboursement</label>
+            <div className="duration-options">
+              {[12, 24, 36, 48, 60].map(d => (
+                <button key={d} className={`duration-btn ${duration === d ? 'active' : ''}`} onClick={() => setDuration(d)}>{d} mois</button>
+              ))}
+            </div>
+            
+            <div className="card" style={{marginTop: 24, background: '#0F1823'}}>
+              <div style={{display: 'flex', justifyContent: 'space-between', marginBottom: 8}}>
+                <span style={{color: '#86868B'}}>Mensualité estimée</span>
+                <span style={{fontSize: 24, fontWeight: 700}}>{formatCurrency(monthly)}</span>
+              </div>
+              <div style={{display: 'flex', justifyContent: 'space-between'}}>
+                <span style={{color: '#86868B', fontSize: 14}}>TAEG</span>
+                <span style={{fontSize: 14}}>À partir de 4.9%</span>
+              </div>
+            </div>
+            
+            <button className="btn" onClick={() => setStep('contact')} style={{marginTop: 24}}>Continuer →</button>
+          </div>
+        </div>
+      );
+
+      const renderContact = () => (
+        <div className="container">
+          <div className="card">
+            <button onClick={() => setStep('simulation')} style={{color: '#86868B', marginBottom: 20, background: 'none', border: 'none'}}>← Retour</button>
+            <h2 style={{marginBottom: 8}}>Vos coordonnées</h2>
+            <p style={{marginBottom: 24}}>Nous avons besoin de ces informations pour finaliser votre dossier.</p>
+            
+            <input type="text" placeholder="Prénom *" value={contact.firstName} onChange={(e) => setContact({...contact, firstName: e.target.value})} />
+            <input type="text" placeholder="Nom *" value={contact.lastName} onChange={(e) => setContact({...contact, lastName: e.target.value})} />
+            <input type="tel" placeholder="Téléphone *" value={contact.phone} onChange={(e) => setContact({...contact, phone: e.target.value})} />
+            <input type="email" placeholder="Email (optionnel)" value={contact.email} onChange={(e) => setContact({...contact, email: e.target.value})} />
+            
+            <div className="card" style={{marginTop: 24, background: '#0F1823'}}>
+              <h3 style={{marginBottom: 16, fontSize: 14, display: 'flex', alignItems: 'center', gap: 8}}>
+                <span style={{color: '#AB0017'}}>⚠</span> Consentements obligatoires
+              </h3>
+              {[
+                "J'accepte la vérification de mon identité et la consultation du Bureau de Crédit.",
+                "J'accepte le traitement de mes données personnelles dans le cadre de ma demande.",
+                "J'accepte de recevoir des informations sur les produits du groupe Saham."
+              ].map((text, idx) => (
+                <div key={idx} className="checkbox-container">
+                  <input type="checkbox" checked={consents[idx]} onChange={() => {
+                    const newConsents = [...consents];
+                    newConsents[idx] = !newConsents[idx];
+                    setConsents(newConsents);
+                  }} />
+                  <label>{text}</label>
+                </div>
+              ))}
+            </div>
+            
+            <button className="btn" onClick={() => setStep('documents')} disabled={!canContinue} style={{marginTop: 24}}>
+              {canContinue ? 'Continuer vers les documents →' : 'Veuillez remplir tous les champs'}
+            </button>
+          </div>
+        </div>
+      );
+
+      const renderDocuments = () => (
+        <div className="container">
+          <div className="card">
+            <button onClick={() => setStep('contact')} style={{color: '#86868B', marginBottom: 20, background: 'none', border: 'none'}}>← Retour</button>
+            <h2 style={{marginBottom: 8}}>Vos documents</h2>
+            <p style={{marginBottom: 24}}>Téléchargez les justificatifs demandés.</p>
+            
+            {docs.map(doc => (
+              <div key={doc.id} className={`doc-item ${doc.status === 'uploaded' ? 'uploaded' : ''}`}>
+                <div className="doc-info">
+                  <div className={`doc-icon ${doc.status === 'uploaded' ? 'uploaded' : ''}`}>
+                    {doc.status === 'uploaded' ? '✓' : '📄'}
+                  </div>
+                  <div>
+                    <div style={{fontWeight: 600}}>{doc.name}</div>
+                    <div style={{fontSize: 12, color: '#86868B'}}>{doc.status === 'uploaded' ? 'Document reçu' : 'En attente'}</div>
+                  </div>
+                </div>
+                {doc.status === 'pending' ? (
+                  <button className="upload-btn" onClick={() => uploadDoc(doc.id)}>Télécharger</button>
+                ) : (
+                  <span style={{color: '#16A34A', fontSize: 14, fontWeight: 600}}>Reçu ✓</span>
+                )}
+              </div>
+            ))}
+            
+            <button className="btn" onClick={submitDocs} disabled={!allDocsUploaded} style={{marginTop: 24}}>
+              {allDocsUploaded ? 'Soumettre ma demande →' : `${docs.filter(d => d.status === 'uploaded').length}/${docs.length} documents`}
+            </button>
+            {!allDocsUploaded && (
+              <button className="btn btn-secondary" onClick={() => setStep('waiting')}>
+                Sauvegarder et reprendre plus tard
+              </button>
+            )}
+          </div>
+        </div>
+      );
+
+      const renderWaiting = () => (
+        <div className="container" style={{textAlign: 'center'}}>
+          <div style={{width: 80, height: 80, background: 'rgba(171,0,23,0.1)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 32px'}}>
+            <span style={{fontSize: 40, animation: 'pulse 2s infinite'}}>⏳</span>
+          </div>
+          <h2 style={{marginBottom: 16}}>Votre dossier est en cours d'étude</h2>
+          <p style={{marginBottom: 32}}>Référence : <span style={{fontFamily: 'monospace'}}>{ref || 'EQD-XXXXXX'}</span></p>
+          
+          <div className="card" style={{textAlign: 'left'}}>
+            {[
+              { label: 'Documents reçus', done: true },
+              { label: 'Vérification', done: false },
+              { label: 'Analyse crédit', done: false },
+              { label: 'Décision', done: false }
+            ].map((item, idx) => (
+              <div key={idx} style={{display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16}}>
+                <div style={{width: 32, height: 32, borderRadius: 8, background: item.done ? 'rgba(22,163,74,0.1)' : 'rgba(255,255,255,0.05)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: item.done ? '#16A34A' : '#86868B'}}>
+                  {item.done ? '✓' : '○'}
+                </div>
+                <span style={{color: item.done ? 'white' : '#86868B'}}>{item.label}</span>
+              </div>
+            ))}
+          </div>
+          
+          <p style={{marginTop: 32, color: '#86868B', fontSize: 14}}>Temps estimé : 4 à 24 heures<br/>Vous serez notifié par SMS.</p>
+        </div>
+      );
+
+      const renderOffer = () => (
+        <div className="container">
+          <div style={{textAlign: 'center', marginBottom: 32}}>
+            <div style={{width: 80, height: 80, background: 'rgba(22,163,74,0.1)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 24px'}}>
+              <span style={{fontSize: 40, color: '#16A34A'}}>✓</span>
+            </div>
+            <h2 style={{marginBottom: 8}}>Votre crédit est approuvé !</h2>
+            <p style={{color: '#86868B'}}>Voici les conditions de votre offre.</p>
+          </div>
+          
+          <div className="card">
+            <div style={{display: 'flex', justifyContent: 'space-between', padding: '16px 0', borderBottom: '1px solid rgba(255,255,255,0.1)'}}>
+              <span style={{color: '#86868B'}}>Montant</span>
+              <span style={{fontWeight: 600}}>{formatCurrency(amount)}</span>
+            </div>
+            <div style={{display: 'flex', justifyContent: 'space-between', padding: '16px 0', borderBottom: '1px solid rgba(255,255,255,0.1)'}}>
+              <span style={{color: '#86868B'}}>Durée</span>
+              <span style={{fontWeight: 600}}>{duration} mois</span>
+            </div>
+            <div style={{display: 'flex', justifyContent: 'space-between', padding: '16px 0', borderBottom: '1px solid rgba(255,255,255,0.1)'}}>
+              <span style={{color: '#86868B'}}>Mensualité</span>
+              <span style={{fontWeight: 600, color: '#AB0017'}}>{formatCurrency(monthly)}</span>
+            </div>
+            <div style={{display: 'flex', justifyContent: 'space-between', padding: '16px 0'}}>
+              <span style={{color: '#86868B'}}>TAEG</span>
+              <span style={{fontWeight: 600}}>À partir de 4.9%</span>
+            </div>
+          </div>
+          
+          <button className="btn" onClick={() => setStep('success')} style={{marginTop: 24}}>Accepter et signer →</button>
+          <button className="btn btn-secondary">Télécharger le contrat</button>
+        </div>
+      );
+
+      const renderSuccess = () => (
+        <div className="container" style={{textAlign: 'center'}}>
+          <div style={{width: 100, height: 100, background: '#16A34A', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 32px'}}>
+            <span style={{fontSize: 50, color: 'white'}}>✓</span>
+          </div>
+          <h2 style={{marginBottom: 16}}>Crédit confirmé !</h2>
+          <p style={{color: '#86868B', marginBottom: 32}}>Votre dossier a été signé avec succès.</p>
+          
+          <div className="card" style={{textAlign: 'left', marginBottom: 32}}>
+            <div style={{display: 'flex', justifyContent: 'space-between', marginBottom: 16}}>
+              <span style={{color: '#86868B'}}>Référence</span>
+              <span style={{fontFamily: 'monospace'}}>{ref}</span>
+            </div>
+            <div style={{display: 'flex', justifyContent: 'space-between', marginBottom: 16}}>
+              <span style={{color: '#86868B'}}>Montant</span>
+              <span style={{fontWeight: 600}}>{formatCurrency(amount)}</span>
+            </div>
+            <div style={{display: 'flex', justifyContent: 'space-between'}}>
+              <span style={{color: '#86868B'}}>Déblocage</span>
+              <span>24 à 48 heures</span>
+            </div>
+          </div>
+          
+          <button className="btn">Télécharger le contrat</button>
+          <button className="btn btn-secondary" onClick={() => window.location.reload()}>Nouvelle simulation</button>
+        </div>
+      );
+
+      const steps = {
+        hero: renderHero,
+        simulation: renderSimulation,
+        contact: renderContact,
+        documents: renderDocuments,
+        waiting: renderWaiting,
+        offer: renderOffer,
+        success: renderSuccess
+      };
+
+      return steps[step]();
+    };
+
+    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+  </script>
+</body>
+</html>

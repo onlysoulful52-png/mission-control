@@ -1,0 +1,71 @@
+{
+  "lastUpdate": "2026-03-07T10:55:00+08:00",
+  "agents": {
+    "henry": {
+      "name": "Henry",
+      "role": "Agent Principal",
+      "status": "active",
+      "statusText": "En ligne - Session principale",
+      "currentTask": "Coordination équipe",
+      "lastActivity": "2026-03-07T10:55:00+08:00",
+      "channel": "Kimi Chat"
+    },
+    "rothschild": {
+      "name": "Rothschild",
+      "role": "CEO / Stratège",
+      "status": "standby",
+      "statusText": "En attente de mission",
+      "currentTask": null,
+      "lastActivity": "2026-03-07T10:50:00+08:00",
+      "channel": "Disponible sur demande"
+    },
+    "junior": {
+      "name": "Junior",
+      "role": "Analyste / Research",
+      "status": "standby",
+      "statusText": "En attente de mission",
+      "currentTask": null,
+      "lastActivity": "2026-03-07T10:50:00+08:00",
+      "channel": "Disponible sur demande"
+    },
+    "aiman": {
+      "name": "Aiman",
+      "role": "Lead Developer",
+      "status": "standby",
+      "statusText": "En attente de mission",
+      "currentTask": null,
+      "lastActivity": "2026-03-07T10:50:00+08:00",
+      "channel": "Disponible sur demande"
+    },
+    "ops": {
+      "name": "Ops",
+      "role": "DevOps",
+      "status": "monitoring",
+      "statusText": "Monitoring actif",
+      "currentTask": "Surveillance infrastructure",
+      "lastActivity": "2026-03-07T10:53:00+08:00",
+      "channel": "Automatique"
+    },
+    "qanon": {
+      "name": "QAnon",
+      "role": "Testeur / QA",
+      "status": "standby",
+      "statusText": "En attente de mission",
+      "currentTask": null,
+      "lastActivity": "2026-03-07T10:50:00+08:00",
+      "channel": "Disponible sur demande"
+    },
+    "whatsapp-bot": {
+      "name": "WhatsApp Bot",
+      "role": "Extension Mobile",
+      "status": "active",
+      "statusText": "Connecté",
+      "currentTask": "Notifications actives",
+      "lastActivity": "2026-03-07T10:21:00+08:00",
+      "channel": "WhatsApp"
+    }
+  },
+  "activeSessions": 2,
+  "lastCronRun": "2026-03-07T10:53:00+08:00",
+  "notes": "Agents créés et prêts. Spawn à la demande via @mention."
+}

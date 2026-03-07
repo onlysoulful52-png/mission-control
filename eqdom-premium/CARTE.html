@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Eqdom - Crédit Premium</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    :root{--navy:#0a0f1a;--navy-light:#151b2d;--red:#dc1a35;--red-dark:#b0152b;--gold:#FFB800;--text:#94a3b8;--success:#10b981}
+    html{scroll-behavior:smooth;scroll-snap-type:y mandatory}
+    body{font-family:'Inter',-apple-system,sans-serif;background:linear-gradient(135deg,var(--navy) 0%,#070a12 50%,var(--navy) 100%);background-attachment:fixed;color:#fff;line-height:1.6;overflow-x:hidden}
+    .progress-bar{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--red),#ff6b7a);z-index:1001;transition:width .6s;width:0%;box-shadow:0 0 10px rgba(220,26,53,.4)}
+    .section{min-height:100vh;width:100%;display:flex;align-items:center;justify-content:center;padding:100px 40px;scroll-snap-align:start;position:relative}
+    @media(max-width:768px){.section{padding:100px 20px 140px}}
+    .container{max-width:1200px;width:100%;margin:0 auto}
+    .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:100px;align-items:center}
+    @media(max-width:968px){.grid-2{grid-template-columns:1fr;gap:60px}}
+    .eyebrow{font-size:11px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:var(--red);margin-bottom:20px;display:flex;align-items:center;gap:12px}
+    .eyebrow::before{content:'';width:40px;height:2px;background:var(--red)}
+    h1{font-size:clamp(48px,6vw,80px);font-weight:800;line-height:1;letter-spacing:-.03em;margin-bottom:24px}h1 span{color:var(--red);position:relative}
+    h1 span::after{content:'';position:absolute;bottom:8px;left:0;right:0;height:12px;background:var(--red);opacity:.15;z-index:-1;border-radius:4px}
+    h2{font-size:clamp(36px,5vw,56px);font-weight:700;line-height:1.1;margin-bottom:20px;letter-spacing:-.02em}h2 span{color:var(--red)}
+    p{color:var(--text);font-size:18px;line-height:1.8;font-weight:400}
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;background:var(--red);color:#fff;border:none;padding:20px 40px;border-radius:16px;font-size:16px;font-weight:600;cursor:pointer;text-decoration:none;transition:all .4s cubic-bezier(.4,0,.2,1);box-shadow:0 8px 30px rgba(220,26,53,.35);position:relative;overflow:hidden;margin-top:32px;min-width:220px}
+    .btn::before{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.2),transparent);transition:left .6s}
+    .btn:hover{background:var(--red-dark);transform:translateY(-3px);box-shadow:0 15px 40px rgba(220,26,53,.45)}
+    .btn:hover::before{left:100%}
+    .btn-secondary{background:transparent;border:2px solid rgba(255,255,255,.15);box-shadow:none;margin-left:16px}
+    .btn-secondary:hover{background:rgba(255,255,255,.05);border-color:rgba(255,255,255,.3)}
+    
+    /* 3D Card Styles */
+    .card-3d-container{perspective:1000px;width:380px;height:240px;margin:0 auto;position:relative}
+    @media(max-width:480px){.card-3d-container{width:320px;height:200px}}
+    .card-3d{width:100%;height:100%;position:relative;transform-style:preserve-3d;border-radius:24px;background:linear-gradient(135deg,#1a1a2e 0%,#0f0f1a 50%,#1a1a2e 100%);border:1px solid rgba(255,255,255,.1);box-shadow:0 30px 60px rgba(0,0,0,.5),0 0 40px rgba(220,26,53,.3);animation:float 4s ease-in-out infinite;overflow:hidden;transition:transform .1s}
+    @keyframes float{0%,100%{transform:translateY(0) rotateX(8deg) rotateY(-8deg)}50%{transform:translateY(-20px) rotateX(8deg) rotateY(-8deg)}}
+    .card-3d::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.1) 0%,transparent 50%,rgba(255,255,255,.05) 100%);pointer-events:none}
+    .card-chip{position:absolute;top:30px;left:30px;width:55px;height:40px;background:linear-gradient(135deg,var(--gold) 0%,#FF8C00 100%);border-radius:8px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 15px rgba(255,184,0,.3)}
+    .card-chip::after{content:'';width:38px;height:26px;border:2px solid rgba(139,105,20,.5);border-radius:4px}
+    .card-logo{position:absolute;top:30px;right:30px;font-weight:800;font-size:22px;letter-spacing:3px;color:#fff;text-shadow:0 2px 10px rgba(0,0,0,.5)}
+    .card-number{position:absolute;bottom:90px;left:30px;font-family:'Courier New',monospace;font-size:22px;letter-spacing:4px;color:rgba(255,255,255,.9);text-shadow:0 2px 4px rgba(0,0,0,.5)}
+    .card-holder{position:absolute;bottom:30px;left:30px}
+    .card-holder-label{font-size:10px;text-transform:uppercase;letter-spacing:2px;color:rgba(255,255,255,.5);margin-bottom:6px}
+    .card-holder-name{font-size:15px;letter-spacing:2px;text-transform:uppercase;color:#fff;font-weight:600}
+    .card-shine{position:absolute;inset:0;background:linear-gradient(135deg,transparent 40%,rgba(255,255,255,.1) 50%,transparent 60%);animation:shine 3s infinite;pointer-events:none}
+    @keyframes shine{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
+    
+    /* Slider */
+    .slider-container{margin:40px 0}
+    .slider-value{font-size:52px;font-weight:800;background:linear-gradient(135deg,#fff 0%,var(--red) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin:16px 0}
+    input[type=range]{width:100%;-webkit-appearance:none;height:10px;background:rgba(255,255,255,.1);border-radius:5px;outline:none;margin:24px 0}
+    input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:32px;height:32px;background:var(--red);border-radius:50%;cursor:grab;box-shadow:0 0 0 6px rgba(220,26,53,.2),0 10px 30px rgba(220,26,53,.4);border:3px solid #fff}
+    .duration-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-top:24px}
+    @media(max-width:640px){.duration-grid{grid-template-columns:repeat(3,1fr)}}
+    .duration-btn{padding:18px;background:rgba(255,255,255,.03);border:2px solid rgba(255,255,255,.08);border-radius:14px;color:var(--text);font-size:15px;font-weight:500;cursor:pointer;transition:all .3s;position:relative;overflow:hidden}
+    .duration-btn::before{content:'';position:absolute;inset:0;background:var(--red);opacity:0;transition:opacity .3s}
+    .duration-btn.active{border-color:var(--red);color:#fff;font-weight:600}
+    .duration-btn.active::before{opacity:1}
+    .duration-btn span{position:relative;z-index:1}
+    
+    /* Form Elements */
+    input[type=text],input[type=tel],input[type=email]{width:100%;background:var(--navy);border:2px solid rgba(255,255,255,.08);padding:20px 18px;border-radius:14px;color:#fff;font-size:17px;transition:all .3s;margin-bottom:16px}
+    input:focus{outline:none;border-color:var(--red);box-shadow:0 0 0 4px rgba(220,26,53,.1)}
+    .consent-box{background:var(--navy);border-radius:20px;padding:28px;margin-top:28px;border:2px solid rgba(255,255,255,.06)}
+    .checkbox-item{display:flex;align-items:flex-start;gap:16px;padding:16px 0;border-bottom:1px solid rgba(255,255,255,.06);cursor:pointer}
+    .checkbox-item:last-child{border-bottom:none}
+    .checkbox-item input{width:22px;height:22px;margin-top:2px;accent-color:var(--red);flex-shrink:0}
+    .checkbox-item label{color:var(--text);font-size:15px;line-height:1.6;cursor:pointer}
+    
+    /* Document Items */
+    .doc-item{display:flex;align-items:center;justify-content:space-between;padding:24px;background:var(--navy);border:2px solid rgba(255,255,255,.06);border-radius:18px;margin-bottom:16px;transition:all .4s}
+    .doc-item:hover{border-color:rgba(220,26,53,.25);transform:translateX(12px)}
+    .doc-item.uploaded{border-color:var(--success);background:rgba(16,185,129,.05)}
+    .doc-info{display:flex;align-items:center;gap:20px}
+    .doc-icon{width:60px;height:60px;background:rgba(255,255,255,.05);border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:28px}
+    .doc-item.uploaded .doc-icon{background:rgba(16,185,129,.15)}
+    .doc-name{font-weight:600;font-size:17px;margin-bottom:4px}
+    .doc-status{font-size:14px;color:var(--text)}
+    
+    /* Timeline */
+    .timeline{display:flex;justify-content:space-between;max-width:700px;margin:48px auto;position:relative}
+    .timeline::before{content:'';position:absolute;top:28px;left:60px;right:60px;height:3px;background:linear-gradient(90deg,var(--success) 60%,rgba(255,255,255,.1) 60%)}
+    .timeline-step{display:flex;flex-direction:column;align-items:center;gap:16px;position:relative;z-index:1}
+    .timeline-dot{width:56px;height:56px;border-radius:50%;background:var(--navy-light);border:3px solid rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:600;transition:all .4s}
+    .timeline-step.active .timeline-dot{background:var(--red);border-color:var(--red);animation:pulse-dot 2s infinite;box-shadow:0 0 30px rgba(220,26,53,.4)}
+    .timeline-step.completed .timeline-dot{background:var(--success);border-color:var(--success)}
+    @keyframes pulse-dot{0%,100%{box-shadow:0 0 0 0 rgba(220,26,53,.5)}50%{box-shadow:0 0 0 15px rgba(220,26,53,0)}}
+    .timeline-label{font-size:13px;color:var(--text);font-weight:500;text-align:center}
+    
+    /* Scoring */
+    .heart-icon{width:140px;height:140px;margin:0 auto 40px}
+    .heart-icon svg{width:100%;height:100%;fill:var(--red);animation:heartbeat 1.8s ease-in-out infinite;filter:drop-shadow(0 0 30px rgba(220,26,53,.5))}
+    @keyframes heartbeat{0%,100%{transform:scale(1)}25%{transform:scale(1.1)}50%{transform:scale(1)}75%{transform:scale(1.15)}}
+    .scoring-bar{height:12px;background:rgba(255,255,255,.1);border-radius:6px;overflow:hidden;margin:32px 0;box-shadow:inset 0 2px 4px rgba(0,0,0,.3)}
+    .scoring-fill{height:100%;background:linear-gradient(90deg,var(--red),#ff6b7a);border-radius:6px;width:0%;animation:fillBar 4s ease-out forwards;box-shadow:0 0 20px rgba(220,26,53,.4)}
+    @keyframes fillBar{0%{width:0%}100%{width:87%}}
+    
+    /* Success */
+    .success-icon{width:140px;height:140px;background:linear-gradient(135deg,var(--success),#34d399);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 32px;font-size:70px;box-shadow:0 30px 60px rgba(16,185,129,.35);animation:successPop .8s cubic-bezier(.175,.885,.32,1.275)}
+    @keyframes successPop{0%{transform:scale(0);opacity:0}50%{transform:scale(1.15)}100%{transform:scale(1);opacity:1}}
+    .badge-success{display:inline-flex;align-items:center;gap:10px;padding:12px 24px;border-radius:30px;font-size:14px;font-weight:600;margin-bottom:28px;background:rgba(16,185,129,.1);color:var(--success);border:2px solid rgba(16,185,129,.3)}
+    
+    /* Cards General */
+    .card{background:linear-gradient(145deg,var(--navy-light),rgba(21,27,45,.8));border:1px solid rgba(255,255,255,.08);border-radius:28px;padding:48px;position:relative;overflow:hidden;transition:all .5s;backdrop-filter:blur(10px)}
+    .card:hover{transform:translateY(-12px);border-color:rgba(220,26,53,.2);box-shadow:0 40px 80px rgba(0,0,0,.5),0 0 60px rgba(220,26,53,.1)}
+    @media(max-width:768px){.card{padding:28px}}
+    
+    /* Result Card */
+    .result-card{background:linear-gradient(145deg,rgba(220,26,53,.1),rgba(220,26,53,.03));border:2px solid rgba(220,26,53,.2);border-radius:24px;padding:40px;margin:40px 0}
+    .result-row{display:flex;justify-content:space-between;padding:20px 0;border-bottom:1px solid rgba(255,255,255,.08)}
+    .result-row:last-child{border-bottom:none}
+    .result-label{color:var(--text);font-size:15px}
+    .result-value{font-weight:700;font-size:16px}
+    .result-value.highlight{color:var(--red);font-size:28px}
+    
+    .ref-box{display:inline-flex;align-items:center;gap:12px;background:var(--navy-light);padding:18px 32px;border-radius:14px;font-family:'SF Mono',monospace;font-size:18px;letter-spacing:2px;margin:24px 0;border:2px solid rgba(255,255,255,.08);font-weight:600}
+    .ref-box::before{content:'#';color:var(--red);font-size:22px}
+    
+    /* Animations */
+    .reveal{opacity:0;transform:translateY(60px);transition:all 1s cubic-bezier(.4,0,.2,1)}
+    .reveal.active{opacity:1;transform:translateY(0)}
+    .reveal-left{opacity:0;transform:translateX(-80px);transition:all 1s cubic-bezier(.4,0,.2,1)}
+    .reveal-left.active{opacity:1;transform:translateX(0)}
+    .reveal-right{opacity:0;transform:translateX(80px);transition:all 1s cubic-bezier(.4,0,.2,1)}
+    .reveal-right.active{opacity:1;transform:translateX(0)}
+    
+    .stats{display:flex;gap:48px;margin-top:48px}
+    @media(max-width:640px){.stats{flex-direction:column;gap:24px}}
+    .stat-number{font-size:44px;font-weight:800;color:var(--red);line-height:1}
+    .stat-label{font-size:13px;color:var(--text);margin-top:8px;text-transform:uppercase;letter-spacing:1.5px}
+    
+    .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+    @media(max-width:968px){.grid-3{grid-template-columns:1fr}}
+    .feature-card{background:linear-gradient(145deg,var(--navy-light),rgba(21,27,45,.6));border:1px solid rgba(255,255,255,.06);border-radius:20px;padding:32px;transition:all .4s}
+    .feature-card:hover{transform:translateY(-8px);border-color:rgba(220,26,53,.15)}
+    .icon-box{width:64px;height:64px;background:rgba(220,26,53,.1);border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:28px;margin-bottom:20px}
+  </style>
+</head>
+<body>
+  <div class="progress-bar" id="progressBar"></div>
+
+  <!-- SECTION 1: HERO -->
+  <section class="section" id="sec0">
+    <div class="container">
+      <div class="grid-2">
+        <div class="reveal-left">
+          <div class="eyebrow">Groupe Saham</div>
+          <h1>Votre projet,<br><span>notre financement.</span></h1>
+          <p>Une solution de crédit sur mesure, 100% en ligne. Obtenez une réponse en quelques minutes, recevez vos fonds sous 48h.</p>
+          <a href="#sec1" class="btn">Démarrer ma simulation →</a>
+          <div class="stats">
+            <div><div class="stat-number">5min</div><div class="stat-label">Simulation</div></div>
+            <div><div class="stat-number">48h</div><div class="stat-label">Déblocage</div></div>
+            <div><div class="stat-number">4.9%</div><div class="stat-label">TAEG</div></div>
+          </div>
+        </div>
+        
+        <div class="reveal-right">
+          <div class="card-3d-container" id="card3d">
+            <div class="card-3d">
+              <div class="card-shine"></div>
+              <div class="card-chip"></div>
+              <div class="card-logo">EQDOM</div>
+              <div class="card-number">•••• •••• •••• 4242</div>
+              <div class="card-holder">
+                <div class="card-holder-label">Titulaire</div>
+                <div class="card-holder-name">SARAH BENALI</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 2: SIMULATION -->
+  <section class="section" id="sec1">
+    <div class="container">
+      <div class="grid-2">
+        <div class="reveal-left">
+          <div class="eyebrow">Simulation</div>
+          <h2>Quel est votre <span>projet</span> ?</h2>
+          <p>Ajustez le montant et la durée selon vos besoins. Obtenez une estimation instantanée de vos mensualités.</p>
+          <div class="grid-3" style="margin-top:40px">
+            <div class="feature-card">
+              <div class="icon-box">⚡</div>
+              <div style="font-weight:700;margin-bottom:12px">Réponse immédiate</div>
+              <div style="color:var(--text);font-size:15px">Découvrez votre taux en quelques secondes</div>
+            </div>
+            <div class="feature-card">
+              <div class="icon-box">🔒</div>
+              <div style="font-weight:700;margin-bottom:12px">Sans engagement</div>
+              <div style="color:var(--text);font-size:15px">Simulation gratuite sans impact</div>
+            </div>
+            <div class="feature-card">
+              <div class="icon-box">📱</div>
+              <div style="font-weight:700;margin-bottom:12px">100% Digital</div>
+              <div style="color:var(--text);font-size:15px">De la simu à la signature</div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="reveal-right">
+          <div class="card">
+            <div class="slider-container">
+              <div style="font-size:13px;color:var(--text);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:8px">Montant souhaité</div>
+              <div class="slider-value" id="amountDisplay">50 000 DH</div>
+              <input type="range" min="5000" max="500000" step="5000" value="50000" oninput="updateSim()" id="amountSlider">
+              <div style="display:flex;justify-content:space-between;font-size:14px;color:var(--text);font-weight:500">
+                <span>5 000 DH</span>
+                <span>500 000 DH</span>
+              </div>
+            </div>
+            
+            <div style="margin-top:32px">
+              <div style="font-size:13px;color:var(--text);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:16px">Durée</div>
+              <div class="duration-grid">
+                <button class="duration-btn" onclick="setDuration(12,this)"><span>12m</span></button>
+                <button class="duration-btn active" onclick="setDuration(24,this)"><span>24m</span></button>
+                <button class="duration-btn" onclick="setDuration(36,this)"><span>36m</span></button>
+                <button class="duration-btn" onclick="setDuration(48,this)"><span>48m</span></button>
+                <button class="duration-btn" onclick="setDuration(60,this)"><span>60m</span></button>
+              </div>
+            </div>
+            
+            <div class="result-card">
+              <div class="result-row">
+                <div>
+                  <div class="result-label">Mensualité estimée</div>
+                  <div class="result-value highlight" id="monthlyDisplay">2 396 DH</div>
+                </div>
+                <div style="text-align:right">
+                  <div class="result-label">TAEG</div>
+                  <div style="font-size:28px;font-weight:700">4.9%</div>
+                </div>
+              </div>
+            </div>
+            
+            <a href="#sec2" class="btn" style="width:100%;display:block">Continuer ma demande →</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 3: CONTACT -->
+  <section class="section" id="sec2">
+    <div class="container">
+      <div class="grid-2">
+        <div class="reveal-left">
+          <div class="eyebrow">Coordonnées</div>
+          <h2>Vos <span>informations</span></h2>
+          <p>Finalisez votre demande de crédit. Un conseiller vous contactera si nécessaire.</p>
+          <div class="card" style="margin-top:32px">
+            <div style="display:flex;align-items:center;gap:16px">
+              <div style="width:56px;height:56px;background:rgba(220,26,53,.1);border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:28px">🔐</div>
+              <div>
+                <div style="font-weight:700">Protection de vos données</div>
+                <div style="color:var(--text);font-size:14px;margin-top:4px">Conforme à la loi 09-08 sur la protection des données</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="reveal-right">
+          <div class="card">
+            <input type="text" placeholder="Prénom *">
+            <input type="text" placeholder="Nom *">
+            <input type="tel" placeholder="Téléphone *">
+            <input type="email" placeholder="Email (optionnel)">
+            
+            <div class="consent-box">
+              <div style="color:var(--red);font-weight:700;font-size:14px;margin-bottom:20px">⚠ Consentements obligatoires (CNDP)</div>
+              <label class="checkbox-item"><input type="checkbox"> J'accepte la vérification de mon identité et la consultation du Bureau de Crédit</label>
+              <label class="checkbox-item"><input type="checkbox"> J'accepte le traitement de mes données conformément à la loi 09-08</label>
+              <label class="checkbox-item"><input type="checkbox"> J'accepte de recevoir les offres du groupe Saham</label>
+            </div>
+            
+            <a href="#sec3" class="btn" style="width:100%;display:block">Continuer vers les documents →</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 4: DOCUMENTS -->
+  <section class="section" id="sec3">
+    <div class="container" style="max-width:800px">
+      <div class="text-center reveal">
+        <div class="eyebrow" style="justify-content:center">Documents</div>
+        <h2>Vos <span>justificatifs</span></h2>
+        <p>Téléchargez les documents demandés pour finaliser votre dossier.</p>
+      </div>
+      
+      <div style="margin-top:48px">
+        <div class="doc-item reveal" id="doc1">
+          <div class="doc-info">
+            <div class="doc-icon">🪪</div>
+            <div>
+              <div class="doc-name">CIN - Recto</div>
+              <div class="doc-status">Carte d'identité (face avant)</div>
+            </div>
+          </div>
+          <button class="btn" style="margin:0;padding:12px 24px;font-size:14px;min-width:auto" onclick="uploadDoc('doc1')">Télécharger</button>
+        </div>
+        
+        <div class="doc-item reveal" id="doc2">
+          <div class="doc-info">
+            <div class="doc-icon">🪪</div>
+            <div>
+              <div class="doc-name">CIN - Verso</div>
+              <div class="doc-status">Carte d'identité (face arrière)</div>
+            </div>
+          </div>
+          <button class="btn" style="margin:0;padding:12px 24px;font-size:14px;min-width:auto" onclick="uploadDoc('doc2')">Télécharger</button>
+        </div>
+        
+        <div class="doc-item reveal" id="doc3">
+          <div class="doc-info">
+            <div class="doc-icon">🏦</div>
+            <div>
+              <div class="doc-name">RIB</div>
+              <div class="doc-status">Relevé d'Identité Bancaire</div>
+            </div>
+          </div>
+          <button class="btn" style="margin:0;padding:12px 24px;font-size:14px;min-width:auto" onclick="uploadDoc('doc3')">Télécharger</button>
+        </div>
+      </div>
+      
+      <div class="text-center reveal" style="margin-top:40px">
+        <a href="#sec4" class="btn" id="submitDocs">Soumettre ma demande →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 5: ANALYSE -->
+  <section class="section" id="sec4">
+    <div class="container" style="max-width:600px;text-align:center">
+      <div class="reveal">
+        <div class="heart-icon">
+          <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+        </div>
+        
+        <h2>Analyse de votre <span>profil</span></h2>
+        <p>Notre algorithme étudie votre dossier pour vous offrir la meilleure offre.</p>
+        
+        <div class="scoring-bar"><div class="scoring-fill"></div></div>
+        
+        <div style="display:flex;justify-content:space-between;margin-top:16px;font-size:14px;color:var(--text)">
+          <span>Analyse en cours...</span>
+          <span>87%</span>
+        </div>
+        
+        <a href="#sec5" class="btn" style="margin-top:48px">Voir mon offre →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 6: OFFRE -->
+  <section class="section" id="sec5">
+    <div class="container" style="max-width:600px;text-align:center">
+      <div class="reveal">
+        <div class="badge-success">✓ Crédit approuvé</div>
+        
+        <h2>Votre <span>offre</span> personnalisée</h2>
+        
+        <div class="result-card">
+          <div class="result-row">
+            <span class="result-label">Montant du crédit</span>
+            <span class="result-value">50 000 DH</span>
+          </div>
+          <div class="result-row">
+            <span class="result-label">Durée</span>
+            <span class="result-value">24 mois</span>
+          </div>
+          <div class="result-row">
+            <span class="result-label">Mensualité</span>
+            <span class="result-value highlight">2 396 DH</span>
+          </div>
+          <div class="result-row">
+            <span class="result-label">TAEG</span>
+            <span class="result-value">4.9%</span>
+          </div>
+          <div class="result-row">
+            <span class="result-label">Première échéance</span>
+            <span class="result-value">05 avril 2026</span>
+          </div>
+        </div>
+        
+        <a href="#sec6" class="btn">Accepter et signer →</a>
+        <button class="btn btn-secondary">Télécharger le contrat</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 7: SUCCÈS -->
+  <section class="section" id="sec6">
+    <div class="container" style="max-width:600px;text-align:center">
+      <div class="reveal">
+        <div class="success-icon">✓</div>
+        
+        <h1>Crédit <span>confirmé</span> !</h1>
+        
+        <p>Votre dossier a été signé avec succès. Vos fonds seront débloqués sous peu.</p>
+        
+        <div class="ref-box">EQD-8F3D9A2E</div>
+        
+        <div class="card" style="text-align:left;margin:40px 0">
+          <div class="result-row">
+            <span class="result-label">Montant</span>
+            <span class="result-value">50 000 DH</span>
+          </div>
+          <div class="result-row">
+            <span class="result-label">Déblocage des fonds</span>
+            <span class="result-value">24 à 48 heures</span>
+          </div>
+        </div>
+        
+        <a href="#sec0" class="btn">Nouvelle simulation</a>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    // Scroll reveal
+    const reveals=document.querySelectorAll('.reveal,.reveal-left,.reveal-right');
+    function checkReveal(){reveals.forEach(e=>{const w=window.innerHeight,t=e.getBoundingClientRect().top;if(t<w-100)e.classList.add('active')})}
+    window.addEventListener('scroll',checkReveal);checkReveal();
+    
+    // Progress bar
+    function updateProgress(n){document.getElementById('progressBar').style.width=((n+1)/7*100)+'%'}
+    window.addEventListener('scroll',()=>{const s=document.querySelectorAll('.section');let c=0;s.forEach((e,i)=>{const r=e.getBoundingClientRect();if(r.top<=window.innerHeight/2)c=i});updateProgress(c)});
+    
+    // 3D Card tilt effect
+    const card3d=document.querySelector('.card-3d');
+    const cardContainer=document.getElementById('card3d');
+    if(card3d&&cardContainer){
+      cardContainer.addEventListener('mousemove',(e)=>{
+        const rect=cardContainer.getBoundingClientRect();
+        const x=e.clientX-rect.left-rect.width/2;
+        const y=e.clientY-rect.top-rect.height/2;
+        const rotateX=(y/rect.height)*-25;
+        const rotateY=(x/rect.width)*25;
+        card3d.style.transform=`rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+        card3d.style.animation='none';
+      });
+      cardContainer.addEventListener('mouseleave',()=>{
+        card3d.style.animation='float 4s ease-in-out infinite';
+      });
+    }
+    
+    // Simulation
+    function updateSim(){const a=parseInt(document.getElementById('amountSlider').value),m=Math.round((a/24)*1.15);document.getElementById('amountDisplay').textContent=a.toLocaleString('fr-FR')+' DH';document.getElementById('monthlyDisplay').textContent=m.toLocaleString('fr-FR')+' DH'}
+    function setDuration(m,b){document.querySelectorAll('.duration-btn').forEach(x=>x.classList.remove('active'));b.classList.add('active')}
+    
+    // Document upload
+    function uploadDoc(id){
+      const el=document.getElementById(id);
+      el.classList.add('uploaded');
+      el.querySelector('.doc-status').textContent='Document reçu ✓';
+      el.querySelector('button').style.display='none';
+    }
+  </script>
+</body>
+</html>

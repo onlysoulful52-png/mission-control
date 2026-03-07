@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Eqdom - Crédit Premium 3D</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    :root {
+      --navy: #0a0a0f;
+      --navy-light: #151520;
+      --red: #AB0017;
+      --red-glow: rgba(171, 0, 23, 0.6);
+      --gold: #FFB800;
+      --text: #888888;
+    }
+    
+    html {
+      scroll-behavior: smooth;
+      scroll-snap-type: y mandatory;
+    }
+    
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      background: var(--navy);
+      color: white;
+      overflow-x: hidden;
+    }
+    
+    /* Scroll snap sections */
+    .section {
+      min-height: 100vh;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      scroll-snap-align: start;
+      position: relative;
+      padding: 40px 20px;
+    }
+    
+    /* 3D Card */
+    .card-3d-container {
+      perspective: 1000px;
+      width: 340px;
+      height: 200px;
+      margin: 0 auto;
+    }
+    
+    .card-3d {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      transform-style: preserve-3d;
+      border-radius: 16px;
+      background: linear-gradient(135deg, #1a1a2e 0%, #0f0f1a 50%, #1a1a2e 100%);
+      border: 1px solid rgba(255,255,255,0.1);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 40px var(--red-glow);
+      animation: float 4s ease-in-out infinite, glowPulse 3s ease-in-out infinite;
+      overflow: hidden;
+    }
+    
+    @keyframes float {
+      0%, 100% { transform: translateY(0) rotateX(5deg) rotateY(-5deg); }
+      50% { transform: translateY(-15px) rotateX(5deg) rotateY(-5deg); }
+    }
+    
+    @keyframes glowPulse {
+      0%, 100% { box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 40px var(--red-glow); }
+      50% { box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 80px var(--red-glow); }
+    }
+    
+    /* Card Chip */
+    .card-chip {
+      position: absolute;
+      top: 24px;
+      left: 24px;
+      width: 48px;
+      height: 36px;
+      background: linear-gradient(135deg, var(--gold) 0%, #FF8C00 100%);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .card-chip::after {
+      content: '';
+      width: 32px;
+      height: 22px;
+      border: 1px solid rgba(139, 105, 20, 0.5);
+      border-radius: 3px;
+    }
+    
+    /* Card Logo */
+    .card-logo {
+      position: absolute;
+      top: 24px;
+      right: 24px;
+      font-weight: 700;
+      font-size: 18px;
+      letter-spacing: 2px;
+      color: white;
+    }
+    
+    /* Card Number */
+    .card-number {
+      position: absolute;
+      bottom: 70px;
+      left: 24px;
+      font-family: monospace;
+      font-size: 20px;
+      letter-spacing: 3px;
+      color: rgba(255,255,255,0.8);
+    }
+    
+    /* Card Holder */
+    .card-holder {
+      position: absolute;
+      bottom: 24px;
+      left: 24px;
+    }
+    
+    .card-holder-label {
+      font-size: 9px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: rgba(255,255,255,0.4);
+      margin-bottom: 4px;
+    }
+    
+    .card-holder-name {
+      font-size: 14px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+    
+    /* Holographic effect */
+    .hologram {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, transparent 40%, rgba(255,255,255,0.05) 50%, transparent 60%);
+      opacity: 0.3;
+      animation: hologramShine 3s ease-in-out infinite;
+    }
+    
+    @keyframes hologramShine {
+      0%, 100% { transform: translateX(-100%); }
+      50% { transform: translateX(100%); }
+    }
+    
+    /* Floating particles */
+    .particle {
+      position: absolute;
+      width: 4px;
+      height: 4px;
+      background: var(--red);
+      border-radius: 50%;
+      opacity: 0.6;
+    }
+    
+    .particle:nth-child(1) { top: 20%; left: 10%; animation: particleFloat 3s ease-in-out infinite; }
+    .particle:nth-child(2) { top: 60%; left: 5%; animation: particleFloat 4s ease-in-out infinite 0.5s; }
+    .particle:nth-child(3) { top: 30%; right: 10%; animation: particleFloat 3.5s ease-in-out infinite 1s; }
+    .particle:nth-child(4) { top: 70%; right: 15%; animation: particleFloat 4.5s ease-in-out infinite 1.5s; }
+    
+    @keyframes particleFloat {
+      0%, 100% { transform: translateY(0); opacity: 0.3; }
+      50% { transform: translateY(-30px); opacity: 0.8; }
+    }
+    
+    /* Navigation dots */
+    .nav-dots {
+      position: fixed;
+      right: 24px;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    
+    .nav-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.2);
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    
+    .nav-dot.active {
+      background: var(--red);
+      height: 32px;
+      border-radius: 4px;
+    }
+    
+    /* Glass cards */
+    .glass {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 20px;
+      padding: 28px;
+      backdrop-filter: blur(10px);
+    }
+    
+    /* Layout */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      width: 100%;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: center;
+    }
+    
+    @media (max-width: 968px) {
+      .container {
+        grid-template-columns: 1fr;
+        gap: 40px;
+      }
+      .nav-dots {
+        display: none;
+      }
+    }
+    
+    /* Typography */
+    h1 {
+      font-size: clamp(36px, 5vw, 56px);
+      line-height: 1.1;
+      margin-bottom: 20px;
+    }
+    
+    h1 span {
+      color: var(--red);
+    }
+    
+    h2 {
+      font-size: clamp(28px, 4vw, 40px);
+      margin-bottom: 16px;
+    }
+    
+    p {
+      color: var(--text);
+      font-size: 16px;
+      line-height: 1.6;
+    }
+    
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: white;
+      color: black;
+      border: none;
+      padding: 16px 32px;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.3s;
+      margin-top: 24px;
+    }
+    
+    .btn:hover {
+      background: var(--red);
+      color: white;
+      transform: translateY(-2px);
+    }
+    
+    .btn-outline {
+      background: transparent;
+      border: 1px solid rgba(255,255,255,0.2);
+      color: white;
+      margin-left: 12px;
+    }
+    
+    .btn-outline:hover {
+      background: rgba(255,255,255,0.1);
+      border-color: rgba(255,255,255,0.4);
+    }
+    
+    /* Range slider */
+    input[type="range"] {
+      width: 100%;
+      -webkit-appearance: none;
+      height: 6px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 3px;
+      outline: none;
+      margin: 20px 0;
+    }
+    
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 24px;
+      height: 24px;
+      background: var(--red);
+      border-radius: 50%;
+      cursor: pointer;
+      box-shadow: 0 0 0 4px rgba(171,0,23,0.3);
+    }
+    
+    /* Duration buttons */
+    .duration-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 16px;
+    }
+    
+    .duration-btn {
+      padding: 12px 20px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 10px;
+      color: var(--text);
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    
+    .duration-btn:hover,
+    .duration-btn.active {
+      background: var(--red);
+      border-color: var(--red);
+      color: white;
+    }
+    
+    /* Amount display */
+    .amount-display {
+      font-size: 42px;
+      font-weight: 700;
+      margin: 16px 0;
+      background: linear-gradient(135deg, white, var(--red));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    /* Monthly payment highlight */
+    .monthly-highlight {
+      font-size: 36px;
+      font-weight: 700;
+      color: var(--red);
+      text-shadow: 0 0 20px var(--red-glow);
+    }
+    
+    /* Form inputs */
+    input[type="text"],
+    input[type="tel"],
+    input[type="email"] {
+      width: 100%;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.1);
+      padding: 16px;
+      border-radius: 12px;
+      color: white;
+      font-size: 16px;
+      margin-bottom: 12px;
+      transition: all 0.3s;
+    }
+    
+    input:focus {
+      outline: none;
+      border-color: var(--red);
+      box-shadow: 0 0 0 3px rgba(171,0,23,0.1);
+    }
+    
+    /* Timeline */
+    .timeline {
+      display: flex;
+      justify-content: space-between;
+      max-width: 600px;
+      margin: 40px auto;
+      position: relative;
+    }
+    
+    .timeline::before {
+      content: '';
+      position: absolute;
+      top: 15px;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: rgba(255,255,255,0.1);
+    }
+    
+    .timeline-step {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .timeline-dot {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--navy-light);
+      border: 2px solid rgba(255,255,255,0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+    }
+    
+    .timeline-step.active .timeline-dot {
+      background: var(--red);
+      border-color: var(--red);
+      animation: pulse 2s infinite;
+    }
+    
+    .timeline-step.completed .timeline-dot {
+      background: #16A34A;
+      border-color: #16A34A;
+    }
+    
+    @keyframes pulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(171,0,23,0.4); }
+      50% { box-shadow: 0 0 0 10px rgba(171,0,23,0); }
+    }
+    
+    .timeline-label {
+      font-size: 12px;
+      color: var(--text);
+    }
+    
+    /* Success */
+    .success-icon {
+      width: 100px;
+      height: 100px;
+      background: #16A34A;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 24px;
+      font-size: 50px;
+      animation: scaleIn 0.5s ease-out;
+    }
+    
+    @keyframes scaleIn {
+      0% { transform: scale(0); }
+      50% { transform: scale(1.1); }
+      100% { transform: scale(1); }
+    }
+    
+    /* Reveal animations */
+    .reveal {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .reveal.active {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation Dots -->
+  <div class="nav-dots">
+    <div class="nav-dot active" onclick="scrollToSection(0)"></div>
+    <div class="nav-dot" onclick="scrollToSection(1)"></div>
+    <div class="nav-dot" onclick="scrollToSection(2)"></div>
+    <div class="nav-dot" onclick="scrollToSection(3)"></div>
+    <div class="nav-dot" onclick="scrollToSection(4)"></div>
+  </div>
+
+  <!-- Section 1: Hero -->
+  <section class="section" id="section-0">
+    <div class="container">
+      <div class="reveal">
+        <div style="color: var(--red); font-size: 12px; text-transform: uppercase; letter-spacing: 3px; margin-bottom: 16px;">
+          Groupe Saham
+        </div>
+        <h1>Votre projet,<br><span>notre financement.</span></h1>
+        <p>Une solution de crédit sur mesure, 100% en ligne. Obtenez une réponse en quelques minutes, recevez vos fonds sous 48h.</p>
+        <div>
+          <button class="btn" onclick="scrollToSection(1)">Démarrer ma simulation →</button>
+        </div>
+      </div>
+      
+      <div class="reveal" style="transition-delay: 0.2s;">
+        <div class="card-3d-container">
+          <div class="card-3d" id="creditCard">
+            <div class="hologram"></div>
+            <div class="card-chip"></div>
+            <div class="card-logo">EQDOM</div>
+            <div class="card-number">•••• •••• •••• 4242</div>
+            <div class="card-holder">
+              <div class="card-holder-label">Titulaire</div>
+              <div class="card-holder-name">SARAH BENALI</div>
+            </div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 2: Simulation -->
+  <section class="section" id="section-1">
+    <div class="container">
+      <div class="reveal">
+        <div class="card-3d-container">
+          <div class="card-3d">
+            <div class="hologram"></div>
+            <div style="text-align: center; padding-top: 40px;">
+              <div style="font-size: 14px; color: var(--text); margin-bottom: 8px;">Montant</div>
+              <div class="amount-display" id="amountDisplay">50 000 DH</div>
+            </div>
+            <div style="position: absolute; bottom: 24px; left: 24px; right: 24px;">
+              <div style="font-size: 12px; color: var(--text);">Mensualité</div>
+              <div style="font-size: 28px; font-weight: 700; color: var(--red);" id="monthlyDisplay">2 396 DH</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="reveal" style="transition-delay: 0.2s;">
+        <div class="glass">
+          <div style="color: var(--red); font-size: 11px; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 8px;">Simulation</div>
+          <h2>Quel est votre projet ?</h2>
+          
+          <div style="margin-top: 32px;">
+            <label style="color: var(--text); font-size: 14px;">Montant souhaité</label>
+            <div class="amount-display" id="amountDisplay2">50 000 DH</div>
+            <input type="range" id="amountSlider" min="5000" max="500000" step="5000" value="50000" oninput="updateSimulation()">
+            <div style="display: flex; justify-content: space-between; color: var(--text); font-size: 13px;">
+              <span>5 000 DH</span>
+              <span>500 000 DH</span>
+            </div>
+          </div>
+          
+          <div style="margin-top: 32px;">
+            <label style="color: var(--text); font-size: 14px;">Durée</label>
+            <div class="duration-grid">
+              <button class="duration-btn" onclick="setDuration(12, this)">12 mois</button>
+              <button class="duration-btn active" onclick="setDuration(24, this)">24 mois</button>
+              <button class="duration-btn" onclick="setDuration(36, this)">36 mois</button>
+              <button class="duration-btn" onclick="setDuration(48, this)">48 mois</button>
+              <button class="duration-btn" onclick="setDuration(60, this)">60 mois</button>
+            </div>
+          </div>
+          
+          <div class="glass" style="margin-top: 32px; border-color: rgba(171,0,23,0.3);">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <div>
+                <div style="color: var(--text); font-size: 13px;">Mensualité estimée</div>
+                <div class="monthly-highlight" id="monthlyResult">2 396 DH</div>
+              </div>
+              <div style="text-align: right;">
+                <div style="color: var(--text); font-size: 13px;">TAEG</div>
+                <div style="font-size: 24px; font-weight: 700;">4.9%</div>
+              </div>
+            </div>
+          </div>
+          
+          <button class="btn" style="width: 100%; margin-top: 24px;" onclick="scrollToSection(2)">Continuer →</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 3: Contact -->
+  <section class="section" id="section-2">
+    <div class="container">
+      <div class="reveal">
+        <h2>Vos <span>coordonnées</span></h2>
+        <p>Finalisez votre demande de crédit. Un conseiller vous contactera si nécessaire.</p>
+        
+        <div class="glass" style="margin-top: 32px;">
+          <div style="display: flex; align-items: center; gap: 16px;">
+            <div style="width: 48px; height: 48px; background: rgba(171,0,23,0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 24px;">🔐</div>
+            <div>
+              <div style="font-weight: 600;">Protection de vos données</div>
+              <div style="color: var(--text); font-size: 14px;">Conforme à la loi 09-08 sur la protection des données</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="reveal" style="transition-delay: 0.2s;">
+        <div class="glass">
+          <input type="text" placeholder="Prénom *">
+          <input type="text" placeholder="Nom *">
+          <input type="tel" placeholder="Téléphone *">
+          <input type="email" placeholder="Email (optionnel)">
+          
+          <div style="background: rgba(0,0,0,0.3); border-radius: 12px; padding: 20px; margin-top: 24px;">
+            <div style="color: var(--red); font-size: 13px; font-weight: 600; margin-bottom: 16px;">⚠ Consentements obligatoires</div>
+            <label style="display: flex; align-items: flex-start; gap: 12px; margin: 12px 0; color: var(--text); font-size: 13px; cursor: pointer;">
+              <input type="checkbox" style="width: 18px; height: 18px; margin-top: 2px;">
+              J'accepte la vérification de mon identité et la consultation du Bureau de Crédit
+            </label>
+            <label style="display: flex; align-items: flex-start; gap: 12px; margin: 12px 0; color: var(--text); font-size: 13px; cursor: pointer;">
+              <input type="checkbox" style="width: 18px; height: 18px; margin-top: 2px;">
+              J'accepte le traitement de mes données personnelles conformément à la loi 09-08
+            </label>
+            <label style="display: flex; align-items: flex-start; gap: 12px; margin: 12px 0; color: var(--text); font-size: 13px; cursor: pointer;">
+              <input type="checkbox" style="width: 18px; height: 18px; margin-top: 2px;">
+              J'accepte de recevoir des informations sur les produits du groupe Saham
+            </label>
+          </div>
+          
+          <button class="btn" style="width: 100%;" onclick="scrollToSection(3)">Continuer vers les documents →</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 4: Documents -->
+  <section class="section" id="section-3">
+    <div style="text-align: center; max-width: 800px; margin: 0 auto;">
+      <div class="reveal">
+        <h2>Vos <span>documents</span></h2>
+        <p>Téléchargez les justificatifs demandés pour finaliser votre dossier.</p>
+        
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 48px;">
+          <div class="glass" style="text-align: center;">
+            <div style="font-size: 40px; margin-bottom: 16px;">🪪</div>
+            <div style="font-weight: 600; margin-bottom: 8px;">CIN - Recto</div>
+            <div style="color: var(--text); font-size: 13px; margin-bottom: 16px;">Carte d'identité (face avant)</div>
+            <button class="btn btn-outline" style="width: 100%; margin: 0;">Télécharger</button>
+          </div>
+          
+          <div class="glass" style="text-align: center;">
+            <div style="font-size: 40px; margin-bottom: 16px;">🪪</div>
+            <div style="font-weight: 600; margin-bottom: 8px;">CIN - Verso</div>
+            <div style="color: var(--text); font-size: 13px; margin-bottom: 16px;">Carte d'identité (face arrière)</div>
+            <button class="btn btn-outline" style="width: 100%; margin: 0;">Télécharger</button>
+          </div>
+          
+          <div class="glass" style="text-align: center;">
+            <div style="font-size: 40px; margin-bottom: 16px;">🏦</div>
+            <div style="font-weight: 600; margin-bottom: 8px;">RIB</div>
+            <div style="color: var(--text); font-size: 13px; margin-bottom: 16px;">Relevé d'Identité Bancaire</div>
+            <button class="btn btn-outline" style="width: 100%; margin: 0;">Télécharger</button>
+          </div>
+        </div>
+        
+        <button class="btn" style="margin-top: 48px;" onclick="scrollToSection(4)">Soumettre ma demande →</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 5: Success -->
+  <section class="section" id="section-4">
+    <div style="text-align: center; max-width: 600px; margin: 0 auto;">
+      <div class="reveal">
+        <div class="success-icon">✓</div>
+        <div style="display: inline-flex; align-items: center; gap: 8px; background: rgba(22,163,74,0.1); color: #16A34A; padding: 8px 16px; border-radius: 20px; font-size: 14px; font-weight: 600; margin-bottom: 24px;">
+          <span>✓</span>
+          <span>Crédit approuvé</span>
+        </div>
+        <h1>Crédit <span>confirmé</span> !</h1>
+        <p>Votre dossier a été signé avec succès. Vos fonds seront débloqués sous peu.</p>
+        
+        <div class="glass" style="margin-top: 48px; text-align: left;">
+          <div style="display: flex; justify-content: space-between; padding: 16px 0; border-bottom: 1px solid rgba(255,255,255,0.1);">
+            <span style="color: var(--text);">Référence</span>
+            <span style="font-family: monospace;">EQD-8F3D9A2E</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; padding: 16px 0; border-bottom: 1px solid rgba(255,255,255,0.1);">
+            <span style="color: var(--text);">Montant</span>
+            <span>50 000 DH</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; padding: 16px 0;">
+            <span style="color: var(--text);">Déblocage des fonds</span>
+            <span>24 à 48 heures</span>
+          </div>
+        </div>
+        
+        <div style="margin-top: 48px;">
+          <button class="btn">Télécharger le contrat</button>
+          <button class="btn btn-outline" onclick="scrollToSection(0)">Nouvelle simulation</button>
+        </div>
+        
+        <p style="margin-top: 48px; font-size: 14px;">
+          📧 Un email de confirmation a été envoyé<br>
+          📱 Vous recevrez un SMS quand les fonds seront débloqués
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    // Scroll reveal
+    const reveals = document.querySelectorAll('.reveal');
+    
+    function checkReveal() {
+      reveals.forEach(element => {
+        const windowHeight = window.innerHeight;
+        const elementTop = element.getBoundingClientRect().top;
+        const elementVisible = 100;
+        
+        if (elementTop < windowHeight - elementVisible) {
+          element.classList.add('active');
+        }
+      });
+    }
+    
+    window.addEventListener('scroll', checkReveal);
+    checkReveal();
+    
+    // Navigation
+    function scrollToSection(index) {
+      document.getElementById('section-' + index).scrollIntoView({ behavior: 'smooth' });
+      updateNavDots(index);
+    }
+    
+    function updateNavDots(index) {
+      document.querySelectorAll('.nav-dot').forEach((dot, i) => {
+        dot.classList.toggle('active', i === index);
+      });
+    }
+    
+    // Update dots on scroll
+    window.addEventListener('scroll', () => {
+      const sections = document.querySelectorAll('.section');
+      let current = 0;
+      
+      sections.forEach((section, index) => {
+        const rect = section.getBoundingClientRect();
+        if (rect.top <= window.innerHeight / 2) {
+          current = index;
+        }
+      });
+      
+      updateNavDots(current);
+    });
+    
+    // Simulation
+    let currentAmount = 50000;
+    let currentDuration = 24;
+    
+    function updateSimulation() {
+      currentAmount = parseInt(document.getElementById('amountSlider').value);
+      const monthly = Math.round((currentAmount / currentDuration) * 1.15);
+      
+      document.getElementById('amountDisplay').textContent = currentAmount.toLocaleString('fr-FR') + ' DH';
+      document.getElementById('amountDisplay2').textContent = currentAmount.toLocaleString('fr-FR') + ' DH';
+      document.getElementById('monthlyDisplay').textContent = monthly.toLocaleString('fr-FR') + ' DH';
+      document.getElementById('monthlyResult').textContent = monthly.toLocaleString('fr-FR') + ' DH';
+    }
+    
+    function setDuration(months, btn) {
+      currentDuration = months;
+      document.querySelectorAll('.duration-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      updateSimulation();
+    }
+    
+    // 3D Card tilt effect
+    const card = document.getElementById('creditCard');
+    if (card) {
+      document.addEventListener('mousemove', (e) => {
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left - rect.width / 2;
+        const y = e.clientY - rect.top - rect.height / 2;
+        
+        const rotateX = (y / rect.height) * -20;
+        const rotateY = (x / rect.width) * 20;
+        
+        card.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(${Math.sin(Date.now() / 1000) * 10}px)`;
+      });
+    }
+  </script>
+</body>
+</html>

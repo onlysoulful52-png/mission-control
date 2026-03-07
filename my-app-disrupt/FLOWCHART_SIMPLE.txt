@@ -1,0 +1,140 @@
+╔═══════════════════════════════════════════════════════════════════════════════════════════════════╗
+║                    FLOWCHART EQDOM — VUE SYNTHÉTIQUE PAR ÉTAPES                                   ║
+╚═══════════════════════════════════════════════════════════════════════════════════════════════════╝
+
+
+┌───────────────────────────────────────────────────────────────────────────────────────────────────┐
+│  ÉTAPE 0 : ARRIVÉE                                                                                │
+│  ├─ 📱 Client : Clique "Démarrer"                                                                  │
+│  ├─ 🧠 Système : Check cookie ?                                                                    │
+│  └─ 🚪 Exit 0 : Si cookie → Écran reprise / Sinon → Étape 1                                       │
+│                                                                                                    │
+│  💬 Si exit : SMS J+1 "Votre simulation vous attend"                                               │
+└───────────────────────────────────────────────────────────────────────────────────────────────────┘
+                                          │
+                                          ▼
+┌───────────────────────────────────────────────────────────────────────────────────────────────────┐
+│  ÉTAPE 1 : SIMULATION (30 sec)                                                                    │
+│  ├─ 📍 Voir : Slider montant + choix durée + mensualité                                            │
+│  ├─ 📱 Action : Ajuste montant/durée → Clique "Continuer"                                          │
+│  └─ 🚪 Exit 1 : Ferme l'onglet                                                                    │
+│                                                                                                    │
+│  💾 Sauvegarde : LocalStorage (brouillon)                                                          │
+│  💬 Si exit : SMS J+1 "Reprenez votre simulation : [lien]"                                         │
+└───────────────────────────────────────────────────────────────────────────────────────────────────┘
+                                          │
+                                          ▼
+┌───────────────────────────────────────────────────────────────────────────────────────────────────┐
+│  ÉTAPE 2 : COORDONNÉES (1 min)                                                                    │
+│  ├─ 📍 Voir : Champs prénom/nom/tél + 3 cases CNDP à cocher                                        │
+│  ├─ 📱 Action : Remplit + coche cases → Clique "Continuer"                                         │
+│  ├─ ⬅️ Retour : ⬅️ Étape 1                                                                        │
+│  └─ 🚪 Exit 2 : Ferme sans tout remplir                                                           │
+│                                                                                                    │
+│  💬 Si exit : SMS J+1 "Il ne vous manque plus que vos documents"                                   │
+└───────────────────────────────────────────────────────────────────────────────────────────────────┘
+                                          │
+                                          ▼
+┌───────────────────────────────────────────────────────────────────────────────────────────────────┐
+│  ÉTAPE 3 : UPLOAD DOCUMENTS (2-5 min)                                                             │
+│  ├─ 📍 Voir : 3 cards (CIN recto/verso + RIB) + bouton upload                                      │
+│  ├─ 📱 Action A : Upload les 3 docs → Clique "Soumettre" → Étape 4                                 │
+│  ├─ 📱 Action B : Upload 1-2 docs → Clique "Sauvegarder" → Exit 3-BIS                              │
+│  ├─ ⬅️ Retour : ⬅️ Étape 2                                                                        │
+│  └─ 🚪 Exit 3 : Ferme sans sauvegarder                                                            │
+│                                                                                                    │
+│  💬 Exit 3 : SMS J+2 "Finalisez votre dossier"                                                     │
+│  💬 Exit 3-BIS : SMS J+1 "Il vous manque : [liste docs]"                                           │
+└───────────────────────────────────────────────────────────────────────────────────────────────────┘
+                                          │
+                                          ▼ (Si "Soumettre")
+┌───────────────────────────────────────────────────────────────────────────────────────────────────┐
+│  ÉTAPE 4 : EN ATTENTE (4h-24h)                                                                    │
+│  ├─ 📍 Voir : Barre progression "Vérification en cours" + référence dossier                        │
+│  ├─ 📱 Action : Clique "Me notifier" (optionnel) / Ajoute docs (optionnel)                         │
+│  └─ 🚪 Exit 4 : Ferme et attend (NORMAL)                                                          │
+│                                                                                                    │
+│  🔒 Verrouillage : Dossier freeze, plus modifiable                                                 │
+│  🔔 Notification : SMS quand résultat prêt "Votre offre est prête !"                               │
+└───────────────────────────────────────────────────────────────────────────────────────────────────┘
+                                          │
+                    ┌─────────────────────┼─────────────────────┐
+                    │                     │                     │
+                    ▼                     ▼                     ▼
+┌─────────────────────────────────┐ ┌─────────────────────────┐ ┌─────────────────────────────────┐
+│  ÉTAPE 5-A : OFFRE              │ │  ÉTAPE 5-B : À COMPLÉTER│ │  ÉTAPE 5-C : REFUS/CONTRE-PROP│
+│  🟢 APPROUVÉ (60%)              │ │  🟡 (25%)               │ │  🔴 (15%)                     │
+│                                 │ │                         │ │                                 │
+│  📍 Voir : Offre détaillée      │ │  📍 Voir : Liste docs   │ │  📍 Voir : Motif refus OU     │
+│           Montant/TAEG/Mensualité│ │           rejetés       │ │           nouvelle offre      │
+│                                 │ │                         │ │           (montant réduit)    │
+│  📱 Action :                    │ │  📱 Action :            │ │  📱 Action :                  │
+│   □ Voir contrat PDF            │ │   □ Compléter maintenant│ │   □ Accepter contre-propo     │
+│   □ Accepter et signer → Étape 6│ │     → Retour Étape 3    │ │     → Étape 5-A               │
+│   □ Refuser → Exit 5-A          │ │   □ Programer rappel    │ │   □ Refuser → Exit 5-C        │
+│                                 │ │     → Exit 5-B          │ │                                 │
+│  💬 Si exit : Email "Cloturé"   │ │  💬 Rappel : SMS J+1/2/3│ │  📩 Email : "Décision"          │
+└─────────────────────────────────┘ └─────────────────────────┘ └─────────────────────────────────┘
+                    │
+                    ▼
+┌───────────────────────────────────────────────────────────────────────────────────────────────────┐
+│  ÉTAPE 6 : SIGNATURE (2 min)                                                                      │
+│  ├─ 📍 Voir : Récap contrat + Canvas signature + mention 14j rétractation                          │
+│  ├─ 📱 Action : Signe sur canvas → Clique "Valider"                                                │
+│  ├─ 🎉 Animation : Confettis + "Signé !"                                                           │
+│  └─ 🚪 Exit 6 : "Annuler" (rare)                                                                  │
+│                                                                                                    │
+│  📩 Si exit : Email "Signature attendue" + 💬 SMS J+1 rappel                                       │
+│  🔒 Système : Signature horodatée + PDF généré + Virement déclenché                                │
+└───────────────────────────────────────────────────────────────────────────────────────────────────┘
+                                          │
+                                          ▼
+┌───────────────────────────────────────────────────────────────────────────────────────────────────┐
+│  ÉTAPE 7 : CONFIRMATION (FIN)                                                                     │
+│  ├─ 📍 Voir : ✅ "Crédit approuvé !" + Référence + Timeline déblocage                              │
+│  ├─ 📱 Action :                                                     │
+│  │  □ Télécharger contrat signé                                                                │
+│  │  □ Suivre virement                                                                          │
+│  │  □ Parrainer un ami                                                                         │
+│  └─ 🚪 Exit 7 : Parcours terminé avec succès                                                      │
+│                                                                                                    │
+│  📩 Notifications suite :                                                                         │
+│  🔔 Immédiat : Push "Signé"                                                                        │
+│  📩 Immédiat : Email contrat signé                                                                 │
+│  📩 J+1 : "Virement en cours"                                                                      │
+│  💬 J+2 : "Virement effectué"                                                                      │
+│  📩 J+7 : NPS Survey                                                                               │
+│  🎁 Programme fidélité activé                                                                      │
+└───────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+════════════════════════════════════════════════════════════════════════════════════════════════════
+                                        RÈGLES CLÉS
+════════════════════════════════════════════════════════════════════════════════════════════════════
+
+┌──────────────────────────────────────────────────────────────────────────────────────────────────┐
+│  DÉLAIS D'EXPIRATION                                                                              │
+├──────────────────────────────────────────────────────────────────────────────────────────────────┤
+│  • Brouillon (jamais soumis)     : 7 jours → Suppression auto                                    │
+│  • À compléter (docs manquants)  : 7 jours → Relances J+1,3,5,6 → Archivage J+7                 │
+│  • Offre approuvée (attente sig) : 7 jours → Relances J+3,6 → Retour étude si dépassement        │
+│  • Dossier refusé/archivé        : 30 jours conservation légale → Suppression                    │
+└──────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────────────────────────────────────────────────────────┐
+│  CANAUX DE NOTIFICATION                                                                           │
+├──────────────────────────────────────────────────────────────────────────────────────────────────┤
+│  💬 SMS    : Relances, rappels urgents, notifications résultat                                    │
+│  📩 Email  : Contrats, récaps détaillés, NPS, confirmations                                       │
+│  🔔 Push   : Uniquement si client active (résultat prêt, signature confirmée)                    │
+└──────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────────────────────────────────────────────────────────┐
+│  POINTS DE RETOUR POSSIBLES                                                                       │
+├──────────────────────────────────────────────────────────────────────────────────────────────────┤
+│  ✅ Étape 1 ← Étape 2                                                                            │
+│  ✅ Étape 2 ← Étape 3                                                                            │
+│  ✅ Étape 3 ← Étape 5-B (completion)                                                             │
+│  ❌ Pas de retour après soumission (Étape 4 verrouillée)                                         │
+│  ❌ Pas de retour après offre (Étape 5-A/C verrouillées)                                         │
+└──────────────────────────────────────────────────────────────────────────────────────────────────┘

@@ -1,0 +1,457 @@
+# FLOWCHART EQDOM — GUIDE CLIENT ÉTAPE PAR ÉTAPE
+
+```
+╔═══════════════════════════════════════════════════════════════════════════════════════════════════╗
+║                           LÉGENDE                                                                 ║
+╠═══════════════════════════════════════════════════════════════════════════════════════════════════╣
+║  📱 = Action client (clic, upload, saisie)                                                        ║
+║  🔔 = Notification push/web                                                                       ║
+║  📩 = Email                                                                                       ║
+║  💬 = SMS                                                                                         ║
+║  🚪 = Exit possible (quitter le parcours)                                                         ║
+║  ⬅️ = Retour arrière possible                                                                    ║
+╚═══════════════════════════════════════════════════════════════════════════════════════════════════╝
+
+
+═══════════════════════════════════════════════════════════════════════════════════════════════════
+ ÉTAPE 0 : ARRIVÉE
+═══════════════════════════════════════════════════════════════════════════════════════════════════
+
+┌─────────────────────────────────────────────────────────────────────────────────────────────────┐
+│  📍 CLIENT VOIT :                                                                               │
+│     Page d'accueil Eqdom avec simulation rapide                                                 │
+│                                                                                                 │
+│  📱 ACTION CLIENT :                                                                             │
+│     □ Clique sur "Démarrer ma simulation"                                                       │
+│                                                                                                 │
+│  🧠 SYSTÈME VÉRIFIE :                                                                           │
+│     → Cookie existant ?                                                                         │
+│     → Dossier en cours sur cet appareil ?                                                       │
+│                                                                                                 │
+├─────────────────────────────────────────────────────────────────────────────────────────────────┤
+│  🚪 EXIT 0-A : Aucun cookie → Va à ÉTAPE 1                                                     │
+│  🚪 EXIT 0-B : Cookie trouvé → Propose reprise (voir ÉTAPE 0-BIS)                              │
+└─────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+═══════════════════════════════════════════════════════════════════════════════════════════════════
+ ÉTAPE 0-BIS : REPRISE DOSSIER (si cookie trouvé)
+═══════════════════════════════════════════════════════════════════════════════════════════════════
+
+┌─────────────────────────────────────────────────────────────────────────────────────────────────┐
+│  📍 CLIENT VOIT :                                                                               │
+│     "Bonjour [Prénom], vous aviez commencé une demande"                                         │
+│     Récap : Montant / Projet / Dernière activité il y a X jours                                 │
+│                                                                                                 │
+│  📱 ACTION CLIENT :                                                                             │
+│     □ Option A : "Reprendre ma demande" → Va à l'étape où il s'était arrêté                    │
+│     □ Option B : "Nouvelle demande" → Efface l'ancien, va à ÉTAPE 1                            │
+│     □ Option C : Ferme l'onglet → 🚪 EXIT                                                       │
+│                                                                                                 │
+├─────────────────────────────────────────────────────────────────────────────────────────────────┤
+│  🚪 EXIT 0-BIS : Ferme sans rien faire                                                          │
+│     → Aucune notification (déjà en cours)                                                       │
+└─────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+═══════════════════════════════════════════════════════════════════════════════════════════════════
+ ÉTAPE 1 : SIMULATION (Durée : 30 secondes)
+═══════════════════════════════════════════════════════════════════════════════════════════════════
+
+┌─────────────────────────────────────────────────────────────────────────────────────────────────┐
+│  📍 CLIENT VOIT :                                                                               │
+│     Slider montant : 50 000 DH                                                                  │
+│     Choix durée : 24 / 36 / 48 mois                                                            │
+│     Résultat : Mensualité estimée 2 396 DH / mois                                               │
+│                                                                                                 │
+│  📱 ACTION CLIENT :                                                                             │
+│     □ Ajuste le montant (curseur)                                                               │
+│     □ Sélectionne la durée (boutons)                                                            │
+│     □ Clique "Continuer"                                                                        │
+│     □ OU ferme l'onglet                                                                         │
+│                                                                                                 │
+│  💾 SYSTÈME SAUVEGARDE :                                                                        │
+│     → LocalStorage : Montant + Durée + Mensualité                                               │
+│     → Token : BROUILLON-XXXX                                                                    │
+│                                                                                                 │
+├─────────────────────────────────────────────────────────────────────────────────────────────────┤
+│  🚪 EXIT 1 : Ferme l'onglet ou quitte                                                          │
+│     💬 SMS J+1 : "Votre simulation Eqdom vous attend ! Reprenez où vous en étiez : [lien]"     │
+│     📩 Email J+1 : Même contenu + récap visuel                                                  │
+│                                                                                                 │
+│  ⬅️ RETOUR : Possible (mais rien avant)                                                         │
+│  ➡️ SUIT : ÉTAPE 2                                                                              │
+└─────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+═══════════════════════════════════════════════════════════════════════════════════════════════════
+ ÉTAPE 2 : COORDONNÉES (Durée : 1 minute)
+═══════════════════════════════════════════════════════════════════════════════════════════════════
+
+┌─────────────────────────────────────────────────────────────────────────────────────────────────┐
+│  📍 CLIENT VOIT :                                                                               │
+│     Champs : Prénom* / Nom* / Téléphone* / Email (optionnel)                                    │
+│     Cases à cocher CNDP (obligatoires) :                                                        │
+│       □ J'accepte la vérification d'identité                                                    │
+│       □ J'accepte la consultation du Bureau de Crédit                                           │
+│       □ J'accepte le traitement de mes données                                                  │
+│                                                                                                 │
+│  📱 ACTION CLIENT :                                                                             │
+│     □ Remplit les champs (prénom, nom, téléphone)                                               │
+│     □ Coche les 3 cases CNDP (sinon bouton grisé)                                               │
+│     □ Clique "Continuer vers les documents"                                                     │
+│     □ OU clique "Revenir" (retour simulation)                                                   │
+│     □ OU ferme l'onglet                                                                         │
+│                                                                                                 │
+│  💾 SYSTÈME SAUVEGARDE :                                                                        │
+│     → LocalStorage : Données contact + Consentements timestampés                               │
+│                                                                                                 │
+├─────────────────────────────────────────────────────────────────────────────────────────────────┤
+│  🚪 EXIT 2 : Ferme sans cocher tout                                                            │
+│     💬 SMS J+1 : "Il ne vous manque plus que vos documents pour finaliser votre crédit Eqdom"  │
+│     📩 Email J+1 : Récap + lien reprise                                                        │
+│                                                                                                 │
+│  🚪 EXIT 2-BIS : Coche consentements mais ferme avant upload                                   │
+│     💬 SMS J+1 : Même message (considéré comme chaud)                                          │
+│                                                                                                 │
+│  ⬅️ RETOUR : ⬅️ ÉTAPE 1 possible                                                               │
+│  ➡️ SUIT : ÉTAPE 3                                                                              │
+└─────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+═══════════════════════════════════════════════════════════════════════════════════════════════════
+ ÉTAPE 3 : UPLOAD DOCUMENTS (Durée : 2-5 minutes)
+═══════════════════════════════════════════════════════════════════════════════════════════════════
+
+┌─────────────────────────────────────────────────────────────────────────────────────────────────┐
+│  📍 CLIENT VOIT :                                                                               │
+│     3 Cards flottantes :                                                                        │
+│       🟡 CIN Recto (requis)    [Upload]                                                         │
+│       🟡 CIN Verso (requis)    [Upload]                                                         │
+│       🟡 RIB (requis)          [Upload]                                                         │
+│       ⚪ Fiche de paie (optionnel) [Upload]                                                     │
+│                                                                                                 │
+│     LÉGENDE : 🟡 Uploadé / ⚪ Manquant / 🟢 Validé / 🔴 Rejeté                                 │
+│                                                                                                 │
+│  📱 ACTION CLIENT :                                                                             │
+│     OPTION A : Upload complet                                                                   │
+│       □ Upload CIN recto (photo ou fichier)                                                     │
+│       □ Upload CIN verso                                                                        │
+│       □ Upload RIB                                                                              │
+│       □ Clique "Soumettre ma demande"                                                           │
+│       → Va à ÉTAPE 4                                                                            │
+│                                                                                                 │
+│     OPTION B : Sauvegarde partielle                                                             │
+│       □ Upload 1 ou 2 docs seulement                                                            │
+│       □ Clique "Sauvegarder et reprendre plus tard"                                             │
+│       → 🚪 EXIT 3-BIS                                                                           │
+│                                                                                                 │
+│     OPTION C : Abandon                                                                          │
+│       □ Ferme l'onglet sans cliquer                                                             │
+│       → 🚪 EXIT 3                                                                               │
+│                                                                                                 │
+│     OPTION D : Retour                                                                           │
+│       □ Clique "Revenir"                                                                        │
+│       → ⬅️ ÉTAPE 2                                                                              │
+│                                                                                                 │
+│  💾 SYSTÈME SAUVEGARDE :                                                                        │
+│     → LocalStorage : URLs docs temporaires (chiffrées)                                          │
+│     → Token : PARTIEL-XXXX ou COMPLET-XXXX                                                      │
+│                                                                                                 │
+├─────────────────────────────────────────────────────────────────────────────────────────────────┤
+│  🚪 EXIT 3 : Ferme sans sauvegarder (0 doc uploadé)                                            │
+│     📩 Email J+2 : "Votre demande Eqdom n'est pas terminée" + lien                             │
+│     💬 SMS J+2 : "Pensez à finaliser votre dossier Eqdom : [lien court]"                       │
+│                                                                                                 │
+│  🚪 EXIT 3-BIS : Sauvegarde partielle (1-2 docs uploadés)                                      │
+│     💬 SMS J+1 : "Vous avez commencé votre dossier Eqdom. Il vous manque : CIN verso, RIB"    │
+│     📩 Email J+1 : Liste précise des docs manquants + lien magique                              │
+│                                                                                                 │
+│  ⬅️ RETOUR : ⬅️ ÉTAPE 2 possible                                                               │
+│  ➡️ SUIT (si soumission) : ÉTAPE 4                                                              │
+└─────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+═══════════════════════════════════════════════════════════════════════════════════════════════════
+ ÉTAPE 4 : EN ATTENTE DE VÉRIFICATION (Durée : 4h à 24h)
+═══════════════════════════════════════════════════════════════════════════════════════════════════
+
+┌─────────────────────────────────────────────────────────────────────────────────────────────────┐
+│  📍 CLIENT VOIT :                                                                               │
+│     Écran "Votre dossier est en cours d'étude"                                                  │
+│     Barre de progression : 4 étapes                                                             │
+│       1. Documents reçus       ████████████ ✓                                                   │
+│       2. Vérification OCR      ██████░░░░░ ⏳ (en cours)                                        │
+│       3. Analyse crédit        ░░░░░░░░░░░ ⏳                                                   │
+│       4. Décision finale       ░░░░░░░░░░░ ⏳                                                   │
+│                                                                                                 │
+│     Référence dossier : EQD-78432                                                               │
+│     Temps estimé : 4h à 24h                                                                     │
+│                                                                                                 │
+│  📱 ACTION CLIENT :                                                                             │
+│     □ Option A : "Me notifier par SMS quand c'est prêt" (checkbox)                              │
+│     □ Option B : "Ajouter d'autres documents" (si oubli)                                       │
+│     □ Option C : Ferme l'onglet                                                                 │
+│                                                                                                 │
+│  🔒 SYSTÈME :                                                                                   │
+│     → Verrouille le dossier (plus de modification)                                              │
+│     → Lancement OCR + Scoring en background                                                     │
+│                                                                                                 │
+├─────────────────────────────────────────────────────────────────────────────────────────────────┤
+│  🚪 EXIT 4 : Ferme et attend (choix normal)                                                    │
+│     💬 SMS : Quand résultat prêt → "Votre offre Eqdom est prête ! [lien]"                      │
+│     📩 Email : Même contenu + récap offre                                                       │
+│     🔔 Push (si accepté) : "Offre prête !"                                                      │
+│                                                                                                 │
+│  🚪 EXIT 4-BIS : Clique "Ajouter documents" (avant verrouillage)                               │
+│     → Retour ÉTAPE 3 (upload supplémentaire)                                                    │
+│     → Nouvelle soumission → Reset du timer                                                      │
+│                                                                                                 │
+│  ⬅️ RETOUR : ❌ Bloqué (dossier soumis)                                                         │
+│  ➡️ SUIT (automatique par SMS) : ÉTAPE 5-A, 5-B ou 5-C selon résultat                          │
+└─────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+═══════════════════════════════════════════════════════════════════════════════════════════════════
+ ÉTAPE 5-A : OFFRE ACCEPTÉE (Scénario Happy Path - 60% des cas)
+═══════════════════════════════════════════════════════════════════════════════════════════════════
+
+┌─────────────────────────────────────────────────────────────────────────────────────────────────┐
+│  📍 CLIENT VOIT :                                                                               │
+│     🎉 "Votre crédit est approuvé !"                                                            │
+│                                                                                                 │
+│     Récap offre :                                                                               │
+│     • Montant : 50 000 DH                                                                       │
+│     • Durée : 24 mois                                                                           │
+│     • Mensualité : 2 396 DH                                                                     │
+│     • TAEG : 4.9%                                                                               │
+│     • Coût total du crédit : XX XXX DH                                                          │
+│                                                                                                 │
+│  📱 ACTION CLIENT :                                                                             │
+│     □ Option A : "Voir le contrat détaillé" (modal PDF)                                         │
+│     □ Option B : "Télécharger le contrat (PDF)"                                                 │
+│     □ Option C : "Accepter et signer électroniquement"                                          │
+│     → Va à ÉTAPE 6                                                                              │
+│                                                                                                 │
+│     □ Option D : "Refuser cette offre"                                                          │
+│     → 🚪 EXIT 5-A (rare)                                                                        │
+│                                                                                                 │
+│     □ Option E : "Négocier" (si montant ajustable)                                              │
+│     → Formulaire demande ajustement                                                             │
+│                                                                                                 │
+├─────────────────────────────────────────────────────────────────────────────────────────────────┤
+│  🚪 EXIT 5-A : Refuse l'offre                                                                  │
+│     📩 Email : "Dossier cloturé sur demande"                                                    │
+│     → Archivage 30 jours                                                                        │
+│                                                                                                 │
+│  ⬅️ RETOUR : ❌ Dossier verrouillé, retour impossible                                           │
+│  ➡️ SUIT : ÉTAPE 6                                                                              │
+└─────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+═══════════════════════════════════════════════════════════════════════════════════════════════════
+ ÉTAPE 5-B : DOCS À COMPLÉTER (Scénario Loopback - 25% des cas)
+═══════════════════════════════════════════════════════════════════════════════════════════════════
+
+┌─────────────────────────────────────────────────────────────────────────────────────────────────┐
+│  📍 CLIENT VOIT :                                                                               │
+│     ⚠️ "Documents demandés en complément"                                                       │
+│                                                                                                 │
+│     Documents rejetés :                                                                         │
+│     🔴 CIN Recto : "Image floue, veuillez re-scanner"                                           │
+│     🔴 Fiche de paie : "Document manquant"                                                      │
+│                                                                                                 │
+│     ⏱️ Délai : 5 jours restants pour compléter                                                 │
+│                                                                                                 │
+│  📱 ACTION CLIENT :                                                                             │
+│     □ Option A : "Compléter maintenant"                                                         │
+│     → Retour ÉTAPE 3 (upload) avec pré-visualisation des docs déjà OK                          │
+│                                                                                                 │
+│     □ Option B : "Programmer un rappel"                                                         │
+│     → Choix : Demain / Dans 2 jours / Dans 3 jours                                             │
+│     → 🚪 EXIT 5-B (attend rappel)                                                              │
+│                                                                                                 │
+│     □ Option C : Abandon (ne clique rien)                                                      │
+│     → 🚪 EXIT 5-C                                                                               │
+│                                                                                                 │
+├─────────────────────────────────────────────────────────────────────────────────────────────────┤
+│  🚪 EXIT 5-B : Programmé rappel                                                                │
+│     💬 SMS J+1 ou J+2 ou J+3 : "Pensez à compléter votre dossier Eqdom : [lien]"               │
+│     📩 Email même jour : Même contenu                                                           │
+│                                                                                                 │
+│  🚪 EXIT 5-C : Ignore (pas de réponse)                                                         │
+│     💬 SMS J+5 : "Dernier jour pour compléter votre dossier Eqdom"                             │
+│     📩 Email J+5 : Dernier rappel                                                               │
+│     📩 Email J+6 : "Votre dossier va expirer"                                                   │
+│     🗑️ J+7 : Archivage automatique                                                              │
+│                                                                                                 │
+│  ➡️ SUIT (si completion) : Retour ÉTAPE 3 → Nouveau tour ÉTAPE 4                               │
+└────────────────────────────────────────────────════════════════════════════════─────────────────┘
+
+
+═══════════════════════════════════════════════════════════════════════════════════════════════════
+ ÉTAPE 5-C : DOSSIER ÉTUDIÉ (Refus ou Contre-proposition - 15% des cas)
+═══════════════════════════════════════════════════════════════════════════════════════════════════
+
+┌─────────────────────────────────────────────────────────────────────────────────────────────────┐
+│  📍 CLIENT VOIT :                                                                               │
+│     📋 "Décision sur votre dossier"                                                             │
+│                                                                                                 │
+│     CAS 1 : REFUS DEFINITIF                                                                     │
+│     "Votre demande ne peut pas être acceptée"                                                   │
+│     Motif générique : "Votre profil ne correspond pas à nos critères actuels"                  │
+│     (OU Motif spécifique si choix business : "Taux d'endettement trop élevé")                  │
+│                                                                                                 │
+│     CAS 2 : CONTRE-PROPOSITION                                                                  │
+│     "Nous ne pouvons pas accorder 50 000 DH, mais nous vous proposons :"                        │
+│     • Montant réduit : 35 000 DH                                                                │
+│     • Mensualité ajustée : 1 677 DH                                                             │
+│                                                                                                 │
+│  📱 ACTION CLIENT (CAS 1 - Refus) :                                                             │
+│     □ Unique option : "J'ai compris"                                                           │
+│     → 🚪 EXIT 5-C-1 : Fin du parcours                                                          │
+│                                                                                                 │
+│  📱 ACTION CLIENT (CAS 2 - Contre-proposition) :                                                │
+│     □ Option A : "Accepter la nouvelle offre" → Va à ÉTAPE 5-A (offre réduite)                 │
+│     □ Option B : "Refuser" → 🚪 EXIT 5-C-2                                                     │
+│                                                                                                 │
+├─────────────────────────────────────────────────────────────────────────────────────────────────┤
+│  🚪 EXIT 5-C-1 : Refus accepté                                                                 │
+│     📩 Email : "Décision sur votre demande de crédit"                                           │
+│     → Archivage 30 jours (obligation légale)                                                    │
+│     → Possibilité de refaire une demande dans 3 mois                                            │
+│                                                                                                 │
+│  🚪 EXIT 5-C-2 : Contre-proposition refusée                                                    │
+│     📩 Email : "Dossier cloturé"                                                                │
+│     → Archivage 30 jours                                                                        │
+│                                                                                                 │
+│  ➡️ SUIT (si acceptation contre-prop) : ÉTAPE 5-A puis ÉTAPE 6                                 │
+└────────────────────────────────────────────────════════════════════════════════─────────────────┘
+
+
+═══════════════════════════════════════════════════════════════════════════════════════════════════
+ ÉTAPE 6 : SIGNATURE ÉLECTRONIQUE (Durée : 2 minutes)
+═══════════════════════════════════════════════════════════════════════════════════════════════════
+
+┌─────────────────────────────────────────────────────────────────────────────────────────────────┐
+│  📍 CLIENT VOIT :                                                                               │
+│     📄 Récapitulatif contrat                                                                    │
+│     🖊️ Canvas signature (style pad électronique)                                               │
+│     ℹ️ Mention : "14 jours de rétractation"                                                     │
+│                                                                                                 │
+│  📱 ACTION CLIENT :                                                                             │
+│     □ Option A : Signe sur le canvas (doigt ou souris)                                          │
+│     □ Clique "Valider la signature"                                                             │
+│     → Animation confettis                                                                       │
+│     → Va à ÉTAPE 7                                                                              │
+│                                                                                                 │
+│     □ Option B : "Effacer" (re-signe)                                                           │
+│     □ Option C : "Télécharger le contrat avant de signer"                                       │
+│     □ Option D : "Annuler" (abandon dernier moment)                                            │
+│     → 🚪 EXIT 6                                                                                 │
+│                                                                                                 │
+│  🔒 SYSTÈME :                                                                                   │
+│     → Signature horodatée                                                                       │
+│     → Génération PDF signé                                                                      │
+│     → Déclenchement virement (24-48h)                                                           │
+│                                                                                                 │
+├─────────────────────────────────────────────────────────────────────────────────────────────────┤
+│  🚪 EXIT 6 : Abandon avant signature (rare)                                                    │
+│     📩 Email : "Votre signature est attendue pour finaliser"                                    │
+│     💬 SMS J+1 : "Dernière étape : signez votre contrat Eqdom : [lien]"                        │
+│     ⏱️ Validité offre : 7 jours (sinon retour étude)                                           │
+│                                                                                                 │
+│  ⬅️ RETOUR : ❌ Non, contrat en cours de signature                                              │
+│  ➡️ SUIT : ÉTAPE 7 (succès)                                                                     │
+└─────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+═══════════════════════════════════════════════════════════════════════════════════════════════════
+ ÉTAPE 7 : CONFIRMATION & SUIVI (Fin du parcours actif)
+═══════════════════════════════════════════════════════════════════════════════════════════════════
+
+┌─────────────────────────────────────────────────────────────────────────────────────────────────┐
+│  📍 CLIENT VOIT :                                                                               │
+│     ✅ "Crédit approuvé et signé !"                                                             │
+│                                                                                                 │
+│     Récap final :                                                                               │
+│     • Référence : EQD-78432                                                                     │
+│     • Montant : 50 000 DH                                                                       │
+│     • Déblocage : 24-48h sur votre compte                                                       │
+│                                                                                                 │
+│     Timeline visuelle :                                                                         │
+│     Signature ✓ ────▶ Virement en cours ────▶ 💰 Reçu (24-48h)                                 │
+│                                                                                                 │
+│  📱 ACTION CLIENT :                                                                             │
+│     □ "Télécharger le contrat signé (PDF)"                                                      │
+│     □ "Ajouter à mon calendrier" (rappel mensualité)                                           │
+│     □ "Suivre mon virement" (lien tracking)                                                    │
+│     □ "Parrainer un ami" (programme fidélité)                                                  │
+│     □ "Donner mon avis" (NPS)                                                                   │
+│                                                                                                 │
+│     🚪 EXIT 7 : Ferme l'onglet = Parcours terminé avec succès                                  │
+│                                                                                                 │
+├─────────────────────────────────────────────────────────────────────────────────────────────────┤
+│  NOTIFICATIONS POST-SUCCÈS :                                                                   │
+│                                                                                                 │
+│  🔔 Immédiat : Push "Signature confirmée"                                                        │
+│  📩 Immédiat : Email avec contrat signé en PJ                                                   │
+│  📩 J+1 : Email "Votre virement est en cours"                                                   │
+│  💬 J+2 : SMS "Votre crédit Eqdom a été viré sur votre compte"                                 │
+│  📩 J+7 : NPS Survey "Comment s'est passée votre expérience ?"                                  │
+│  📩 J+30 : Premier rappel mensualité "Votre première échéance approche"                        │
+│                                                                                                 │
+│  🎁 Programme fidélité : Offre parrainage (bonus si ami souscrit)                               │
+│                                                                                                 │
+│  ✅ FIN DU PARCOURS CLIENT                                                                      │
+└─────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+═══════════════════════════════════════════════════════════════════════════════════════════════════
+                              RÉCAPITULATIF DES NOTIFICATIONS PAR ÉTAPE
+═══════════════════════════════════════════════════════════════════════════════════════════════════
+
+┌────────────────┬───────────────────────────────────────────────────────────────────────────────┐
+│ ÉTAPE          │ NOTIFICATIONS ACTIVES                                                          │
+├────────────────┼───────────────────────────────────────────────────────────────────────────────┤
+│ Exit 1         │ 💬 SMS J+1 + 📩 Email J+1                                                       │
+│ Exit 2         │ 💬 SMS J+1 + 📩 Email J+1                                                       │
+│ Exit 3         │ 📩 Email J+2 + 💬 SMS J+2                                                       │
+│ Exit 3-BIS     │ 💬 SMS J+1 (rappel docs manquants)                                              │
+│ Exit 4         │ 🔔 Push + 💬 SMS + 📩 Email (quand résultat prêt)                              │
+│ Exit 5-B       │ 💬 SMS J+1/J+2/J+3 (selon choix rappel)                                        │
+│ Exit 5-C       │ 💬 SMS J+5 (dernier rappel) + 📩 Email J+5 + J+6                                │
+│ Exit 6         │ 📩 Email immédiat + 💬 SMS J+1 (rappel signature)                              │
+│ Succès (7)     │ 🔔 Push immédiat + 📩 Email immédiat + J+1 + J+7 (NPS) + J+30                │
+└────────────────┴───────────────────────────────────────────────────────────────────────────────┘
+
+
+═══════════════════════════════════════════════════════════════════════════════════════════════════
+                              RÈGLES DE GESTION DES EXPIRATIONS
+═══════════════════════════════════════════════════════════════════════════════════════════════════
+
+┌─────────────────────────────────────────────────────────────────────────────────────────────────┐
+│  DOSSIER BROUILLON (jamais soumis) :                                                            │
+│  → Expire après 7 jours d'inactivité                                                            │
+│  → Suppression automatique LocalStorage                                                         │
+│  → Relance possible via email/SMS avant expiration                                              │
+│                                                                                                 │
+│  DOSSIER SOUMIS (en attente) :                                                                  │
+│  → Pas d'expiration (en cours de traitement)                                                    │
+│  → Si blocage technique > 72h : Notification admin + client                                     │
+│                                                                                                 │
+│  DOSSIER À COMPLÉTER :                                                                          │
+│  → 7 jours pour compléter                                                                       │
+│  → Relances J+1, J+3, J+5, J+6                                                                  │
+│  → Archivage J+7 si silence                                                                     │
+│                                                                                                 │
+│  OFFRE APPROUVÉE (attente signature) :                                                          │
+│  → 7 jours de validité                                                                          │
+│  → Relance J+3, J+6                                                                             │
+│  → Retour en étude si dépassement                                                               │
+│                                                                                                 │
+│  DOSSIER REFUSÉ/ARCHIVÉ :                                                                       │
+│  → Conservation 30 jours (obligation légale)                                                    │
+│  → Suppression automatique après                                                                │
+│  → Nouvelle demande possible après 3 mois (anti-spam)                                           │
+└─────────────────────────────────────────────────────────────────────────────────────────────────┘

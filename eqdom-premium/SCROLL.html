@@ -1,0 +1,1298 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Eqdom - Crédit en Ligne</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    :root {
+      --saham-navy: #0F1823;
+      --saham-light: #1A2433;
+      --eqdom-red: #AB0017;
+      --eqdom-red-hover: #8A0012;
+      --text-primary: #FFFFFF;
+      --text-secondary: #86868B;
+      --border: rgba(255,255,255,0.1);
+      --success: #16A34A;
+    }
+    
+    html {
+      scroll-behavior: smooth;
+      scroll-snap-type: y mandatory;
+    }
+    
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      background: var(--saham-navy);
+      color: var(--text-primary);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+    
+    /* Animations */
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(60px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    
+    @keyframes scaleIn {
+      from { opacity: 0; transform: scale(0.9); }
+      to { opacity: 1; transform: scale(1); }
+    }
+    
+    @keyframes slideInLeft {
+      from { opacity: 0; transform: translateX(-100px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    
+    @keyframes slideInRight {
+      from { opacity: 0; transform: translateX(100px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+    
+    @keyframes shimmer {
+      0% { background-position: -200% 0; }
+      100% { background-position: 200% 0; }
+    }
+    
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-20px); }
+    }
+    
+    @keyframes gradient {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    
+    /* Fixed Navigation */
+    .nav-dots {
+      position: fixed;
+      right: 40px;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    
+    .nav-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.2);
+      cursor: pointer;
+      transition: all 0.3s;
+      position: relative;
+    }
+    
+    .nav-dot::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 0;
+      height: 0;
+      border-radius: 50%;
+      background: var(--eqdom-red);
+      transition: all 0.3s;
+    }
+    
+    .nav-dot:hover,
+    .nav-dot.active {
+      background: rgba(255,255,255,0.4);
+    }
+    
+    .nav-dot.active::before {
+      width: 100%;
+      height: 100%;
+    }
+    
+    .nav-dot-label {
+      position: absolute;
+      right: 24px;
+      top: 50%;
+      transform: translateY(-50%);
+      white-space: nowrap;
+      font-size: 12px;
+      color: var(--text-secondary);
+      opacity: 0;
+      transition: opacity 0.3s;
+      pointer-events: none;
+    }
+    
+    .nav-dot:hover .nav-dot-label {
+      opacity: 1;
+    }
+    
+    /* Header */
+    .header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      padding: 24px 48px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 100;
+      background: linear-gradient(to bottom, var(--saham-navy), transparent);
+    }
+    
+    .logo {
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--eqdom-red);
+    }
+    
+    .header-links {
+      display: flex;
+      gap: 32px;
+    }
+    
+    .header-link {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 14px;
+      transition: color 0.3s;
+    }
+    
+    .header-link:hover {
+      color: var(--text-primary);
+    }
+    
+    /* Sections */
+    .section {
+      min-height: 100vh;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      padding: 100px 48px;
+      scroll-snap-align: start;
+      position: relative;
+    }
+    
+    .section-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      width: 100%;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+    }
+    
+    .section-full {
+      grid-template-columns: 1fr;
+      text-align: center;
+    }
+    
+    /* Hero Section */
+    .hero-title {
+      font-size: clamp(48px, 6vw, 72px);
+      font-weight: 700;
+      line-height: 1.1;
+      margin-bottom: 24px;
+    }
+    
+    .hero-title span {
+      background: linear-gradient(135deg, var(--eqdom-red), #FF4D6D);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    .hero-subtitle {
+      font-size: 20px;
+      color: var(--text-secondary);
+      margin-bottom: 40px;
+      max-width: 500px;
+    }
+    
+    .hero-stats {
+      display: flex;
+      gap: 48px;
+      margin-top: 48px;
+    }
+    
+    .hero-stat {
+      animation: fadeInUp 0.6s both;
+    }
+    
+    .hero-stat-number {
+      font-size: 36px;
+      font-weight: 700;
+      color: var(--eqdom-red);
+    }
+    
+    .hero-stat-label {
+      font-size: 14px;
+      color: var(--text-secondary);
+    }
+    
+    /* Visual Side */
+    .visual-side {
+      position: relative;
+      height: 500px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .card-visual {
+      background: var(--saham-light);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 32px;
+      width: 100%;
+      max-width: 400px;
+      box-shadow: 0 40px 80px rgba(0,0,0,0.4);
+      animation: float 6s ease-in-out infinite;
+    }
+    
+    .card-visual-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    
+    .card-visual-icon {
+      width: 48px;
+      height: 48px;
+      background: linear-gradient(135deg, var(--eqdom-red), #D41830);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+    }
+    
+    .card-visual-title {
+      font-size: 18px;
+      font-weight: 600;
+    }
+    
+    .card-visual-subtitle {
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+    
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      background: var(--eqdom-red);
+      color: white;
+      border: none;
+      padding: 18px 36px;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      text-decoration: none;
+    }
+    
+    .btn:hover {
+      background: var(--eqdom-red-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 20px 40px rgba(171,0,23,0.3);
+    }
+    
+    .btn-secondary {
+      background: transparent;
+      border: 1px solid var(--border);
+      margin-left: 16px;
+    }
+    
+    .btn-secondary:hover {
+      background: rgba(255,255,255,0.05);
+      border-color: rgba(255,255,255,0.2);
+    }
+    
+    /* Simulation Section */
+    .simulation-container {
+      background: var(--saham-light);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 48px;
+    }
+    
+    .slider-container {
+      margin: 32px 0;
+    }
+    
+    .slider-label {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+    
+    .slider-title {
+      font-size: 14px;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    
+    .slider-value {
+      font-size: 32px;
+      font-weight: 700;
+    }
+    
+    input[type="range"] {
+      width: 100%;
+      -webkit-appearance: none;
+      height: 8px;
+      background: var(--border);
+      border-radius: 4px;
+      outline: none;
+    }
+    
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 28px;
+      height: 28px;
+      background: var(--eqdom-red);
+      border-radius: 50%;
+      cursor: pointer;
+      box-shadow: 0 0 0 4px rgba(171,0,23,0.2);
+      transition: transform 0.2s;
+    }
+    
+    input[type="range"]::-webkit-slider-thumb:hover {
+      transform: scale(1.1);
+    }
+    
+    .duration-options {
+      display: flex;
+      gap: 12px;
+      margin-top: 32px;
+    }
+    
+    .duration-btn {
+      flex: 1;
+      padding: 16px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      color: var(--text-secondary);
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    
+    .duration-btn:hover,
+    .duration-btn.active {
+      background: var(--eqdom-red);
+      border-color: var(--eqdom-red);
+      color: white;
+    }
+    
+    .result-box {
+      background: var(--saham-navy);
+      border-radius: 16px;
+      padding: 32px;
+      margin-top: 32px;
+      text-align: center;
+    }
+    
+    .result-label {
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin-bottom: 8px;
+    }
+    
+    .result-value {
+      font-size: 48px;
+      font-weight: 700;
+      color: var(--eqdom-red);
+    }
+    
+    /* Features Grid */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 32px;
+      margin-top: 48px;
+    }
+    
+    .feature-card {
+      background: var(--saham-light);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 32px;
+      transition: all 0.3s;
+    }
+    
+    .feature-card:hover {
+      transform: translateY(-8px);
+      border-color: rgba(171,0,23,0.3);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+    }
+    
+    .feature-icon {
+      width: 56px;
+      height: 56px;
+      background: rgba(171,0,23,0.1);
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      margin-bottom: 20px;
+    }
+    
+    .feature-title {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+    
+    .feature-desc {
+      font-size: 14px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+    
+    /* Contact Form */
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+    
+    input[type="text"],
+    input[type="tel"],
+    input[type="email"] {
+      width: 100%;
+      background: var(--saham-navy);
+      border: 1px solid var(--border);
+      padding: 16px 20px;
+      border-radius: 12px;
+      color: white;
+      font-size: 16px;
+      transition: all 0.3s;
+    }
+    
+    input:focus {
+      outline: none;
+      border-color: var(--eqdom-red);
+      box-shadow: 0 0 0 3px rgba(171,0,23,0.1);
+    }
+    
+    .consent-section {
+      background: var(--saham-navy);
+      border-radius: 16px;
+      padding: 24px;
+      margin-top: 24px;
+    }
+    
+    .consent-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--eqdom-red);
+      font-weight: 600;
+      margin-bottom: 16px;
+      font-size: 14px;
+    }
+    
+    .checkbox-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    
+    .checkbox-item:last-child {
+      border-bottom: none;
+    }
+    
+    .checkbox-item input {
+      width: 20px;
+      height: 20px;
+      margin-top: 2px;
+      accent-color: var(--eqdom-red);
+    }
+    
+    .checkbox-item label {
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+    
+    /* Timeline */
+    .timeline {
+      display: flex;
+      justify-content: space-between;
+      max-width: 800px;
+      margin: 48px auto;
+      position: relative;
+    }
+    
+    .timeline::before {
+      content: '';
+      position: absolute;
+      top: 20px;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: var(--border);
+    }
+    
+    .timeline-step {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .timeline-dot {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--saham-light);
+      border: 2px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      transition: all 0.3s;
+    }
+    
+    .timeline-step.active .timeline-dot {
+      background: var(--eqdom-red);
+      border-color: var(--eqdom-red);
+    }
+    
+    .timeline-step.completed .timeline-dot {
+      background: var(--success);
+      border-color: var(--success);
+    }
+    
+    .timeline-label {
+      font-size: 13px;
+      color: var(--text-secondary);
+      text-align: center;
+    }
+    
+    /* Success Section */
+    .success-icon {
+      width: 120px;
+      height: 120px;
+      background: var(--success);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 32px;
+      font-size: 60px;
+    }
+    
+    .offer-card {
+      background: var(--saham-light);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 48px;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    
+    .offer-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 20px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    
+    .offer-row:last-child {
+      border-bottom: none;
+    }
+    
+    .offer-label {
+      color: var(--text-secondary);
+    }
+    
+    .offer-value {
+      font-weight: 600;
+      font-size: 18px;
+    }
+    
+    .offer-value.highlight {
+      color: var(--eqdom-red);
+      font-size: 24px;
+    }
+    
+    /* Scroll Reveal Animation */
+    .reveal {
+      opacity: 0;
+      transform: translateY(60px);
+      transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .reveal.active {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    
+    .reveal-left {
+      opacity: 0;
+      transform: translateX(-100px);
+      transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .reveal-left.active {
+      opacity: 1;
+      transform: translateX(0);
+    }
+    
+    .reveal-right {
+      opacity: 0;
+      transform: translateX(100px);
+      transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .reveal-right.active {
+      opacity: 1;
+      transform: translateX(0);
+    }
+    
+    .reveal-scale {
+      opacity: 0;
+      transform: scale(0.8);
+      transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .reveal-scale.active {
+      opacity: 1;
+      transform: scale(1);
+    }
+    
+    /* Gradient Backgrounds */
+    .gradient-bg {
+      background: linear-gradient(135deg, var(--saham-navy) 0%, #1a0f23 50%, var(--saham-navy) 100%);
+      background-size: 200% 200%;
+      animation: gradient 15s ease infinite;
+    }
+    
+    /* Responsive */
+    @media (max-width: 968px) {
+      .section-content {
+        grid-template-columns: 1fr;
+        gap: 40px;
+      }
+      
+      .visual-side {
+        order: -1;
+        height: auto;
+      }
+      
+      .features-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .nav-dots {
+        display: none;
+      }
+      
+      .header {
+        padding: 16px 24px;
+      }
+      
+      .header-links {
+        display: none;
+      }
+      
+      .section {
+        padding: 100px 24px;
+      }
+      
+      .hero-title {
+        font-size: 40px;
+      }
+      
+      .hero-stats {
+        flex-direction: column;
+        gap: 24px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Fixed Header -->
+  <header class="header">
+    <div class="logo">Eqdom</div>
+    <nav class="header-links">
+      <a href="#simulation" class="header-link">Simulation</a>
+      <a href="#contact" class="header-link">Contact</a>
+      <a href="#documents" class="header-link">Documents</a>
+      <a href="#status" class="header-link">Suivi</a>
+    </nav>
+  </header>
+
+  <!-- Navigation Dots -->
+  <div class="nav-dots">
+    <div class="nav-dot active" onclick="scrollToSection('hero')">
+      <span class="nav-dot-label">Accueil</span>
+    </div>
+    <div class="nav-dot" onclick="scrollToSection('simulation')">
+      <span class="nav-dot-label">Simulation</span>
+    </div>
+    <div class="nav-dot" onclick="scrollToSection('features')">
+      <span class="nav-dot-label">Avantages</span>
+    </div>
+    <div class="nav-dot" onclick="scrollToSection('contact')">
+      <span class="nav-dot-label">Contact</span>
+    </div>
+    <div class="nav-dot" onclick="scrollToSection('documents')">
+      <span class="nav-dot-label">Documents</span>
+    </div>
+    <div class="nav-dot" onclick="scrollToSection('status')">
+      <span class="nav-dot-label">Suivi</span>
+    </div>
+    <div class="nav-dot" onclick="scrollToSection('offer')">
+      <span class="nav-dot-label">Offre</span>
+    </div>
+  </div>
+
+  <!-- Section 1: Hero -->
+  <section id="hero" class="section gradient-bg">
+    <div class="section-content">
+      <div class="reveal-left">
+        <div style="color: var(--eqdom-red); font-size: 12px; text-transform: uppercase; letter-spacing: 3px; margin-bottom: 24px;">
+          Groupe Saham — Société de Financement
+        </div>
+        <h1 class="hero-title">
+          Votre projet,<br>
+          <span>notre financement.</span>
+        </h1>
+        <p class="hero-subtitle">
+          Une solution de crédit sur mesure, 100% en ligne. 
+          Obtenez une réponse en quelques minutes, recevez vos fonds sous 48h.
+        </p>
+        <div>
+          <a href="#simulation" class="btn">
+            Démarrer ma simulation →
+          </a>
+          <a href="#features" class="btn btn-secondary">
+            En savoir plus
+          </a>
+        </div>
+        
+        <div class="hero-stats">
+        <div class="hero-stat" style="animation-delay: 0.2s;">
+          <div class="hero-stat-number">5min</div>
+          <div class="hero-stat-label">Simulation</div>
+        </div>
+        <div class="hero-stat" style="animation-delay: 0.4s;">
+          <div class="hero-stat-number">48h</div>
+          <div class="hero-stat-label">Déblocage</div>
+        </div>
+        <div class="hero-stat" style="animation-delay: 0.6s;">
+          <div class="hero-stat-number">4.9%</div>
+          <div class="hero-stat-label">TAEG min</div>
+        </div>
+        </div>
+      </div>
+      
+      <div class="visual-side reveal-right">
+        <div class="card-visual">
+          <div class="card-visual-header">
+            <div class="card-visual-icon">💳</div>
+            <div>
+              <div class="card-visual-title">Crédit Personnel</div>
+              <div class="card-visual-subtitle">Simulation instantanée</div>
+            </div>
+          </div>
+          <div style="background: rgba(255,255,255,0.05); border-radius: 12px; padding: 20px; margin: 20px 0;">
+            <div style="color: var(--text-secondary); font-size: 13px;">Montant</div>
+            <div style="font-size: 32px; font-weight: 700; margin: 8px 0;">50 000 MAD</div>
+            <input type="range" style="width: 100%;" min="5000" max="500000" value="50000">
+          </div>
+          <div style="display: flex; justify-content: space-between; padding: 16px 0; border-top: 1px solid var(--border);">
+            <div>
+              <div style="color: var(--text-secondary); font-size: 12px;">Mensualité</div>
+              <div style="font-size: 20px; font-weight: 600; color: var(--eqdom-red);">2 396 MAD</div>
+            </div>
+            <div style="text-align: right;">
+              <div style="color: var(--text-secondary); font-size: 12px;">Durée</div>
+              <div style="font-size: 20px; font-weight: 600;">24 mois</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 2: Simulation -->
+  <section id="simulation" class="section">
+    <div class="section-content">
+      <div class="reveal-left">
+        <h2 style="font-size: 42px; margin-bottom: 16px;">
+          Simulez votre <span style="color: var(--eqdom-red);">crédit</span>
+        </h2>
+        <p style="color: var(--text-secondary); font-size: 18px; margin-bottom: 32px;">
+          Ajustez le montant et la durée selon vos besoins. 
+          Obtenez une estimation instantanée de vos mensualités.
+        </p>
+        
+        <div class="features-grid" style="margin-top: 48px;">
+          <div class="feature-card">
+            <div class="feature-icon">⚡</div>
+            <div class="feature-title">Réponse immédiate</div>
+            <div class="feature-desc">Découvrez votre taux personnalisé en quelques secondes</div>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">🔒</div>
+            <div class="feature-title">Sans engagement</div>
+            <div class="feature-desc">La simulation est gratuite et sans impact sur votre score</div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="reveal-right">
+        <div class="simulation-container">
+          <div class="slider-container">
+            <div class="slider-label">
+              <span class="slider-title">Montant souhaité</span>
+              <span class="slider-value" id="amountValue">50 000 MAD</span>
+            </div>
+            <input type="range" id="amountSlider" min="5000" max="500000" step="5000" value="50000" oninput="updateSimulation()">
+            <div style="display: flex; justify-content: space-between; color: var(--text-secondary); font-size: 13px; margin-top: 8px;">
+              <span>5 000 MAD</span>
+              <span>500 000 MAD</span>
+            </div>
+          </div>
+          
+          <div class="slider-container" style="margin-top: 32px;">
+            <div class="slider-label">
+              <span class="slider-title">Durée de remboursement</span>
+            </div>
+            <div class="duration-options">
+              <button class="duration-btn" onclick="setDuration(12)">12 mois</button>
+              <button class="duration-btn active" onclick="setDuration(24)">24 mois</button>
+              <button class="duration-btn" onclick="setDuration(36)">36 mois</button>
+              <button class="duration-btn" onclick="setDuration(48)">48 mois</button>
+              <button class="duration-btn" onclick="setDuration(60)">60 mois</button>
+            </div>
+          </div>
+          
+          <div class="result-box">
+            <div class="result-label">Votre mensualité estimée</div>
+            <div class="result-value" id="monthlyResult">2 396 MAD</div>
+            <div style="color: var(--text-secondary); font-size: 14px; margin-top: 8px;">
+              TAEG à partir de <strong>4.9%</strong>
+            </div>
+          </div>
+          
+          <a href="#contact" class="btn" style="width: 100%; margin-top: 24px; justify-content: center;">
+            Continuer ma demande →
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 3: Features -->
+  <section id="features" class="section section-full">
+    <div class="reveal">
+      <h2 style="font-size: 42px; margin-bottom: 16px;">
+        Pourquoi choisir <span style="color: var(--eqdom-red);">Eqdom</span> ?
+      </h2>
+      <p style="color: var(--text-secondary); font-size: 18px; max-width: 600px; margin: 0 auto 48px;">
+        Le crédit simplifié, 100% digital, avec l'expertise du Groupe Saham.
+      </p>
+      
+      <div class="features-grid" style="max-width: 1000px; margin: 0 auto;">
+        <div class="feature-card reveal-scale" style="transition-delay: 0.1s;">
+          <div class="feature-icon">🚀</div>
+          <div class="feature-title">100% en ligne</div>
+          <div class="feature-desc">De la simulation à la signature, tout se fait sans déplacement</div>
+        </div>
+        <div class="feature-card reveal-scale" style="transition-delay: 0.2s;">
+          <div class="feature-icon">⏱️</div>
+          <div class="feature-title">Réponse en 5 min</div>
+          <div class="feature-desc">Notre algorithme analyse votre dossier instantanément</div>
+        </div>
+        <div class="feature-card reveal-scale" style="transition-delay: 0.3s;">
+          <div class="feature-icon">🛡️</div>
+          <div class="feature-title">Sécurisé</div>
+          <div class="feature-desc">Vos données sont protégées selon les standards CNDP</div>
+        </div>
+        <div class="feature-card reveal-scale" style="transition-delay: 0.4s;">
+          <div class="feature-icon">💰</div>
+          <div class="feature-title">Fonds sous 48h</div>
+          <div class="feature-desc">Après signature, recevez votre argent rapidement</div>
+        </div>
+        <div class="feature-card reveal-scale" style="transition-delay: 0.5s;">
+          <div class="feature-icon">📱</div>
+          <div class="feature-title">Suivi en temps réel</div>
+          <div class="feature-desc">Suivez l'avancement de votre dossier à chaque étape</div>
+        </div>
+        <div class="feature-card reveal-scale" style="transition-delay: 0.6s;">
+          <div class="feature-icon">🤝</div>
+          <div class="feature-title">Conseiller dédié</div>
+          <div class="feature-desc">Un expert vous accompagne si vous en avez besoin</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 4: Contact -->
+  <section id="contact" class="section">
+    <div class="section-content">
+      <div class="reveal-left">
+        <h2 style="font-size: 42px; margin-bottom: 16px;">
+          Vos <span style="color: var(--eqdom-red);">coordonnées</span>
+        </h2>
+        <p style="color: var(--text-secondary); font-size: 18px; margin-bottom: 32px;">
+          Renseignez vos informations pour finaliser votre demande de crédit. 
+          Un conseiller vous contactera si nécessaire.
+        </p>
+        
+        <div class="feature-card" style="margin-top: 32px;">
+          <div class="feature-icon">🔐</div>
+          <div class="feature-title">Protection de vos données</div>
+          <div class="feature-desc">
+            Conforme à la loi 09-08 sur la protection des données personnelles. 
+            Vos informations sont cryptées et sécurisées.
+          </div>
+        </div>
+      </div>
+      
+      <div class="reveal-right">
+        <div class="simulation-container">
+          <div class="form-grid">
+            <input type="text" id="firstName" placeholder="Prénom *">
+            <input type="text" id="lastName" placeholder="Nom *">
+            <input type="tel" id="phone" placeholder="Téléphone *">
+            <input type="email" id="email" placeholder="Email (optionnel)">
+          </div>
+          
+          <div class="consent-section">
+            <div class="consent-header">
+              ⚠ Consentements obligatoires (CNDP)
+            </div>
+            <div class="checkbox-item">
+              <input type="checkbox" id="consent1">
+              <label for="consent1">
+                J'accepte la vérification de mon identité et la consultation du Bureau de Crédit 
+                pour l'étude de ma demande.
+              </label>
+            </div>
+            <div class="checkbox-item">
+              <input type="checkbox" id="consent2">
+              <label for="consent2">
+                J'accepte le traitement de mes données personnelles dans le cadre de ma demande 
+                de crédit conformément à la loi 09-08.
+              </label>
+            </div>
+            <div class="checkbox-item">
+              <input type="checkbox" id="consent3">
+              <label for="consent3">
+                J'accepte de recevoir des informations sur les produits et services du groupe Saham.
+              </label>
+            </div>
+          </div>
+          
+          <a href="#documents" class="btn" style="width: 100%; margin-top: 24px; justify-content: center;">
+            Continuer vers les documents →
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 5: Documents -->
+  <section id="documents" class="section section-full">
+    <div class="reveal">
+      <h2 style="font-size: 42px; margin-bottom: 16px;">
+        Vos <span style="color: var(--eqdom-red);">documents</span>
+      </h2>
+      <p style="color: var(--text-secondary); font-size: 18px; max-width: 600px; margin: 0 auto 48px;">
+        Téléchargez les justificatifs demandés. Notre système vérifie automatiquement 
+        la validité de vos documents.
+      </p>
+      
+      <div class="features-grid" style="max-width: 800px; margin: 0 auto;">
+        <div class="feature-card reveal-scale" style="text-align: center; transition-delay: 0.1s;">
+          <div class="feature-icon">🪪</div>
+          <div class="feature-title">CIN - Recto</div>
+          <div class="feature-desc">Carte Nationale d'Identité (face avant)</div>
+          <button class="btn btn-secondary" style="margin-top: 16px; width: 100%;">
+            Télécharger
+          </button>
+        </div>
+        <div class="feature-card reveal-scale" style="text-align: center; transition-delay: 0.2s;">
+          <div class="feature-icon">🪪</div>
+          <div class="feature-title">CIN - Verso</div>
+          <div class="feature-desc">Carte Nationale d'Identité (face arrière)</div>
+          <button class="btn btn-secondary" style="margin-top: 16px; width: 100%;">
+            Télécharger
+          </button>
+        </div>
+        <div class="feature-card reveal-scale" style="text-align: center; transition-delay: 0.3s;">
+          <div class="feature-icon">🏦</div>
+          <div class="feature-title">RIB</div>
+          <div class="feature-desc">Relevé d'Identité Bancaire</div>
+          <button class="btn btn-secondary" style="margin-top: 16px; width: 100%;">
+            Télécharger
+          </button>
+        </div>
+      </div>
+      
+      <div style="text-align: center; margin-top: 48px;">
+        <a href="#status" class="btn">
+          Soumettre ma demande →
+        </a>
+        <p style="color: var(--text-secondary); font-size: 14px; margin-top: 16px;">
+          Vous pouvez également <a href="#" style="color: var(--eqdom-red);">sauvegarder et reprendre plus tard</a>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 6: Status/Waiting -->
+  <section id="status" class="section section-full">
+    <div class="reveal">
+      <h2 style="font-size: 42px; margin-bottom: 16px;">
+        Votre dossier est en <span style="color: var(--eqdom-red);">cours d'étude</span>
+      </h2>
+      <p style="color: var(--text-secondary); font-size: 18px; margin-bottom: 32px;">
+        Référence : <strong style="font-family: monospace; color: var(--text-primary);">EQD-8F3D9A2E</strong>
+      </p>
+      
+      <div class="timeline">
+        <div class="timeline-step completed">
+          <div class="timeline-dot">✓</div>
+          <div class="timeline-label">Documents<br>reçus</div>
+        </div>
+        <div class="timeline-step completed">
+          <div class="timeline-dot">✓</div>
+          <div class="timeline-label">Vérification<br>identité</div>
+        </div>
+        <div class="timeline-step active">
+          <div class="timeline-dot">⏳</div>
+          <div class="timeline-label">Analyse<br>crédit</div>
+        </div>
+        <div class="timeline-step">
+          <div class="timeline-dot">○</div>
+          <div class="timeline-label">Décision<br>finale</div>
+        </div>
+      </div>
+      
+      <div class="offer-card" style="max-width: 600px; margin: 48px auto 0;">
+        <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 24px;">
+          <div style="width: 48px; height: 48px; background: rgba(171,0,23,0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px;">
+            ⏱️
+          </div>
+          <div>
+            <div style="font-weight: 600;">Temps estimé</div>
+            <div style="color: var(--text-secondary); font-size: 14px;">4 à 24 heures</div>
+          </div>
+        </div>
+        <p style="color: var(--text-secondary); font-size: 14px;">
+          Notre équipe analyse votre dossier. Vous recevrez une notification par SMS 
+          à chaque étape importante.
+        </p>
+      </div>
+      
+      <div style="text-align: center; margin-top: 48px;">
+        <a href="#offer" class="btn">
+          Voir l'offre (simulation) →
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 7: Offer -->
+  <section id="offer" class="section section-full">
+    <div class="reveal">
+      <div style="display: inline-flex; align-items: center; gap: 8px; background: rgba(22,163,74,0.1); color: var(--success); padding: 8px 16px; border-radius: 20px; font-size: 14px; font-weight: 600; margin-bottom: 24px;">
+        <span>✓</span>
+        <span>Crédit approuvé</span>
+      </div>
+      
+      <h2 style="font-size: 42px; margin-bottom: 16px;">
+        Votre <span style="color: var(--eqdom-red);">offre</span> de crédit
+      </h2>
+      <p style="color: var(--text-secondary); font-size: 18px; margin-bottom: 48px;">
+        Félicitations ! Voici les conditions personnalisées de votre crédit.
+      </p>
+      
+      <div class="offer-card">
+        <div class="offer-row">
+          <span class="offer-label">Montant du crédit</span>
+          <span class="offer-value">50 000 MAD</span>
+        </div>
+        <div class="offer-row">
+          <span class="offer-label">Durée</span>
+          <span class="offer-value">24 mois</span>
+        </div>
+        <div class="offer-row">
+          <span class="offer-label">Mensualité</span>
+          <span class="offer-value highlight">2 396 MAD</span>
+        </div>
+        <div class="offer-row">
+          <span class="offer-label">TAEG</span>
+          <span class="offer-value">4.9%</span>
+        </div>
+        <div class="offer-row">
+          <span class="offer-label">Coût total du crédit</span>
+          <span class="offer-value">7 504 MAD</span>
+        </div>
+        <div class="offer-row">
+          <span class="offer-label">Première échéance</span>
+          <span class="offer-value">05 avril 2026</span>
+        </div>
+      </div>
+      
+      <div style="text-align: center; margin-top: 48px;">
+        <a href="#success" class="btn" style="min-width: 250px; justify-content: center;">
+          Accepter et signer →
+        </a>
+        <button class="btn btn-secondary" style="min-width: 250px; justify-content: center;">
+          Télécharger le contrat
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 8: Success -->
+  <section id="success" class="section section-full gradient-bg">
+    <div class="reveal">
+      <div class="success-icon">✓</div>
+      
+      <h2 style="font-size: 48px; margin-bottom: 16px;">
+        Crédit <span style="color: var(--eqdom-red);">confirmé</span> !
+      </h2>
+      <p style="color: var(--text-secondary); font-size: 18px; margin-bottom: 48px;">
+        Votre dossier a été signé avec succès. Vos fonds seront débloqués sous peu.
+      </p>
+      
+      <div class="offer-card" style="max-width: 500px;">
+        <div class="offer-row">
+          <span class="offer-label">Référence</span>
+          <span class="offer-value" style="font-family: monospace;">EQD-8F3D9A2E</span>
+        </div>
+        <div class="offer-row">
+          <span class="offer-label">Montant</span>
+          <span class="offer-value">50 000 MAD</span>
+        </div>
+        <div class="offer-row">
+          <span class="offer-label">Déblocage des fonds</span>
+          <span class="offer-value">24 à 48 heures</span>
+        </div>
+      </div>
+      
+      <div style="text-align: center; margin-top: 48px;">
+        <button class="btn" style="min-width: 250px; justify-content: center;">
+          Télécharger le contrat
+        </button>
+        <button class="btn btn-secondary" onclick="window.scrollTo(0,0)" style="min-width: 250px; justify-content: center;">
+          Nouvelle simulation
+        </button>
+      </div>
+      
+      <p style="color: var(--text-secondary); font-size: 14px; margin-top: 48px;">
+        📧 Un email de confirmation a été envoyé<br>
+        📱 Vous recevrez un SMS quand les fonds seront débloqués
+      </p>
+    </div>
+  </section>
+
+  <script>
+    // Scroll Reveal
+    const reveals = document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale');
+    
+    function checkReveal() {
+      reveals.forEach(element => {
+        const windowHeight = window.innerHeight;
+        const elementTop = element.getBoundingClientRect().top;
+        const elementVisible = 150;
+        
+        if (elementTop < windowHeight - elementVisible) {
+          element.classList.add('active');
+        }
+      });
+    }
+    
+    window.addEventListener('scroll', checkReveal);
+    checkReveal();
+    
+    // Navigation Dots
+    function scrollToSection(id) {
+      document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+    }
+    
+    // Update active dot
+    const sections = document.querySelectorAll('.section');
+    const navDots = document.querySelectorAll('.nav-dot');
+    
+    window.addEventListener('scroll', () => {
+      let current = '';
+      sections.forEach(section => {
+        const sectionTop = section.offsetTop;
+        const sectionHeight = section.clientHeight;
+        if (scrollY >= sectionTop - 200) {
+          current = section.getAttribute('id');
+        }
+      });
+      
+      navDots.forEach(dot => {
+        dot.classList.remove('active');
+        if (dot.getAttribute('onclick').includes(current)) {
+          dot.classList.add('active');
+        }
+      });
+    });
+    
+    // Simulation
+    let currentAmount = 50000;
+    let currentDuration = 24;
+    
+    function updateSimulation() {
+      currentAmount = parseInt(document.getElementById('amountSlider').value);
+      const monthly = Math.round((currentAmount / currentDuration) * 1.15);
+      
+      document.getElementById('amountValue').textContent = currentAmount.toLocaleString('fr-FR') + ' MAD';
+      document.getElementById('monthlyResult').textContent = monthly.toLocaleString('fr-FR') + ' MAD';
+    }
+    
+    function setDuration(months) {
+      currentDuration = months;
+      document.querySelectorAll('.duration-btn').forEach(btn => {
+        btn.classList.remove('active');
+      });
+      event.target.classList.add('active');
+      updateSimulation();
+    }
+  </script>
+</body>
+</html>

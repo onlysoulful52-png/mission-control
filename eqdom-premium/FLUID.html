@@ -1,0 +1,1291 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Eqdom - Crédit Premium</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    :root {
+      --saham-navy: #0F1823;
+      --saham-light: #1A2433;
+      --eqdom-red: #AB0017;
+      --eqdom-red-hover: #8A0012;
+      --text-primary: #FFFFFF;
+      --text-secondary: #86868B;
+      --border: rgba(255,255,255,0.1);
+      --success: #16A34A;
+    }
+    
+    html {
+      scroll-behavior: smooth;
+    }
+    
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      background: var(--saham-navy);
+      color: var(--text-primary);
+      min-height: 100vh;
+      overflow-x: hidden;
+      line-height: 1.6;
+    }
+    
+    /* Animations */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    
+    @keyframes slideInRight {
+      from {
+        opacity: 0;
+        transform: translateX(50px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+    
+    @keyframes slideInLeft {
+      from {
+        opacity: 0;
+        transform: translateX(-50px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+    
+    @keyframes scaleIn {
+      from {
+        opacity: 0;
+        transform: scale(0.9);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+    
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+    
+    @keyframes shimmer {
+      0% { background-position: -200% 0; }
+      100% { background-position: 200% 0; }
+    }
+    
+    @keyframes checkmark {
+      0% { transform: scale(0); }
+      50% { transform: scale(1.2); }
+      100% { transform: scale(1); }
+    }
+    
+    @keyframes progressFill {
+      from { width: 0%; }
+      to { width: var(--progress); }
+    }
+    
+    /* Layout */
+    .container {
+      max-width: 480px;
+      margin: 0 auto;
+      padding: 20px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+    
+    /* Progress Bar */
+    .progress-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: rgba(255,255,255,0.05);
+      z-index: 1000;
+    }
+    
+    .progress-bar {
+      height: 100%;
+      background: linear-gradient(90deg, var(--eqdom-red), #D41830);
+      transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    /* Step Container */
+    .step {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      animation: fadeInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .step.hidden {
+      display: none;
+    }
+    
+    /* Typography */
+    h1 {
+      font-size: clamp(32px, 8vw, 40px);
+      font-weight: 700;
+      line-height: 1.1;
+      margin-bottom: 16px;
+      animation: fadeInUp 0.6s 0.1s both;
+    }
+    
+    h1 span {
+      color: var(--eqdom-red);
+    }
+    
+    h2 {
+      font-size: 24px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      animation: fadeInUp 0.5s both;
+    }
+    
+    p {
+      color: var(--text-secondary);
+      font-size: 16px;
+      margin-bottom: 24px;
+      animation: fadeInUp 0.5s 0.1s both;
+    }
+    
+    .brand {
+      color: var(--eqdom-red);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      font-weight: 600;
+      margin-bottom: 24px;
+      animation: fadeIn 0.5s both;
+    }
+    
+    /* Cards */
+    .card {
+      background: var(--saham-light);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 24px;
+      margin-bottom: 16px;
+      animation: scaleIn 0.5s cubic-bezier(0.4, 0, 0.2, 1) both;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    
+    .card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+    }
+    
+    .card.highlight {
+      background: linear-gradient(135deg, var(--saham-light), rgba(171,0,23,0.05));
+      border-color: rgba(171,0,23,0.3);
+    }
+    
+    /* Buttons */
+    .btn {
+      background: var(--eqdom-red);
+      color: white;
+      border: none;
+      padding: 18px 32px;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      width: 100%;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+      animation: fadeInUp 0.5s 0.2s both;
+    }
+    
+    .btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      transition: left 0.5s;
+    }
+    
+    .btn:hover::before {
+      left: 100%;
+    }
+    
+    .btn:hover {
+      background: var(--eqdom-red-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(171,0,23,0.3);
+    }
+    
+    .btn:active {
+      transform: translateY(0);
+    }
+    
+    .btn:disabled {
+      background: #333;
+      color: #666;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+    
+    .btn-secondary {
+      background: transparent;
+      border: 1px solid var(--border);
+      margin-top: 12px;
+    }
+    
+    .btn-secondary:hover {
+      background: rgba(255,255,255,0.05);
+      border-color: rgba(255,255,255,0.2);
+    }
+    
+    .btn-back {
+      background: transparent;
+      border: none;
+      color: var(--text-secondary);
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 20px;
+      cursor: pointer;
+      transition: color 0.3s;
+      animation: slideInLeft 0.4s both;
+    }
+    
+    .btn-back:hover {
+      color: var(--text-primary);
+    }
+    
+    /* Form Elements */
+    input[type="text"],
+    input[type="tel"],
+    input[type="email"] {
+      width: 100%;
+      background: var(--saham-navy);
+      border: 1px solid var(--border);
+      padding: 16px;
+      border-radius: 12px;
+      color: white;
+      font-size: 16px;
+      margin-bottom: 12px;
+      transition: all 0.3s;
+      animation: fadeInUp 0.4s both;
+    }
+    
+    input:focus {
+      outline: none;
+      border-color: var(--eqdom-red);
+      box-shadow: 0 0 0 3px rgba(171,0,23,0.1);
+    }
+    
+    input::placeholder {
+      color: var(--text-secondary);
+    }
+    
+    /* Range Slider */
+    .slider-container {
+      margin: 24px 0;
+      animation: fadeInUp 0.4s both;
+    }
+    
+    input[type="range"] {
+      width: 100%;
+      -webkit-appearance: none;
+      height: 6px;
+      background: var(--border);
+      border-radius: 3px;
+      outline: none;
+      margin: 16px 0;
+    }
+    
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 24px;
+      height: 24px;
+      background: var(--eqdom-red);
+      border-radius: 50%;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 0 0 4px rgba(171,0,23,0.2);
+    }
+    
+    input[type="range"]::-webkit-slider-thumb:hover {
+      transform: scale(1.1);
+      box-shadow: 0 0 0 6px rgba(171,0,23,0.3);
+    }
+    
+    .amount-display {
+      font-size: 42px;
+      font-weight: 700;
+      text-align: center;
+      margin: 16px 0;
+      animation: scaleIn 0.5s both;
+    }
+    
+    .amount-display .currency {
+      font-size: 20px;
+      color: var(--text-secondary);
+      font-weight: 400;
+    }
+    
+    /* Duration Options */
+    .duration-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 8px;
+      margin: 16px 0;
+      animation: fadeInUp 0.4s both;
+    }
+    
+    .duration-btn {
+      padding: 12px 8px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: var(--text-secondary);
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    
+    .duration-btn:hover {
+      background: rgba(255,255,255,0.1);
+      border-color: rgba(255,255,255,0.2);
+    }
+    
+    .duration-btn.active {
+      background: var(--eqdom-red);
+      border-color: var(--eqdom-red);
+      color: white;
+      font-weight: 600;
+    }
+    
+    /* Summary Card */
+    .summary-card {
+      background: var(--saham-navy);
+      border-radius: 16px;
+      padding: 20px;
+      margin-top: 20px;
+      animation: fadeInUp 0.5s both;
+    }
+    
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    
+    .summary-row:last-child {
+      border-bottom: none;
+    }
+    
+    .summary-label {
+      color: var(--text-secondary);
+      font-size: 14px;
+    }
+    
+    .summary-value {
+      font-weight: 600;
+      font-size: 16px;
+    }
+    
+    .summary-value.highlight {
+      color: var(--eqdom-red);
+      font-size: 24px;
+    }
+    
+    /* Consent Checkboxes */
+    .consent-section {
+      background: var(--saham-navy);
+      border-radius: 16px;
+      padding: 20px;
+      margin-top: 20px;
+      animation: fadeInUp 0.4s both;
+    }
+    
+    .consent-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 16px;
+      color: var(--eqdom-red);
+      font-weight: 600;
+      font-size: 14px;
+    }
+    
+    .checkbox-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border);
+      animation: fadeInUp 0.4s both;
+    }
+    
+    .checkbox-item:last-child {
+      border-bottom: none;
+    }
+    
+    .checkbox-item input[type="checkbox"] {
+      width: 20px;
+      height: 20px;
+      accent-color: var(--eqdom-red);
+      margin-top: 2px;
+      cursor: pointer;
+    }
+    
+    .checkbox-item label {
+      color: var(--text-secondary);
+      font-size: 13px;
+      line-height: 1.5;
+      cursor: pointer;
+    }
+    
+    /* Document Upload */
+    .doc-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px;
+      background: var(--saham-navy);
+      border-radius: 12px;
+      margin-bottom: 12px;
+      border: 1px solid var(--border);
+      transition: all 0.3s;
+      animation: slideInRight 0.4s both;
+    }
+    
+    .doc-item.uploaded {
+      border-color: var(--success);
+      background: rgba(22,163,74,0.05);
+    }
+    
+    .doc-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    
+    .doc-icon {
+      width: 44px;
+      height: 44px;
+      background: rgba(255,255,255,0.05);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      transition: all 0.3s;
+    }
+    
+    .doc-item.uploaded .doc-icon {
+      background: rgba(22,163,74,0.1);
+    }
+    
+    .doc-name {
+      font-weight: 500;
+    }
+    
+    .doc-status {
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+    
+    .doc-btn {
+      padding: 8px 16px;
+      background: rgba(255,255,255,0.1);
+      border: none;
+      border-radius: 8px;
+      color: white;
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    
+    .doc-btn:hover {
+      background: rgba(255,255,255,0.15);
+    }
+    
+    .doc-check {
+      color: var(--success);
+      font-weight: 600;
+      animation: checkmark 0.3s both;
+    }
+    
+    /* Waiting State */
+    .waiting-container {
+      text-align: center;
+      animation: fadeIn 0.5s both;
+    }
+    
+    .spinner {
+      width: 80px;
+      height: 80px;
+      margin: 0 auto 32px;
+      position: relative;
+    }
+    
+    .spinner-ring {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border: 3px solid transparent;
+      border-top-color: var(--eqdom-red);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    
+    .spinner-ring:nth-child(2) {
+      width: 70%;
+      height: 70%;
+      top: 15%;
+      left: 15%;
+      border-top-color: rgba(171,0,23,0.5);
+      animation: spin 1.5s linear infinite reverse;
+    }
+    
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    
+    .reference-box {
+      display: inline-block;
+      background: var(--saham-light);
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-family: monospace;
+      font-size: 14px;
+      margin: 16px 0;
+      animation: scaleIn 0.5s both;
+    }
+    
+    .timeline {
+      margin-top: 32px;
+    }
+    
+    .timeline-item {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 16px 0;
+      opacity: 0.5;
+      transition: opacity 0.3s;
+      animation: fadeInUp 0.4s both;
+    }
+    
+    .timeline-item.active {
+      opacity: 1;
+    }
+    
+    .timeline-item.completed {
+      opacity: 1;
+    }
+    
+    .timeline-dot {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      flex-shrink: 0;
+      transition: all 0.3s;
+    }
+    
+    .timeline-item.active .timeline-dot {
+      background: rgba(171,0,23,0.1);
+      color: var(--eqdom-red);
+      animation: pulse 2s infinite;
+    }
+    
+    .timeline-item.completed .timeline-dot {
+      background: rgba(22,163,74,0.1);
+      color: var(--success);
+    }
+    
+    .timeline-item.pending .timeline-dot {
+      background: rgba(255,255,255,0.05);
+      color: var(--text-secondary);
+    }
+    
+    /* Success State */
+    .success-icon {
+      width: 100px;
+      height: 100px;
+      background: var(--success);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 32px;
+      animation: scaleIn 0.5s cubic-bezier(0.4, 0, 0.2, 1) both;
+    }
+    
+    .success-icon svg {
+      width: 50px;
+      height: 50px;
+      stroke: white;
+      stroke-width: 3;
+      fill: none;
+      stroke-dasharray: 100;
+      stroke-dashoffset: 100;
+      animation: drawCheck 0.5s 0.3s both;
+    }
+    
+    @keyframes drawCheck {
+      to { stroke-dashoffset: 0; }
+    }
+    
+    /* Offer Card */
+    .offer-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(22,163,74,0.1);
+      color: var(--success);
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 24px;
+      animation: fadeIn 0.5s both;
+    }
+    
+    .offer-details {
+      margin-top: 24px;
+    }
+    
+    .offer-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 16px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    
+    .offer-row:last-child {
+      border-bottom: none;
+    }
+    
+    /* Hero specific */
+    .hero-content {
+      text-align: center;
+      animation: fadeInUp 0.8s both;
+    }
+    
+    .hero-logo {
+      width: 60px;
+      height: 60px;
+      background: linear-gradient(135deg, var(--eqdom-red), #D41830);
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 32px;
+      font-size: 28px;
+      font-weight: 700;
+      animation: scaleIn 0.6s both;
+    }
+    
+    /* Loading animation for transitions */
+    .page-transition {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: var(--saham-navy);
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s;
+    }
+    
+    .page-transition.active {
+      opacity: 1;
+      pointer-events: all;
+    }
+    
+    /* Responsive */
+    @media (max-width: 480px) {
+      .container {
+        padding: 16px;
+      }
+      
+      h1 {
+        font-size: 32px;
+      }
+      
+      .duration-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+      
+      .amount-display {
+        font-size: 36px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Progress Bar -->
+  <div class="progress-container">
+    <div class="progress-bar" id="progressBar" style="width: 0%"></div>
+  </div>
+
+  <!-- STEP 1: HERO -->
+  <div class="container step" id="step-hero">
+    <div class="hero-content">
+      <div class="hero-logo">E</div>
+      <div class="brand">Groupe Saham</div>
+      <h1>
+        Votre projet,
+        <br>
+        <span>notre financement.</span>
+      </h1>
+      
+      <p>
+        Une solution de crédit sur mesure, 100% en ligne, 
+        en quelques minutes seulement.
+      </p>
+      
+      <button class="btn" onclick="goToStep('simulation')">
+        Démarrer ma simulation →
+      </button>
+      
+      <p style="margin-top: 32px; font-size: 13px;">
+        🔒 Vos données sont sécurisées et protégées
+      </p>
+    </div>
+  </div>
+
+  <!-- STEP 2: SIMULATION -->
+  <div class="container step hidden" id="step-simulation">
+    <button class="btn-back" onclick="goToStep('hero')">
+      ← Retour
+    </button>
+    
+    <div class="card">
+      <h2>Simulez votre crédit</h2>
+      <p>Ajustez le montant et la durée selon vos besoins.</p>
+      
+      <div class="slider-container">
+        <label>Montant souhaité</label>
+        <div class="amount-display" id="amountDisplay">
+          50 000 <span class="currency">MAD</span>
+        </div>
+        <input 
+          type="range" 
+          id="amountSlider" 
+          min="5000" 
+          max="500000" 
+          step="5000" 
+          value="50000"
+          oninput="updateSimulation()"
+        >
+        <div style="display: flex; justify-content: space-between; color: var(--text-secondary); font-size: 13px;">
+          <span>5 000</span>
+          <span>500 000</span>
+        </div>
+      </div>
+      
+      <label style="margin-top: 24px; display: block;">Durée de remboursement</label>
+      <div class="duration-grid">
+        <button class="duration-btn" data-months="12" onclick="setDuration(12)">12m</button>
+        <button class="duration-btn active" data-months="24" onclick="setDuration(24)">24m</button>
+        <button class="duration-btn" data-months="36" onclick="setDuration(36)">36m</button>
+        <button class="duration-btn" data-months="48" onclick="setDuration(48)">48m</button>
+        <button class="duration-btn" data-months="60" onclick="setDuration(60)">60m</button>
+      </div>
+      
+      <div class="summary-card">
+        <div class="summary-row">
+          <span class="summary-label">Mensualité estimée</span>
+          <span class="summary-value highlight" id="monthlyDisplay">2 396 MAD</span>
+        </div>
+        <div class="summary-row">
+          <span class="summary-label">TAEG</span>
+          <span class="summary-value">À partir de 4.9%</span>
+        </div>
+        <div class="summary-row">
+          <span class="summary-label">Coût total du crédit</span>
+          <span class="summary-value" id="totalCost">7 504 MAD</span>
+        </div>
+      </div>
+      
+      <button class="btn" onclick="goToStep('contact')" style="margin-top: 24px;">
+        Continuer →
+      </button>
+    </div>
+  </div>
+
+  <!-- STEP 3: CONTACT -->
+  <div class="container step hidden" id="step-contact">
+    <button class="btn-back" onclick="goToStep('simulation')">
+      ← Retour
+    </button>
+    
+    <div class="card">
+      <h2>Vos coordonnées</h2>
+      <p>Nous avons besoin de ces informations pour finaliser votre dossier.</p>
+      
+      <input type="text" id="firstName" placeholder="Prénom *" oninput="validateContact()">
+      <input type="text" id="lastName" placeholder="Nom *" oninput="validateContact()">
+      <input type="tel" id="phone" placeholder="Téléphone *" oninput="validateContact()">
+      
+      <input type="email" id="email" placeholder="Email (optionnel)" oninput="validateContact()">
+      
+      <div class="consent-section">
+        <div class="consent-header">
+          <span>⚠</span>
+          <span>Consentements obligatoires (CNDP)</span>
+        </div>
+        
+        <div class="checkbox-item">
+          <input type="checkbox" id="consent1" onchange="validateContact()">
+          <label for="consent1">
+            J'accepte la vérification de mon identité et la consultation du Bureau de Crédit pour l'étude de ma demande.
+          </label>
+        </div>
+        
+        <div class="checkbox-item">
+          <input type="checkbox" id="consent2" onchange="validateContact()">
+          <label for="consent2">
+            J'accepte le traitement de mes données personnelles dans le cadre de ma demande de crédit conformément à la loi 09-08.
+          </label>
+        </div>
+        
+        <div class="checkbox-item">
+          <input type="checkbox" id="consent3" onchange="validateContact()">
+          <label for="consent3">
+            J'accepte de recevoir des informations sur les produits et services du groupe Saham.
+          </label>
+        </div>
+      </div>
+      
+      <button class="btn" id="contactBtn" onclick="goToStep('documents')" disabled style="margin-top: 24px;">
+        Veuillez remplir tous les champs
+      </button>
+    </div>
+  </div>
+
+  <!-- STEP 4: DOCUMENTS -->
+  <div class="container step hidden" id="step-documents">
+    <button class="btn-back" onclick="goToStep('contact')">
+      ← Retour
+    </button>
+    
+    <div class="card">
+      <h2>Vos documents</h2>
+      <p>Téléchargez les justificatifs demandés pour finaliser votre dossier.</p>
+      
+      <div id="docList">
+        <div class="doc-item" id="doc-cin1">
+          <div class="doc-info">
+            <div class="doc-icon">📄</div>
+            <div>
+              <div class="doc-name">CIN - Recto</div>
+              <div class="doc-status">En attente</div>
+            </div>
+          </div>
+          <button class="doc-btn" onclick="uploadDoc('cin1')">Télécharger</button>
+        </div>
+        
+        <div class="doc-item" id="doc-cin2">
+          <div class="doc-info">
+            <div class="doc-icon">📄</div>
+            <div>
+              <div class="doc-name">CIN - Verso</div>
+              <div class="doc-status">En attente</div>
+            </div>
+          </div>
+          <button class="doc-btn" onclick="uploadDoc('cin2')">Télécharger</button>
+        </div>
+        
+        <div class="doc-item" id="doc-rib">
+          <div class="doc-info">
+            <div class="doc-icon">📄</div>
+            <div>
+              <div class="doc-name">RIB</div>
+              <div class="doc-status">En attente</div>
+            </div>
+          </div>
+          <button class="doc-btn" onclick="uploadDoc('rib')">Télécharger</button>
+        </div>
+      </div>
+      
+      <button class="btn" id="submitDocsBtn" onclick="submitDocuments()" disabled style="margin-top: 24px;">
+        Charger les documents
+      </button>
+      
+      <button class="btn btn-secondary" onclick="saveAndContinueLater()">
+        Sauvegarder et reprendre plus tard
+      </button>
+    </div>
+  </div>
+
+  <!-- STEP 5: WAITING -->
+  <div class="container step hidden" id="step-waiting">
+    <div class="waiting-container">
+      <div class="spinner">
+        <div class="spinner-ring"></div>
+        <div class="spinner-ring"></div>
+      </div>
+      
+      <h2>Votre dossier est en cours d'étude</h2>
+      
+      <p>Référence</p>
+      <div class="reference-box" id="refNumber">EQD-XXXXXXXX</div>
+      
+      <div class="timeline">
+        <div class="timeline-item completed">
+          <div class="timeline-dot">✓</div>
+          <div>
+            <div style="font-weight: 600;">Documents reçus</div>
+            <div style="font-size: 13px; color: var(--text-secondary);">Votre dossier est complet</div>
+          </div>
+        </div>
+        
+        <div class="timeline-item active">
+          <div class="timeline-dot">⏳</div>
+          <div>
+            <div style="font-weight: 600;">Vérification</div>
+            <div style="font-size: 13px; color: var(--text-secondary);">Vérification de votre identité</div>
+          </div>
+        </div>
+        
+        <div class="timeline-item pending">
+          <div class="timeline-dot">○</div>
+          <div>
+            <div style="font-weight: 600;">Analyse crédit</div>
+            <div style="font-size: 13px; color: var(--text-secondary);">Évaluation de votre demande</div>
+          </div>
+        </div>
+        
+        <div class="timeline-item pending">
+          <div class="timeline-dot">○</div>
+          <div>
+            <div style="font-weight: 600;">Décision</div>
+            <div style="font-size: 13px; color: var(--text-secondary);">Notification par SMS</div>
+          </div>
+        </div>
+      </div>
+      
+      <p style="margin-top: 32px; font-size: 14px;">
+        Temps estimé : <strong>4 à 24 heures</strong>
+        <br>
+        Vous serez notifié par SMS à chaque étape.
+      </p>
+    </div>
+  </div>
+
+  <!-- STEP 6: OFFER -->
+  <div class="container step hidden" id="step-offer">
+    <div class="waiting-container">
+      <div class="offer-badge">
+        <span>✓</span>
+        <span>Crédit approuvé</span>
+      </div>
+      
+      <h2>Votre offre de crédit</h2>
+      
+      <p>Voici les conditions personnalisées de votre crédit.</p>
+      
+      <div class="card highlight">
+        <div class="offer-details">
+          <div class="offer-row">
+            <span class="summary-label">Montant</span>
+            <span class="summary-value" id="offerAmount">50 000 MAD</span>
+          </div>
+          
+          <div class="offer-row">
+            <span class="summary-label">Durée</span>
+            <span class="summary-value" id="offerDuration">24 mois</span>
+          </div>
+          
+          <div class="offer-row">
+            <span class="summary-label">Mensualité</span>
+            <span class="summary-value highlight" id="offerMonthly">2 396 MAD</span>
+          </div>
+          
+          <div class="offer-row">
+            <span class="summary-label">TAEG</span>
+            <span class="summary-value">4.9%</span>
+          </div>
+          
+          <div class="offer-row">
+            <span class="summary-label">Première échéance</span>
+            <span class="summary-value">05/04/2026</span>
+          </div>
+        </div>
+      </div>
+      
+      <button class="btn" onclick="goToStep('success')">
+        Accepter et signer →
+      </button>
+      
+      <button class="btn btn-secondary">
+        Télécharger le contrat
+      </button>
+      
+      <button class="btn btn-secondary" style="background: transparent; color: var(--text-secondary);">
+        Refuser l'offre
+      </button>
+    </div>
+  </div>
+
+  <!-- STEP 7: SUCCESS -->
+  <div class="container step hidden" id="step-success">
+    <div class="waiting-container">
+      <div class="success-icon">
+        <svg viewBox="0 0 24 24">
+          <path d="M5 13l4 4L19 7" />
+        </svg>
+      </div>
+      
+      <h2>Crédit confirmé !</h2>
+      
+      <p>Votre dossier a été signé avec succès.</p>
+      
+      <div class="card">
+        <div class="offer-details">
+          <div class="offer-row">
+            <span class="summary-label">Référence</span>
+            <span class="summary-value" id="successRef" style="font-family: monospace;">EQD-XXXXXXXX</span>
+          </div>
+          
+          <div class="offer-row">
+            <span class="summary-label">Montant</span>
+            <span class="summary-value" id="successAmount">50 000 MAD</span>
+          </div>
+          
+          <div class="offer-row">
+            <span class="summary-label">Déblocage des fonds</span>
+            <span class="summary-value">24 à 48 heures</span>
+          </div>
+        </div>
+      </div>
+      
+      <button class="btn">
+        Télécharger le contrat
+      </button>
+      
+      <button class="btn btn-secondary" onclick="location.reload()">
+        Nouvelle simulation
+      </button>
+      
+      <p style="margin-top: 32px; font-size: 13px;">
+        📧 Un email de confirmation a été envoyé
+        <br>
+        📱 Vous recevrez un SMS quand les fonds seront débloqués
+      </p>
+    </div>
+  </div>
+
+  <script>
+    // State
+    let state = {
+      amount: 50000,
+      duration: 24,
+      monthly: 2396,
+      documents: {
+        cin1: false,
+        cin2: false,
+        rib: false
+      },
+      reference: ''
+    };
+
+    // Generate reference
+    function generateRef() {
+      return 'EQD-' + Math.random().toString(36).substr(2, 8).toUpperCase();
+    }
+
+    // Navigation
+    function goToStep(stepName) {
+      // Hide all steps
+      document.querySelectorAll('.step').forEach(step => {
+        step.classList.add('hidden');
+      });
+      
+      // Show target step
+      document.getElementById('step-' + stepName).classList.remove('hidden');
+      
+      // Update progress bar
+      const progressMap = {
+        'hero': 0,
+        'simulation': 15,
+        'contact': 30,
+        'documents': 50,
+        'waiting': 70,
+        'offer': 85,
+        'success': 100
+      };
+      
+      document.getElementById('progressBar').style.width = progressMap[stepName] + '%';
+      
+      // Scroll to top
+      window.scrollTo(0, 0);
+      
+      // Special actions
+      if (stepName === 'waiting') {
+        state.reference = generateRef();
+        document.getElementById('refNumber').textContent = state.reference;
+        
+        // Simulate progression
+        setTimeout(() => {
+          updateTimeline(2);
+          setTimeout(() => {
+            updateTimeline(3);
+            setTimeout(() => {
+              goToStep('offer');
+            }, 2000);
+          }, 3000);
+        }, 3000);
+      }
+      
+      if (stepName === 'offer') {
+        document.getElementById('offerAmount').textContent = 
+          state.amount.toLocaleString('fr-FR') + ' MAD';
+        document.getElementById('offerDuration').textContent = 
+          state.duration + ' mois';
+        document.getElementById('offerMonthly').textContent = 
+          state.monthly.toLocaleString('fr-FR') + ' MAD';
+      }
+      
+      if (stepName === 'success') {
+        document.getElementById('successRef').textContent = state.reference;
+        document.getElementById('successAmount').textContent = 
+          state.amount.toLocaleString('fr-FR') + ' MAD';
+      }
+    }
+
+    // Simulation updates
+    function updateSimulation() {
+      state.amount = parseInt(document.getElementById('amountSlider').value);
+      
+      // Calculate monthly
+      const baseMonthly = state.amount / state.duration;
+      state.monthly = Math.round(baseMonthly * 1.15);
+      const totalCost = (state.monthly * state.duration) - state.amount;
+      
+      // Update display
+      document.getElementById('amountDisplay').innerHTML = 
+        state.amount.toLocaleString('fr-FR') + ' <span class="currency">MAD</span>';
+      document.getElementById('monthlyDisplay').textContent = 
+        state.monthly.toLocaleString('fr-FR') + ' MAD';
+      document.getElementById('totalCost').textContent = 
+        totalCost.toLocaleString('fr-FR') + ' MAD';
+    }
+
+    function setDuration(months) {
+      state.duration = months;
+      
+      // Update UI
+      document.querySelectorAll('.duration-btn').forEach(btn => {
+        btn.classList.remove('active');
+        if (parseInt(btn.dataset.months) === months) {
+          btn.classList.add('active');
+        }
+      });
+      
+      updateSimulation();
+    }
+
+    // Contact validation
+    function validateContact() {
+      const firstName = document.getElementById('firstName').value;
+      const lastName = document.getElementById('lastName').value;
+      const phone = document.getElementById('phone').value;
+      const consent1 = document.getElementById('consent1').checked;
+      const consent2 = document.getElementById('consent2').checked;
+      const consent3 = document.getElementById('consent3').checked;
+      
+      const isValid = firstName && lastName && phone && consent1 && consent2 && consent3;
+      
+      const btn = document.getElementById('contactBtn');
+      btn.disabled = !isValid;
+      btn.textContent = isValid ? 'Continuer vers les documents →' : 'Veuillez remplir tous les champs';
+    }
+
+    // Document upload simulation
+    function uploadDoc(docId) {
+      state.documents[docId] = true;
+      
+      const docEl = document.getElementById('doc-' + docId);
+      docEl.classList.add('uploaded');
+      docEl.querySelector('.doc-status').textContent = 'Document reçu';
+      docEl.querySelector('.doc-btn').outerHTML = '<span class="doc-check">✓ Reçu</span>';
+      
+      checkAllDocsUploaded();
+    }
+
+    function checkAllDocsUploaded() {
+      const allUploaded = Object.values(state.documents).every(v => v);
+      const btn = document.getElementById('submitDocsBtn');
+      
+      btn.disabled = !allUploaded;
+      
+      const uploadedCount = Object.values(state.documents).filter(v => v).length;
+      btn.textContent = allUploaded ? 'Soumettre ma demande →' : 
+        `${uploadedCount}/3 documents chargés`;
+    }
+
+    function submitDocuments() {
+      goToStep('waiting');
+    }
+
+    function saveAndContinueLater() {
+      alert('Votre progression a été sauvegardée. Vous recevrez un SMS pour reprendre.');
+    }
+
+    // Timeline update
+    function updateTimeline(step) {
+      const items = document.querySelectorAll('.timeline-item');
+      
+      if (step === 2) {
+        items[1].classList.remove('active');
+        items[1].classList.add('completed');
+        items[1].querySelector('.timeline-dot').textContent = '✓';
+        items[2].classList.remove('pending');
+        items[2].classList.add('active');
+      } else if (step === 3) {
+        items[2].classList.remove('active');
+        items[2].classList.add('completed');
+        items[2].querySelector('.timeline-dot').textContent = '✓';
+        items[3].classList.remove('pending');
+        items[3].classList.add('active');
+      }
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Eqdom - Parcours Crédit Premium</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root{--navy:#0a0f1a;--navy-light:#151b2d;--red:#dc1a35;--red-dark:#b0152b;--gold:#FFB800;--text:#94a3b8;--success:#10b981;--warning:#f59e0b}
+    *{margin:0;padding:0;box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{font-family:'Inter',sans-serif;background:linear-gradient(135deg,var(--navy) 0%,#070a12 50%,var(--navy) 100%);background-attachment:fixed;color:#fff;line-height:1.6;overflow-x:hidden}
+    
+    .hidden{display:none!important}
+    .fade-in{animation:fadeIn .6s ease}
+    @keyframes fadeIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+    
+    /* Progress */
+    .progress-bar{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--red),#ff6b7a);z-index:1000;transition:width .5s;box-shadow:0 0 10px rgba(220,26,53,.4)}
+    
+    /* Status Bar */
+    .status-bar{position:fixed;top:20px;right:20px;background:rgba(21,27,45,.9);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:10px 16px;z-index:999;font-size:12px;display:flex;align-items:center;gap:8px;backdrop-filter:blur(10px)}
+    .status-dot{width:8px;height:8px;background:var(--success);border-radius:50%;animation:pulse 2s infinite}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+    
+    /* Draft Badge */
+    .draft-badge{position:fixed;top:20px;left:20px;background:rgba(220,26,53,.15);border:1px solid rgba(220,26,53,.3);border-radius:12px;padding:10px 16px;z-index:999;font-size:12px;display:none;backdrop-filter:blur(10px)}
+    .draft-badge.active{display:flex;align-items:center;gap:8px}
+    
+    /* Exit Modal */
+    .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:2000;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s;backdrop-filter:blur(10px)}
+    .modal-overlay.active{opacity:1;pointer-events:all}
+    .modal-content{background:linear-gradient(145deg,var(--navy-light),rgba(21,27,45,.95));border:1px solid rgba(255,255,255,.1);border-radius:24px;padding:40px;max-width:450px;width:90%;text-align:center;animation:slideUp .4s ease}
+    @keyframes slideUp{from{transform:translateY(40px);opacity:0}to{transform:translateY(0);opacity:1}}
+    .modal-title{font-size:22px;font-weight:700;margin-bottom:16px}
+    .modal-text{color:var(--text);font-size:15px;margin-bottom:24px;line-height:1.7}
+    .modal-btn{background:var(--red);color:#fff;border:none;padding:14px 28px;border-radius:12px;font-size:14px;font-weight:600;cursor:pointer;margin:6px;transition:all .3s}
+    .modal-btn:hover{background:var(--red-dark);transform:translateY(-2px)}
+    .modal-btn.secondary{background:transparent;border:2px solid rgba(255,255,255,.2)}
+    
+    /* Toast */
+    .toast{position:fixed;top:80px;right:20px;background:linear-gradient(145deg,var(--navy-light),rgba(21,27,45,.95));border:1px solid rgba(220,26,53,.3);border-radius:16px;padding:20px;max-width:320px;z-index:1500;transform:translateX(400px);transition:transform .4s ease;box-shadow:0 20px 40px rgba(0,0,0,.4)}
+    .toast.active{transform:translateX(0)}
+    .toast-title{font-weight:700;margin-bottom:6px;display:flex;align-items:center;gap:8px;font-size:14px}
+    .toast-text{color:var(--text);font-size:13px;line-height:1.6}
+    
+    /* Sections */
+    .section{min-height:100vh;width:100%;display:flex;align-items:center;justify-content:center;padding:80px 24px;position:relative}
+    .container{max-width:1200px;width:100%;margin:0 auto}
+    .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center}
+    @media(max-width:900px){.grid-2{grid-template-columns:1fr;gap:48px}}
+    
+    /* Typography */
+    .eyebrow{font-size:11px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:var(--red);margin-bottom:16px;display:flex;align-items:center;gap:10px}
+    .eyebrow::before{content:'';width:32px;height:2px;background:var(--red)}
+    h1{font-size:clamp(40px,5vw,72px);font-weight:800;line-height:1;letter-spacing:-.03em}h1 span{color:var(--red);position:relative}
+    h1 span::after{content:'';position:absolute;bottom:6px;left:0;right:0;height:10px;background:var(--red);opacity:.12;z-index:-1;border-radius:4px}
+    h2{font-size:clamp(28px,4vw,48px);font-weight:700;line-height:1.1;letter-spacing:-.02em}h2 span{color:var(--red)}
+    p{color:var(--text);font-size:16px;line-height:1.8}
+    
+    /* Buttons */
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:var(--red);color:#fff;border:none;padding:18px 32px;border-radius:14px;font-size:15px;font-weight:600;cursor:pointer;transition:all .4s cubic-bezier(.4,0,.2,1);box-shadow:0 8px 30px rgba(220,26,53,.35);position:relative;overflow:hidden;text-decoration:none}
+    .btn::before{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.2),transparent);transition:left .6s}
+    .btn:hover{background:var(--red-dark);transform:translateY(-3px);box-shadow:0 15px 40px rgba(220,26,53,.45)}
+    .btn:hover::before{left:100%}
+    .btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+    .btn-secondary{background:transparent;border:2px solid rgba(255,255,255,.15);box-shadow:none;margin-left:12px}
+    .btn-secondary:hover{background:rgba(255,255,255,.05);border-color:rgba(255,255,255,.3)}
+    .btn-outline{background:transparent;border:2px solid rgba(220,26,53,.5);color:var(--red);box-shadow:none}
+    .btn-outline:hover{background:rgba(220,26,53,.1)}
+    
+    /* 3D Card */
+    .card-3d-wrap{perspective:1000px;width:340px;height:210px;margin:0 auto}
+    @media(max-width:400px){.card-3d-wrap{width:300px;height:185px}}
+    .card-3d{width:100%;height:100%;position:relative;transform-style:preserve-3d;border-radius:18px;background:linear-gradient(135deg,#1a1a2e 0%,#0f0f1a 50%,#1a1a2e 100%);border:1px solid rgba(255,255,255,.1);box-shadow:0 25px 50px rgba(0,0,0,.5),0 0 30px rgba(220,26,53,.25);animation:floatCard 4s ease-in-out infinite;overflow:hidden;transition:transform .1s}
+    @keyframes floatCard{0%,100%{transform:translateY(0) rotateX(6deg) rotateY(-6deg)}50%{transform:translateY(-12px) rotateX(6deg) rotateY(-6deg)}}
+    .card-3d::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.08) 0%,transparent 50%,rgba(255,255,255,.03) 100%);pointer-events:none}
+    .card-shine{position:absolute;inset:0;background:linear-gradient(135deg,transparent 40%,rgba(255,255,255,.1) 50%,transparent 60%);animation:shineMove 3s infinite;pointer-events:none}
+    @keyframes shineMove{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
+    .card-chip{position:absolute;top:22px;left:22px;width:46px;height:32px;background:linear-gradient(135deg,var(--gold) 0%,#FF8C00 100%);border-radius:6px;display:flex;align-items:center;justify-content:center;box-shadow:0 3px 10px rgba(255,184,0,.3)}
+    .card-chip::after{content:'';width:32px;height:22px;border:1.5px solid rgba(139,105,20,.5);border-radius:3px}
+    .card-logo{position:absolute;top:22px;right:22px;font-weight:800;font-size:18px;letter-spacing:2px;color:#fff}
+    .card-number{position:absolute;bottom:70px;left:22px;font-family:'Courier New',monospace;font-size:18px;letter-spacing:2px;color:rgba(255,255,255,.9)}
+    .card-holder{position:absolute;bottom:22px;left:22px}
+    .card-holder-label{font-size:9px;text-transform:uppercase;letter-spacing:1.5px;color:rgba(255,255,255,.5);margin-bottom:3px}
+    .card-holder-name{font-size:13px;letter-spacing:1.5px;text-transform:uppercase;color:#fff;font-weight:600}
+    
+    /* Stats */
+    .stats{display:flex;gap:40px;margin-top:40px}
+    @media(max-width:600px){.stats{flex-direction:column;gap:20px}}
+    .stat-number{font-size:36px;font-weight:800;color:var(--red);line-height:1}
+    .stat-label{font-size:11px;color:var(--text);margin-top:6px;text-transform:uppercase;letter-spacing:1.5px}
+    
+    /* Cards */
+    .card{background:linear-gradient(145deg,var(--navy-light),rgba(21,27,45,.8));border:1px solid rgba(255,255,255,.08);border-radius:24px;padding:36px;transition:all .4s;backdrop-filter:blur(10px)}
+    .card:hover{border-color:rgba(220,26,53,.15)}
+    
+    /* Feature Grid */
+    .feature-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:32px}
+    @media(max-width:800px){.feature-grid{grid-template-columns:1fr}}
+    .feature-item{background:linear-gradient(145deg,var(--navy-light),rgba(21,27,45,.6));border:1px solid rgba(255,255,255,.06);border-radius:16px;padding:24px;transition:all .3s}
+    .feature-item:hover{transform:translateY(-4px);border-color:rgba(220,26,53,.1)}
+    .feature-icon{width:48px;height:48px;background:rgba(220,26,53,.1);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;margin-bottom:16px}
+    
+    /* Slider */
+    .slider-wrap{margin:28px 0}
+    .slider-value{font-size:40px;font-weight:800;background:linear-gradient(135deg,#fff 0%,var(--red) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+    input[type=range]{width:100%;-webkit-appearance:none;height:8px;background:rgba(255,255,255,.1);border-radius:4px;outline:none;margin:20px 0}
+    input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:28px;height:28px;background:var(--red);border-radius:50%;cursor:grab;box-shadow:0 0 0 4px rgba(220,26,53,.2),0 8px 25px rgba(220,26,53,.4);border:3px solid #fff}
+    .dur-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:16px}
+    .dur-btn{padding:14px;background:rgba(255,255,255,.03);border:2px solid rgba(255,255,255,.08);border-radius:12px;color:var(--text);font-size:13px;font-weight:500;cursor:pointer;transition:all .3s}
+    .dur-btn.active{border-color:var(--red);background:rgba(220,26,53,.1);color:#fff}
+    
+    /* Result Box */
+    .result-box{background:linear-gradient(145deg,rgba(220,26,53,.08),rgba(220,26,53,.02));border:2px solid rgba(220,26,53,.15);border-radius:18px;padding:28px;margin:28px 0}
+    .result-row{display:flex;justify-content:space-between;padding:14px 0;border-bottom:1px solid rgba(255,255,255,.06)}
+    .result-row:last-child{border-bottom:none}
+    .result-label{color:var(--text);font-size:14px}
+    .result-val{font-weight:700;font-size:15px}
+    .result-val.highlight{color:var(--red);font-size:28px}
+    
+    /* Form Elements */
+    input[type=text],input[type=tel],input[type=email]{width:100%;background:var(--navy);border:2px solid rgba(255,255,255,.08);padding:16px 14px;border-radius:12px;color:#fff;font-size:15px;transition:all .3s;margin-bottom:12px}
+    input:focus{outline:none;border-color:var(--red);box-shadow:0 0 0 4px rgba(220,26,53,.1)}
+    input::placeholder{color:rgba(148,163,184,.5)}
+    
+    /* Consent */
+    .consent-box{background:var(--navy);border-radius:16px;padding:24px;margin-top:20px;border:2px solid rgba(255,255,255,.06)}
+    .consent-title{color:var(--red);font-weight:700;font-size:13px;margin-bottom:16px;display:flex;align-items:center;gap:6px}
+    .checkbox-wrap{display:flex;align-items:flex-start;gap:12px;padding:12px 0;border-bottom:1px solid rgba(255,255,255,.06);cursor:pointer}
+    .checkbox-wrap:last-child{border-bottom:none}
+    .checkbox-wrap input{width:18px;height:18px;margin-top:2px;accent-color:var(--red);cursor:pointer}
+    .checkbox-wrap label{color:var(--text);font-size:13px;line-height:1.6;cursor:pointer;flex:1}
+    .checkbox-wrap label strong{color:#fff;font-weight:600}
+    .consent-err{color:var(--red);font-size:12px;margin-top:12px;display:none}
+    
+    /* Documents */
+    .doc-list{margin-top:28px}
+    .doc-item{display:flex;align-items:center;justify-content:space-between;padding:18px;background:var(--navy);border:2px solid rgba(255,255,255,.06);border-radius:14px;margin-bottom:12px;transition:all .3s}
+    .doc-item:hover{border-color:rgba(220,26,53,.2)}
+    .doc-item.done{border-color:var(--success);background:rgba(16,185,129,.05)}
+    .doc-item.done .doc-icon{background:rgba(16,185,129,.15);color:var(--success)}
+    .doc-info{display:flex;align-items:center;gap:14px}
+    .doc-icon{width:48px;height:48px;background:rgba(255,255,255,.05);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;transition:all .3s}
+    .doc-name{font-weight:600;font-size:15px;margin-bottom:3px}
+    .doc-status{font-size:12px;color:var(--text)}
+    .doc-status.success{color:var(--success)}
+    .doc-btn{background:var(--red);color:#fff;border:none;padding:10px 18px;border-radius:10px;font-size:12px;font-weight:600;cursor:pointer;transition:all .3s}
+    .doc-btn:hover{background:var(--red-dark)}
+    .doc-item.done .doc-btn{display:none}
+    .upload-input{display:none}
+    
+    /* Scoring */
+    .heart-wrap{width:100px;height:100px;margin:0 auto 28px}
+    .heart-svg{width:100%;height:100%;fill:var(--red);animation:heartbeat 1.5s ease-in-out infinite;filter:drop-shadow(0 0 20px rgba(220,26,53,.5))}
+    @keyframes heartbeat{0%,100%{transform:scale(1)}25%{transform:scale(1.08)}50%{transform:scale(1)}75%{transform:scale(1.12)}}
+    .scoring-bar{height:10px;background:rgba(255,255,255,.1);border-radius:5px;overflow:hidden;margin:24px 0}
+    .scoring-fill{height:100%;background:linear-gradient(90deg,var(--red),#ff6b7a);border-radius:5px;width:0%;transition:width .3s;box-shadow:0 0 15px rgba(220,26,53,.4)}
+    .scoring-pct{font-size:40px;font-weight:800;color:var(--red);text-align:center;margin:16px 0}
+    .scoring-steps{display:flex;justify-content:space-between;margin-top:16px;font-size:12px;color:var(--text)}
+    .scoring-step{transition:all .3s}
+    .scoring-step.active{color:#fff;font-weight:600}
+    
+    /* SMS Preview */
+    .sms-box{background:#1a1f2e;border-left:4px solid var(--success);border-radius:12px;padding:20px;margin:20px 0;text-align:left}
+    .sms-from{font-size:11px;color:var(--text);margin-bottom:8px}
+    .sms-text{font-size:14px;line-height:1.7}
+    
+    /* Badges */
+    .badge{display:inline-flex;align-items:center;gap:6px;padding:10px 20px;border-radius:30px;font-size:13px;font-weight:600;margin-bottom:20px}
+    .badge-ok{background:rgba(16,185,129,.1);color:var(--success);border:2px solid rgba(16,185,129,.3)}
+    .badge-wait{background:rgba(245,158,11,.1);color:var(--warning);border:2px solid rgba(245,158,11,.3)}
+    
+    /* Success */
+    .success-icon{width:100px;height:100px;background:linear-gradient(135deg,var(--success),#34d399);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 24px;font-size:48px;box-shadow:0 20px 40px rgba(16,185,129,.3);animation:popIn .6s cubic-bezier(.175,.885,.32,1.275)}
+    @keyframes popIn{0%{transform:scale(0);opacity:0}50%{transform:scale(1.1)}100%{transform:scale(1);opacity:1}}
+    
+    /* Ref Box */
+    .ref-box{display:inline-flex;align-items:center;gap:8px;background:var(--navy-light);padding:14px 24px;border-radius:12px;font-family:monospace;font-size:16px;letter-spacing:1px;margin:20px 0;border:2px solid rgba(255,255,255,.08);font-weight:600}
+    .ref-box::before{content:'#';color:var(--red)}
+    
+    /* Responsive Text */
+    .text-center{text-align:center}
+  </style>
+</head>
+<body>
+  <!-- Progress Bar -->
+  <div class="progress-bar" id="progBar" style="width:0%"></div>
+  
+  <!-- Status -->
+  <div class="status-bar">
+    <div class="status-dot"></div>
+    <span>Système actif</span>
+  </div>
+  
+  <!-- Draft Badge -->
+  <div class="draft-badge" id="draftBadge">
+    📝 Brouillon • Expire dans <span id="draftTime">7j 00h</span>
+  </div>
+  
+  <!-- Exit Modal -->
+  <div class="modal-overlay" id="exitModal">
+    <div class="modal-content">
+      <div class="modal-title">⚠️ Vous partez sans finaliser ?</div>
+      <div class="modal-text" id="exitText">Votre progression est sauvegardée. Revenez quand vous voulez.</div>
+      <button class="modal-btn" onclick="stay()">Rester et continuer</button>
+      <button class="modal-btn secondary" onclick="saveExit()">Sauvegarder et quitter</button>
+    </div>
+  </div>
+  
+  <!-- Toast -->
+  <div class="toast" id="toast">
+    <div class="toast-title">📱 Notification</div>
+    <div class="toast-text" id="toastText">Message</div>
+  </div>
+
+  <!-- SECTION 1: HERO -->
+  <section class="section" id="sec-hero">
+    <div class="container">
+      <div class="grid-2">
+        <div class="fade-in">
+          <div class="eyebrow">Groupe Saham</div>
+          <h1>Votre projet,<br><span>notre financement.</span></h1>
+          <p>Solution de crédit 100% en ligne. Réponse en minutes, fonds sous 48h. Sans engagement.</p>
+          <button class="btn" onclick="toSim()">Démarrer ma simulation →</button>
+          <div class="stats">
+            <div><div class="stat-number">5min</div><div class="stat-label">Simulation</div></div>
+            <div><div class="stat-number">48h</div><div class="stat-label">Déblocage</div></div>
+            <div><div class="stat-number">4.9%</div><div class="stat-label">TAEG</div></div>
+          </div>
+        </div>
+        
+        <div class="fade-in">
+          <div class="card-3d-wrap" id="cardWrap">
+            <div class="card-3d" id="card3d">
+              <div class="card-shine"></div>
+              <div class="card-chip"></div>
+              <div class="card-logo">EQDOM</div>
+              <div class="card-number">•••• •••• •••• 4242</div>
+              <div class="card-holder">
+                <div class="card-holder-label">Titulaire</div>
+                <div class="card-holder-name" id="cardName">VOTRE NOM</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 2: SIMULATION -->
+  <section class="section hidden" id="sec-sim">
+    <div class="container">
+      <div class="grid-2">
+        <div class="fade-in">
+          <div class="eyebrow">Étape 1/5 • Simulation</div>
+          <h2>Quel est votre <span>projet</span> ?</h2>
+          <p>Ajustez le montant et la durée selon vos besoins. Obtenez une estimation instantanée.</p>
+          <div class="feature-grid">
+            <div class="feature-item">
+              <div class="feature-icon">⚡</div>
+              <div style="font-weight:600;font-size:14px;margin-bottom:6px">Réponse immédiate</div>
+              <div style="color:var(--text);font-size:12px">Découvrez votre taux en secondes</div>
+            </div>
+            <div class="feature-item">
+              <div class="feature-icon">🔒</div>
+              <div style="font-weight:600;font-size:14px;margin-bottom:6px">Sans engagement</div>
+              <div style="color:var(--text);font-size:12px">Simulation 100% gratuite</div>
+            </div>
+            <div class="feature-item">
+              <div class="feature-icon">📱</div>
+              <div style="font-weight:600;font-size:14px;margin-bottom:6px">100% Digital</div>
+              <div style="color:var(--text);font-size:12px">De la simu à la signature</div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="fade-in">
+          <div class="card">
+            <div class="slider-wrap">
+              <div style="font-size:11px;color:var(--text);text-transform:uppercase;letter-spacing:1px">Montant souhaité</div>
+              <div class="slider-value" id="amtDisplay">50 000 DH</div>
+              <input type="range" min="5000" max="500000" step="5000" value="50000" oninput="updateAmt(this.value)">
+              <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--text)">
+                <span>5 000 DH</span>
+                <span>500 000 DH</span>
+              </div>
+            </div>
+            
+            <div style="margin-top:24px">
+              <div style="font-size:11px;color:var(--text);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px">Durée</div>
+              <div class="dur-grid">
+                <button class="dur-btn" onclick="setDur(12,this)">12m</button>
+                <button class="dur-btn active" onclick="setDur(24,this)">24m</button>
+                <button class="dur-btn" onclick="setDur(36,this)">36m</button>
+                <button class="dur-btn" onclick="setDur(48,this)">48m</button>
+                <button class="dur-btn" onclick="setDur(60,this)">60m</button>
+              </div>
+            </div>
+            
+            <div class="result-box">
+              <div class="result-row">
+                <div>
+                  <div class="result-label">Mensualité estimée</div>
+                  <div class="result-val highlight" id="monthDisplay">2 396 DH</div>
+                </div>
+                <div style="text-align:right">
+                  <div class="result-label">TAEG</div>
+                  <div style="font-size:24px;font-weight:700">4.9%</div>
+                </div>
+              </div>
+            </div>
+            
+            <button class="btn" style="width:100%" onclick="toContact()">Continuer ma demande →</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 3: CONTACT -->
+  <section class="section hidden" id="sec-contact">
+    <div class="container">
+      <div class="grid-2">
+        <div class="fade-in">
+          <div class="eyebrow">Étape 2/5 • Coordonnées</div>
+          <h2>Vos <span>informations</span></h2>
+          <p>Finalisez votre demande. Un conseiller vous contactera si besoin.</p>
+          
+          <div class="card" style="margin-top:24px">
+            <div style="display:flex;align-items:center;gap:12px">
+              <div style="width:48px;height:48px;background:rgba(220,26,53,.1);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px">🔐</div>
+              <div>
+                <div style="font-weight:600;font-size:14px">Protection CNDP</div>
+                <div style="color:var(--text);font-size:12px;margin-top:3px">Conforme à la loi 09-08</div>
+              </div>
+            </div>
+          </div>
+          
+          <div style="margin-top:20px;padding:16px;background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.2);border-radius:12px">
+            <div style="font-size:12px;color:var(--warning)">
+              ⏱️ <strong>Délai conservation :</strong> 30 jours max (CNDP)
+            </div>
+          </div>
+        </div>
+        
+        <div class="fade-in">
+          <div class="card">
+            <input type="text" id="inpFN" placeholder="Prénom *" oninput="saveDraft()">
+            <input type="text" id="inpLN" placeholder="Nom *" oninput="saveDraft()">
+            <input type="tel" id="inpPhone" placeholder="Téléphone * (06 XX XX XX XX)" oninput="saveDraft()">
+            <input type="email" id="inpEmail" placeholder="Email (optionnel)" oninput="saveDraft()">
+            
+            <div class="consent-box">
+              <div class="consent-title">⚠️ Consentements obligatoires</div>
+              <label class="checkbox-wrap">
+                <input type="checkbox" id="chk1" onchange="saveDraft()">
+                <label for="chk1">J'autorise <strong>Eqdom</strong> à vérifier mon identité et consulter le Bureau de Crédit</label>
+              </label>
+              <label class="checkbox-wrap">
+                <input type="checkbox" id="chk2" onchange="saveDraft()">
+                <label for="chk2">J'accepte le traitement de mes données (loi 09-08)</label>
+              </label>
+              <label class="checkbox-wrap">
+                <input type="checkbox" id="chk3" onchange="saveDraft()">
+                <label for="chk3">J'accepte les offres du <strong>groupe Saham</strong></label>
+              </label>
+              <div class="consent-err" id="consentErr">⚠️ Les 3 consentements sont obligatoires</div>
+            </div>
+            
+            <button class="btn" style="width:100%" onclick="validateContact()">Continuer vers les documents →</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 4: DOCUMENTS -->
+  <section class="section hidden" id="sec-docs">
+    <div class="container" style="max-width:700px">
+      <div class="text-center fade-in">
+        <div class="eyebrow" style="justify-content:center">Étape 3/5 • Documents</div>
+        <h2>Vos <span>justificatifs</span></h2>
+        <p>Téléchargez les documents demandés. Le <strong>scoring débutera automatiquement</strong> après réception.</p>
+        <div class="badge badge-wait" id="docBadge">⏳ En attente de vos documents</div>
+      </div>
+      
+      <div class="doc-list fade-in">
+        <div class="doc-item" id="doc1">
+          <div class="doc-info">
+            <div class="doc-icon">🪪</div>
+            <div>
+              <div class="doc-name">CIN - Recto</div>
+              <div class="doc-status" id="status1">Carte d'identité (face avant)</div>
+            </div>
+          </div>
+          <input type="file" class="upload-input" id="file1" accept="image/*" onchange="uploadDoc(1)">
+          <button class="doc-btn" onclick="document.getElementById('file1').click()">Télécharger</button>
+        </div>
+        
+        <div class="doc-item" id="doc2">
+          <div class="doc-info">
+            <div class="doc-icon">🪪</div>
+            <div>
+              <div class="doc-name">CIN - Verso</div>
+              <div class="doc-status" id="status2">Carte d'identité (face arrière)</div>
+            </div>
+          </div>
+          <input type="file" class="upload-input" id="file2" accept="image/*" onchange="uploadDoc(2)">
+          <button class="doc-btn" onclick="document.getElementById('file2').click()">Télécharger</button>
+        </div>
+        
+        <div class="doc-item" id="doc3">
+          <div class="doc-info">
+            <div class="doc-icon">🏦</div>
+            <div>
+              <div class="doc-name">RIB</div>
+              <div class="doc-status" id="status3">Relevé d'Identité Bancaire</div>
+            </div>
+          </div>
+          <input type="file" class="upload-input" id="file3" accept="image/*,.pdf" onchange="uploadDoc(3)">
+          <button class="doc-btn" onclick="document.getElementById('file3').click()">Télécharger</button>
+        </div>
+      </div>
+      
+      <div class="text-center fade-in" style="margin-top:28px">
+        <button class="btn" id="btnSubmitDocs" onclick="submitDocs()" disabled>Soumettre pour analyse →</button>
+        <p style="margin-top:16px;font-size:12px;color:var(--text)">
+          📧 Vous recevrez une confirmation SMS à chaque étape
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 5: SCORING -->
+  <section class="section hidden" id="sec-scoring">
+    <div class="container" style="max-width:500px">
+      <div class="card text-center fade-in">
+        <div class="eyebrow" style="justify-content:center">Étape 4/5 • Analyse</div>
+        
+        <div class="heart-wrap">
+          <svg class="heart-svg" viewBox="0 0 24 24">
+            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+          </svg>
+        </div>
+        
+        <h2>Analyse de votre <span>profil</span></h2>
+        <p style="font-size:14px">Notre algorithme étudie votre dossier. <strong>4 à 24 heures</strong> de délai.</p>
+        
+        <div class="scoring-bar">
+          <div class="scoring-fill" id="scoreFill"></div>
+        </div>
+        
+        <div class="scoring-pct" id="scorePct">0%</div>
+        
+        <div class="scoring-steps">
+          <div class="scoring-step" id="step1">✓ Vérification</div>
+          <div class="scoring-step" id="step2">Analyse</div>
+          <div class="scoring-step" id="step3">Décision</div>
+        </div>
+        
+        <div id="waitBox" style="margin-top:24px">
+          <div style="font-size:24px;margin-bottom:12px">⏳</div>
+          <div style="font-weight:600;margin-bottom:8px">Analyse en cours...</div>
+          <div class="small">SMS envoyé à J+1, J+3, J+7 si pas de réponse</div>
+          <div class="ref-box" id="scoreRef">EQD-XXXXXX</div>
+        </div>
+        
+        <div class="sms-box hidden" id="smsBox">
+          <div class="sms-from">📱 Eqdom • À l'instant</div>
+          <div class="sms-text">
+            🎉 Votre crédit est APPROUVÉ !<br>
+            Montant: 50 000 DH<br>
+            Cliquez pour voir votre offre:
+          </div>
+        </div>
+        
+        <button class="btn hidden" id="btnOffer" onclick="toOffer()">Voir mon offre →</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 6: OFFER -->
+  <section class="section hidden" id="sec-offer">
+    <div class="container" style="max-width:550px">
+      <div class="text-center fade-in">
+        <div class="badge badge-ok">✓ Crédit approuvé</div>
+        
+        <h2>Votre <span>offre</span> personnalisée</h2>
+        
+        <div class="ref-box" id="offerRef">EQD-8F3D9A2E</div>
+      </div>
+      
+      <div class="result-box fade-in">
+        <div class="result-row">
+          <span class="result-label">Montant du crédit</span>
+          <span class="result-val" id="offAmt">50 000 DH</span>
+        </div>
+        <div class="result-row">
+          <span class="result-label">Durée</span>
+          <span class="result-val" id="offDur">24 mois</span>
+        </div>
+        <div class="result-row">
+          <span class="result-label">Mensualité</span>
+          <span class="result-val highlight" id="offMonth">2 396 DH</span>
+        </div>
+        <div class="result-row">
+          <span class="result-label">TAEG</span>
+          <span class="result-val">4.9%</span>
+        </div>
+        <div class="result-row">
+          <span class="result-label">Coût total</span>
+          <span class="result-val" id="offCost">7 504 DH</span>
+        </div>
+      </div>
+      
+      <div class="text-center fade-in">
+        <button class="btn" onclick="acceptOffer()">✓ Accepter et signer</button>
+        <button class="btn btn-secondary" onclick="declineOffer()">✗ Refuser</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 7: SUCCESS -->
+  <section class="section hidden" id="sec-success">
+    <div class="container" style="max-width:550px">
+      <div class="text-center fade-in">
+        <div class="success-icon">✓</div>
+        
+        <h1>Crédit <span>confirmé</span> !</h1>
+        
+        <p>Votre dossier est signé. Déblocage des fonds en cours.</p>
+        
+        <div class="ref-box" id="successRef">EQD-8F3D9A2E</div>
+        
+        <div class="card" style="text-align:left;margin:28px 0">
+          <div class="result-row">
+            <span class="result-label">Montant débloqué</span>
+            <span class="result-val" id="succAmt">50 000 DH</span>
+          </div>
+          <div class="result-row">
+            <span class="result-label">Délai</span>
+            <span class="result-val">24-48 heures</span>
+          </div>
+        </div>
+        
+        <div class="sms-box" style="text-align:left">
+          <div class="sms-from">📱 Eqdom • Confirmation</div>
+          <div class="sms-text">
+            ✅ Votre crédit de 50 000 DH est confirmé !<br>
+            Les fonds seront versés sous 24-48h.</div>
+        </div>
+        
+        <button class="btn" onclick="location.reload()">Nouvelle simulation</button>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    // State
+    let state={step:'hero',amt:50000,dur:24,month:2396,docs:{d1:false,d2:false,d3:false},ref:''};
+    
+    // 3D Card Effect
+    const card3d=document.getElementById('card3d');
+    const cardWrap=document.getElementById('cardWrap');
+    if(card3d&&cardWrap){
+      cardWrap.addEventListener('mousemove',(e)={
+        const r=cardWrap.getBoundingClientRect();
+        const x=e.clientX-r.left-r.width/2;
+        const y=e.clientY-r.top-r.height/2;
+        const rx=(y/r.height)*-20;
+        const ry=(x/r.width)*20;
+        card3d.style.transform=`rotateX(${rx}deg) rotateY(${ry}deg)`;
+        card3d.style.animation='none';
+      });
+      cardWrap.addEventListener('mouseleave',()={
+        card3d.style.animation='floatCard 4s ease-in-out infinite';
+      });
+    }
+    
+    // Navigation
+    function showSection(id){
+      document.querySelectorAll('.section').forEach(s=>s.classList.add('hidden'));
+      document.getElementById('sec-'+id).classList.remove('hidden');
+      state.step=id;
+      const steps=['hero','sim','contact','docs','scoring','offer','success'];
+      document.getElementById('progBar').style.width=((steps.indexOf(id)+1)/7*100)+'%';
+      window.scrollTo({top:0,behavior:'smooth'});
+    }
+    
+    function toSim(){
+      state.ref='EQD-'+Math.random().toString(36).substr(2,8).toUpperCase();
+      document.getElementById('scoreRef').textContent=state.ref;
+      document.getElementById('offerRef').textContent=state.ref;
+      document.getElementById('successRef').textContent=state.ref;
+      showSection('sim');
+    }
+    function toContact(){showSection('contact');loadDraft();}
+    
+    // Simulation
+    function updateAmt(v){
+      state.amt=parseInt(v);
+      document.getElementById('amtDisplay').textContent=state.amt.toLocaleString('fr-FR')+' DH';
+      calcMonth();
+    }
+    function setDur(m,btn){
+      state.dur=m;
+      document.querySelectorAll('.dur-btn').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      calcMonth();
+    }
+    function calcMonth(){
+      const rate=0.049/12;
+      const n=state.dur;
+      state.month=Math.round((state.amt*rate*Math.pow(1+rate,n))/(Math.pow(1+rate,n)-1));
+      document.getElementById('monthDisplay').textContent=state.month.toLocaleString('fr-FR')+' DH';
+    }
+    
+    // Draft Management
+    function saveDraft(){
+      const fn=document.getElementById('inpFN').value;
+      const draft={amt:state.amt,dur:state.dur,firstName:fn,expiry:Date.now()+7*24*60*60*1000};
+      localStorage.setItem('eqdom_draft',JSON.stringify(draft));
+      document.getElementById('draftBadge').classList.add('active');
+      if(fn)document.getElementById('cardName').textContent=(fn+' '+document.getElementById('inpLN').value||'').toUpperCase()||'VOTRE NOM';
+    }
+    function loadDraft(){
+      const d=JSON.parse(localStorage.getItem('eqdom_draft')||'{}');
+      if(d.expiry&&Date.now()<d.expiry){
+        document.getElementById('inpFN').value=d.firstName||'';
+        document.getElementById('draftBadge').classList.add('active');
+      }
+    }
+    
+    // Contact Validation
+    function validateContact(){
+      const c1=document.getElementById('chk1').checked;
+      const c2=document.getElementById('chk2').checked;
+      const c3=document.getElementById('chk3').checked;
+      if(!c1||!c2||!c3){document.getElementById('consentErr').style.display='block';return;}
+      if(!document.getElementById('inpFN').value||!document.getElementById('inpLN').value||!document.getElementById('inpPhone').value){
+        showToast('Erreur','Veuillez remplir tous les champs obligatoires');return;
+      }
+      document.getElementById('consentErr').style.display='none';
+      showSection('docs');
+      showToast('📱 SMS envoyé','Code de confirmation envoyé');
+    }
+    
+    // Documents
+    function uploadDoc(n){
+      const f=document.getElementById('file'+n).files[0];
+      if(f){
+        state.docs['d'+n]=true;
+        document.getElementById('doc'+n).classList.add('done');
+        document.getElementById('status'+n).textContent='Document reçu ✓';
+        document.getElementById('status'+n).classList.add('success');
+        showToast('📎 Upload','Document reçu avec succès');
+        checkAllDocs();
+      }
+    }
+    function checkAllDocs(){
+      const all=state.docs.d1&&state.docs.d2&&state.docs.d3;
+      document.getElementById('btnSubmitDocs').disabled=!all;
+      if(all){
+        document.getElementById('docBadge').textContent='✓ Tous les documents reçus';
+        document.getElementById('docBadge').className='badge badge-ok';
+      }
+    }
+    function submitDocs(){
+      localStorage.removeItem('eqdom_draft');
+      document.getElementById('draftBadge').classList.remove('active');
+      showSection('scoring');
+      runScoring();
+    }
+    
+    // Scoring Animation
+    function runScoring(){
+      let p=0;
+      const i=setInterval(()={
+        p+=Math.random()*4;
+        if(p>100)p=100;
+        document.getElementById('scoreFill').style.width=p+'%';
+        document.getElementById('scorePct').textContent=Math.floor(p)+'%';
+        if(p>30)document.getElementById('step1').classList.add('active');
+        if(p>60)document.getElementById('step2').classList.add('active');
+        if(p>90)document.getElementById('step3').classList.add('active');
+        if(p>=100){
+          clearInterval(i);
+          setTimeout(showOfferReady,400);
+        }
+      },180);
+    }
+    function showOfferReady(){
+      document.getElementById('waitBox').classList.add('hidden');
+      document.getElementById('smsBox').classList.remove('hidden');
+      document.getElementById('btnOffer').classList.remove('hidden');
+      showToast('🎉 Offre prête!','Votre crédit est approuvé');
+      document.getElementById('offAmt').textContent=state.amt.toLocaleString('fr-FR')+' DH';
+      document.getElementById('offDur').textContent=state.dur+' mois';
+      document.getElementById('offMonth').textContent=state.month.toLocaleString('fr-FR')+' DH';
+      document.getElementById('succAmt').textContent=state.amt.toLocaleString('fr-FR')+' DH';
+      document.getElementById('offCost').textContent=((state.month*state.dur)-state.amt).toLocaleString('fr-FR')+' DH';
+    }
+    function toOffer(){showSection('offer');}
+    
+    // Offer Actions
+    function acceptOffer(){showSection('success');showToast('✓ Signature','Contrat signé! Déblocage 24-48h');}
+    function declineOffer(){if(confirm('Refuser cette offre? Vous pourrez refaire une demande dans 30 jours.'))location.reload();}
+    
+    // Toast
+    function showToast(t,txt){
+      document.querySelector('.toast-title').textContent=t;
+      document.getElementById('toastText').textContent=txt;
+      document.getElementById('toast').classList.add('active');
+      setTimeout(()=>document.getElementById('toast').classList.remove('active'),4000);
+    }
+    
+    // Exit Management
+    window.addEventListener('beforeunload',(e)={
+      if(['sim','contact','docs'].includes(state.step)){e.preventDefault();e.returnValue='';}
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,226 @@
+══════════════════════════════════════════════════════════════════════════════════
+                    FLOWCHART EQDOM — VERSION TEXTE VISUELLE
+══════════════════════════════════════════════════════════════════════════════════
+
+                              ┌─────────────┐
+                              │    START    │
+                              └──────┬──────┘
+                                     │
+           ┌─────────────────────────┼─────────────────────────┐
+           │                         │                         │
+           ▼                         ▼                         ▼
+    ┌─────────────┐          ┌─────────────┐          ┌─────────────┐
+    │   LANDING   │          │   QR CODE   │          │  SMS LINK   │
+    └──────┬──────┘          └──────┬──────┘          └──────┬──────┘
+           │                         │                         │
+           └─────────────────────────┼─────────────────────────┘
+                                     │
+                                     ▼
+                              ┌─────────────┐
+                              │  Cookie ?   │
+                              │  Token ?    │
+                              └──────┬──────┘
+                                     │
+                    ┌────────────────┴────────────────┐
+                    │ NON                              │ OUI
+                    ▼                                  ▼
+           ┌─────────────────┐                ┌─────────────────┐
+           │  1. SIMULATION  │                │ ÉCRAN REPRISE   │
+           │     (Sync)      │                │ "Bonjour Sarah" │
+           └────────┬────────┘                └────────┬────────┘
+                    │                                 │
+                    │ Sauvegarde auto                 │
+                    ▼                                 │
+           ┌─────────────────┐                       │
+           │ LocalStorage    │◄──────────────────────┘
+           │ Brouillon       │        [Reprendre]
+           └─────────────────┘
+                    │
+                    ▼
+           ┌─────────────────┐
+           │ 2. CONTACT MIN  │
+           │   (Sync)        │
+           │ Prénom/Nom/Tél  │
+           └────────┬────────┘
+                    │
+                    ▼
+           ┌─────────────────┐
+           │ CONSENTEMENT    │◄── Checkbox CNDP
+           │   CNDP          │    obligatoires
+           └────────┬────────┘
+                    │
+        ┌───────────┴───────────┐
+        │                       │
+        ▼                       ▼
+┌───────────────┐      ┌─────────────────┐
+│ Exit 3:       │      │ 3. UPLOAD DOCS  │
+│ Quitte        │      │   (Hybride)     │
+│ Relance J+1   │      │                 │
+└───────────────┘      │ CIN/RIB/Fiche   │
+                       │ Flottent UI     │
+                       └────────┬────────┘
+                                │
+              ┌─────────────────┼─────────────────┐
+              │                 │                 │
+              ▼                 ▼                 ▼
+    ┌─────────────────┐ ┌─────────────────┐ ┌─────────────────┐
+    │  Exit 4:        │ │ SOUMETTRE       │ │  Exit 5:        │
+    │ Sauvegarde      │ │                 │ │  Abandon        │
+    │ partielle       │ │ (Min 2 docs)    │ │                 │
+    │ Token magique   │ │                 │ │ Email J+2       │
+    └────────┬────────┘ └────────┬────────┘ └─────────────────┘
+             │                   │
+             │                   ▼
+             │          ┌─────────────────┐
+             │          │ 4. EN ATTENTE   │
+             │          │   (Async)       │
+             │          │                 │
+             │          │ Progress bar    │
+             │          │ 4h-24h          │
+             │          └────────┬────────┘
+             │                   │
+             │                   ▼
+             │          ┌─────────────────┐
+             │          │ BACKEND CHECK   │
+             │          │ OCR + Scoring   │
+             │          └────────┬────────┘
+             │                   │
+             │     ┌─────────────┼─────────────┐
+             │     │             │             │
+             │     ▼             ▼             ▼
+             │ ┌────────────────┐ ┌────────────────┐ ┌────────────────┐
+             │ │ 🟢 SCÉNARIO A  │ │ 🟡 SCÉNARIO B  │ │ 🔴 SCÉNARIO C  │
+             │ │                │ │                │ │                │
+             │ │ Docs OK        │ │ Docs incomplets│ │ Docs invalides │
+             │ │ Scoring OK     │ │ Scoring OK     │ │ OU Scoring NOK │
+             │ │                │ │                │ │                │
+             │ │ APPROUVÉ       │ │ À COMPLÉTER    │ │ REFUSÉ         │
+             │ └────────┬───────┘ └────────┬───────┘ └────────┬───────┘
+             │          │                  │                  │
+             │          ▼                  ▼                  ▼
+             │ ┌────────────────┐ ┌────────────────┐ ┌────────────────┐
+             │ │ 5. OFFRE       │ │ Notification   │ │ Notification   │
+             │ │ Présentée      │ │ "Docs manq."   │ │ "Dossier ét."  │
+             │ │                │ │                │ │                │
+             │ │ Montant/TAEG   │ └────────┬───────┘ └────────┬───────┘
+             │ │ [Accepter]     │          │                  │
+             │ └────────┬───────┘          ▼                  ▼
+             │          │          ┌────────────────┐ ┌────────────────┐
+             │          │          │ 6. COMPLETION  │ │ Motif affiché  │
+             │          │          │ Upload spécif. │ │ ou             │
+             │          │          │ (docs listés)  │ │ Contre-prop.   │
+             │          │          └────────┬───────┘ └────────┬───────┘
+             │          │                   │                  │
+             │          │                   │                  │
+             │          │                   ▼                  ▼
+             │          │          ┌────────────────┐ ┌────────────────┐
+             │          │          │ Retour étape 3 │ │ [Voir contre   │
+             │          │          │ (loop)         │ │  proposition]  │
+             │          │          │                │ │                │
+             │          │          └────────────────┘ └────────┬───────┘
+             │          │                                      │
+             │          │                                      ▼
+             │          │                             ┌────────────────┐
+             │          │                             │ Montant réduit │
+             │          │                             │ Nouvelle offre │
+             │          │                             └────────┬───────┘
+             │          │                                      │
+             └──────────┴──────────────────────────────────────┘
+                                     │
+                                     ▼
+                            ┌─────────────────┐
+                            │ 6. CONTRAT      │
+                            │  & SIGNATURE   │
+                            │                 │
+                            │ Récapitulatif   │
+                            │ Canvas sign     │
+                            └────────┬────────┘
+                                     │
+                    ┌────────────────┼────────────────┐
+                    │                                 │
+                    ▼                                 ▼
+           ┌─────────────────┐              ┌─────────────────┐
+           │ Exit 10:        │              │ Signature OK    │
+           │ Abandon         │              │                 │
+           │ Email confirm   │              │ Freeze +        │
+           └─────────────────┘              │ Confettis       │
+                                            └────────┬────────┘
+                                                     │
+                                                     ▼
+                                            ┌─────────────────┐
+                                            │ 7. CONFIRMÉ     │
+                                            │   🎉 SUCCÈS     │
+                                            │                 │
+                                            │ Référence       │
+                                            │ Déblocage 24-48h│
+                                            └────────┬────────┘
+                                                     │
+                                                     ▼
+                                            ┌─────────────────┐
+                                            │ Exit 11:        │
+                                            │ Programme       │
+                                            │ Fidélité        │
+                                            │ NPS Survey      │
+                                            └─────────────────┘
+
+
+══════════════════════════════════════════════════════════════════════════════════
+                              LÉGENDE EXIT POINTS
+══════════════════════════════════════════════════════════════════════════════════
+
+EXIT 1 — Bounce landing          → Aucune sauvegarde
+EXIT 2 — Quitte simulation       → Brouillon localStorage
+EXIT 3 — Quitte contact          → Relance SMS J+1  
+EXIT 4 — Sauvegarde partielle    → Token magique, relance J+1
+EXIT 5 — Abandon docs            → Email J+2
+EXIT 6 — Attente vérification    → Notification push résultat
+EXIT 7 — Acceptation offre       → Phase signature
+EXIT 8 — Completion demandée     → Retour étape 3
+EXIT 9 — Refus accepté           → Fin
+EXIT 10 — Abandon signature      → Annulation
+EXIT 11 — Succès final           → Fidélisation
+
+
+══════════════════════════════════════════════════════════════════════════════════
+                            LÉGENDE COULEURS BACKEND
+══════════════════════════════════════════════════════════════════════════════════
+
+🟢 APPROUVÉ      → Workflow happy path → Offre → Signature → Déblocage
+🟡 À COMPLÉTER   → Loopback workflow   → Upload manquant → Re-vérification  
+🔴 REFUSÉ        → End workflow        → Motif OU Contre-proposition
+
+
+══════════════════════════════════════════════════════════════════════════════════
+                        LIEN POUR VOIR LE DIAGRAMME INTERACTIF
+══════════════════════════════════════════════════════════════════════════════════
+
+Ouvre ce lien et copie-colle le contenu de FLOWCHART.mmd :
+
+🔗 https://mermaid.live
+
+Ou utilise l'éditeur en ligne : mermaid.live/edit
+
+Colle ce code :
+```
+flowchart TB
+    START([START]) --> LANDING
+    LANDING --> CHECK{Cookie ?}
+    CHECK -->|OUI| REPRISE
+    CHECK -->|NON| SIMU
+    SIMU -->|Sauvegarde| BROUILLON[(Brouillon)]
+    SIMU --> CONTACT
+    CONTACT -->|Exit 3| RELANCE1
+    CONTACT --> CONSENT
+    CONSENT --> UPLOAD
+    UPLOAD -->|Exit 4| SAUVEPART
+    UPLOAD -->|Exit 5| ABANDON1
+    UPLOAD -->|Soumettre| ATTENTE
+    SAUVEPART --> RELANCE2
+    ATTENTE --> BACKEND
+    BACKEND -->|OK| APPROUVE
+    BACKEND -->|Incomplet| ACOMPLETER
+    BACKEND -->|NOK| REFUSE
+    APPROUVE --> OFFRE --> CONTRAT --> SIGN --> CONFIRM
+    ACOMPLETER --> COMPLETION --> UPLOAD
+    REFUSE --> NOTIF3 --> DECISION
+```

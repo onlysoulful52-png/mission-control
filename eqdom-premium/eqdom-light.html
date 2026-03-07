@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Eqdom - Crédit Premium</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:Inter,sans-serif;background:#0a0f1a;color:#fff;line-height:1.6}
+.section{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:40px 20px}
+.container{max-width:1100px;width:100%;margin:0 auto}
+.hidden{display:none!important}
+.card{background:#151b2d;border:1px solid rgba(255,255,255,.1);border-radius:20px;padding:32px;max-width:500px;margin:0 auto}
+.btn{background:#dc1a35;color:#fff;border:none;padding:16px 32px;border-radius:12px;font-size:15px;font-weight:600;cursor:pointer;width:100%;margin-top:20px}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.btn-secondary{background:transparent;border:2px solid rgba(255,255,255,.2)}
+input{width:100%;background:#0a0f1a;border:1px solid rgba(255,255,255,.2);padding:14px 16px;border-radius:10px;color:#fff;margin-bottom:12px;font-size:15px}
+input:focus{outline:none;border-color:#dc1a35}
+h1{font-size:42px;font-weight:800;margin-bottom:16px;line-height:1.1}
+h1 span{color:#dc1a35}
+p{color:#94a3b8;margin-bottom:24px}
+.doc-item{display:flex;align-items:center;justify-content:space-between;padding:16px;background:#0a0f1a;border:1px solid rgba(255,255,255,.1);border-radius:12px;margin-bottom:12px}
+.doc-item.done{border-color:#10b981}
+.doc-info{display:flex;align-items:center;gap:12px}
+.doc-icon{font-size:24px}
+.small{font-size:13px;color:#94a3b8}
+.progress{position:fixed;top:0;left:0;height:3px;background:#dc1a35;transition:width .3s;z-index:100}
+.checkbox{display:flex;align-items:flex-start;gap:10px;margin:12px 0;font-size:14px;color:#94a3b8}
+.checkbox input{margin-top:3px}
+.result-row{display:flex;justify-content:space-between;padding:12px 0;border-bottom:1px solid rgba(255,255,255,.1)}
+.result-row:last-child{border-bottom:none}
+.highlight{color:#dc1a35;font-size:24px;font-weight:700}
+.success-icon{width:80px;height:80px;background:#10b981;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:40px;margin:0 auto 20px}
+.heart{width:60px;height:60px;background:#dc1a35;clip-path:path('M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z');animation:pulse 1.5s infinite;margin:0 auto 20px}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.1)}}
+.scoring-bar{height:8px;background:rgba(255,255,255,.1);border-radius:4px;margin:20px 0;overflow:hidden}
+.scoring-fill{height:100%;background:#dc1a35;width:0%;transition:width .3s}
+.badge{display:inline-block;padding:8px 16px;border-radius:20px;font-size:13px;margin-bottom:16px}
+.badge-success{background:rgba(16,185,129,.2);color:#10b981}
+</style>
+</head>
+<body>
+<div class="progress" id="prog" style="width:0%"></div>
+
+<!-- HERO -->
+<div class="section" id="s-hero">
+<div class="container" style="text-align:center">
+<h1>Votre projet,<br><span>notre financement.</span></h1>
+<p>Crédit 100% en ligne. Réponse en minutes, fonds sous 48h.</p>
+<button class="btn" onclick="go('sim')">Démarrer ma simulation →</button>
+</div>
+</div>
+
+<!-- SIMULATION -->
+<div class="section hidden" id="s-sim">
+<div class="container">
+<div class="card">
+<p class="small">Montant souhaité</p>
+<p style="font-size:36px;font-weight:800;margin:8px 0">50 000 DH</p>
+<input type="range" min="5000" max="500000" value="50000" style="width:100%;margin:16px 0">
+<p class="small">Durée</p>
+<div style="display:flex;gap:8px;margin:12px 0">
+<button class="btn" style="flex:1;padding:12px" onclick="this.style.background='#dc1a35'">24m</button>
+<button class="btn btn-secondary" style="flex:1;padding:12px" onclick="this.style.background='#dc1a35'">36m</button>
+<button class="btn btn-secondary" style="flex:1;padding:12px" onclick="this.style.background='#dc1a35'">48m</button>
+</div>
+<div style="background:rgba(220,26,53,.1);padding:20px;border-radius:12px;margin-top:20px">
+<div class="result-row">
+<span>Mensualité</span>
+<span class="highlight">2 396 DH</span>
+</div>
+<div class="result-row">
+<span>TAEG</span>
+<span style="font-size:20px;font-weight:700">4.9%</span>
+</div>
+</div>
+<button class="btn" onclick="go('contact')">Continuer →</button>
+</div>
+</div>
+</div>
+
+<!-- CONTACT -->
+<div class="section hidden" id="s-contact">
+<div class="container">
+<div class="card">
+<h1 style="font-size:28px">Vos <span>informations</span></h1>
+<input type="text" placeholder="Prénom *" id="fn">
+<input type="text" placeholder="Nom *" id="ln">
+<input type="tel" placeholder="Téléphone *" id="ph">
+<input type="email" placeholder="Email">
+<div style="background:#0a0f1a;padding:16px;border-radius:12px;margin:16px 0">
+<p style="color:#dc1a35;font-size:13px;margin-bottom:12px">⚠ Consentements obligatoires (CNDP)</p>
+<label class="checkbox"><input type="checkbox" id="c1"> J'accepte la vérification d'identité</label>
+<label class="checkbox"><input type="checkbox" id="c2"> J'accepte le traitement des données (loi 09-08)</label>
+<label class="checkbox"><input type="checkbox" id="c3"> J'accepte les offres du groupe Saham</label>
+</div>
+<button class="btn" onclick="checkContact()">Continuer vers les documents →</button>
+</div>
+</div>
+</div>
+
+<!-- DOCUMENTS -->
+<div class="section hidden" id="s-docs">
+<div class="container">
+<div class="card">
+<h1 style="font-size:28px">Vos <span>justificatifs</span></h1>
+<p class="small" style="margin-bottom:20px">Le scoring débutera après réception des documents</p>
+
+<div class="doc-item" id="d1">
+<div class="doc-info">
+<div class="doc-icon">🪪</div>
+<div>
+<div style="font-weight:600">CIN - Recto</div>
+<div class="small">Carte d'identité face avant</div>
+</div>
+</div>
+<input type="file" id="f1" class="hidden" onchange="up('d1','f1')">
+<button class="btn" style="width:auto;padding:10px 20px;margin:0" onclick="document.getElementById('f1').click()">Upload</button>
+</div>
+
+<div class="doc-item" id="d2">
+<div class="doc-info">
+<div class="doc-icon">🪪</div>
+<div>
+<div style="font-weight:600">CIN - Verso</div>
+<div class="small">Carte d'identité face arrière</div>
+</div>
+</div>
+<input type="file" id="f2" class="hidden" onchange="up('d2','f2')">
+<button class="btn" style="width:auto;padding:10px 20px;margin:0" onclick="document.getElementById('f2').click()">Upload</button>
+</div>
+
+<div class="doc-item" id="d3">
+<div class="doc-info">
+<div class="doc-icon">🏦</div>
+<div>
+<div style="font-weight:600">RIB</div>
+<div class="small">Relevé d'Identité Bancaire</div>
+</div>
+</div>
+<input type="file" id="f3" class="hidden" onchange="up('d3','f3')">
+<button class="btn" style="width:auto;padding:10px 20px;margin:0" onclick="document.getElementById('f3').click()">Upload</button>
+</div>
+
+<button class="btn" id="subdocs" onclick="go('scoring')" disabled>Soumettre pour analyse →</button>
+</div>
+</div>
+</div>
+
+<!-- SCORING -->
+<div class="section hidden" id="s-scoring">
+<div class="container">
+<div class="card" style="text-align:center">
+<div class="heart"></div>
+<h1 style="font-size:28px">Analyse de votre <span>profil</span></h1>
+<p class="small">Notre algorithme étudie votre dossier...</p>
+<div class="scoring-bar"><div class="scoring-fill" id="sf"></div></div>
+<p style="font-size:32px;font-weight:800;color:#dc1a35" id="pct">0%</p>
+<div id="waitmsg" style="margin:20px 0">
+<p>⏳ Analyse en cours...</p>
+<p class="small">Vous recevrez un SMS dès que votre offre sera prête</p>
+</div>
+<button class="btn hidden" id="voffer" onclick="go('offer')">Voir mon offre →</button>
+</div>
+</div>
+</div>
+
+<!-- OFFER -->
+<div class="section hidden" id="s-offer">
+<div class="container">
+<div class="card" style="text-align:center">
+<div class="badge badge-success">✓ Crédit approuvé</div>
+<h1 style="font-size:28px">Votre <span>offre</span></h1>
+<div style="background:rgba(220,26,53,.1);padding:20px;border-radius:12px;margin:20px 0;text-align:left">
+<div class="result-row"><span>Montant</span><span>50 000 DH</span></div>
+<div class="result-row"><span>Durée</span><span>24 mois</span></div>
+<div class="result-row"><span>Mensualité</span><span class="highlight">2 396 DH</span></div>
+<div class="result-row"><span>TAEG</span><span>4.9%</span></div>
+</div>
+<button class="btn" onclick="go('success')">✓ Accepter et signer</button>
+<button class="btn btn-secondary" onclick="location.reload()">✗ Refuser</button>
+</div>
+</div>
+</div>
+
+<!-- SUCCESS -->
+<div class="section hidden" id="s-success">
+<div class="container">
+<div class="card" style="text-align:center">
+<div class="success-icon">✓</div>
+<h1>Crédit <span>confirmé</span> !</h1>
+<p>Votre dossier est signé. Déblocage sous 24-48h.</p>
+<div style="background:#151b2d;padding:16px;border-radius:12px;margin:20px 0;font-family:monospace">
+# EQD-8F3D9A2E
+</div>
+<button class="btn" onclick="location.reload()">Nouvelle simulation</button>
+</div>
+</div>
+</div>
+
+<script>
+const steps=['hero','sim','contact','docs','scoring','offer','success'];
+function go(s){
+document.querySelectorAll('.section').forEach(x=>x.classList.add('hidden'));
+document.getElementById('s-'+s).classList.remove('hidden');
+document.getElementById('prog').style.width=((steps.indexOf(s)+1)/7*100)+'%';
+if(s==='scoring')setTimeout(doScoring,500);
+}
+function checkContact(){
+if(!document.getElementById('c1').checked||!document.getElementById('c2').checked||!document.getElementById('c3').checked){
+alert('Vous devez accepter les 3 conditions');return;
+}
+if(!document.getElementById('fn').value||!document.getElementById('ln').value||!document.getElementById('ph').value){
+alert('Veuillez remplir tous les champs');return;
+}
+go('docs');
+}
+function up(d,f){
+if(document.getElementById(f).files[0]){
+document.getElementById(d).classList.add('done');
+document.getElementById(d).querySelector('.small').textContent='Document reçu ✓';
+document.getElementById(d).querySelector('button').style.display='none';
+checkDocs();
+}
+}
+function checkDocs(){
+const all=['d1','d2','d3'].every(x=>document.getElementById(x).classList.contains('done'));
+document.getElementById('subdocs').disabled=!all;
+}
+function doScoring(){
+let p=0;
+const i=setInterval(()=>{
+p+=Math.random()*5;
+if(p>100)p=100;
+document.getElementById('sf').style.width=p+'%';
+document.getElementById('pct').textContent=Math.floor(p)+'%';
+if(p>=100){
+clearInterval(i);
+document.getElementById('waitmsg').style.display='none';
+document.getElementById('voffer').classList.remove('hidden');
+}
+},200);
+}
+</script>
+</body>
+</html>
