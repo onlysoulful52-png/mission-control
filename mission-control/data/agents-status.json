@@ -1,25 +1,25 @@
 {
-  "lastUpdate": "2026-03-07T11:05:00+08:00",
+  "lastUpdate": "2026-03-07T11:18:00+08:00",
   "agents": {
     "henry": {
       "name": "Henry",
       "role": "Agent Principal",
       "status": "active",
-      "statusText": "En ligne - Session principale",
-      "currentTask": "Coordination équipe",
-      "lastActivity": "2026-03-07T11:05:00+08:00",
+      "statusText": "En ligne - Logging total activé",
+      "currentTask": "Coordination + Logs temps réel",
+      "lastActivity": "2026-03-07T11:18:00+08:00",
       "channel": "Kimi Chat",
-      "tasks_completed_today": 15
+      "tasks_completed_today": 16
     },
     "rothschild": {
       "name": "Rothschild",
       "role": "CEO / Stratège",
       "status": "active",
-      "statusText": "Veille continue activée",
-      "currentTask": "Recherche opportunités business",
-      "lastActivity": "2026-03-07T11:10:00+08:00",
+      "statusText": "Deep research en cours",
+      "currentTask": "Veille B2B informel Maroc (YouTube/Reddit/LinkedIn)",
+      "lastActivity": "2026-03-07T11:16:45+08:00",
       "channel": "Auto-veille toutes les heures",
-      "tasks_completed_today": 1
+      "tasks_completed_today": 2
     },
     "junior": {
       "name": "Junior",
@@ -45,11 +45,11 @@
       "name": "Ops",
       "role": "DevOps",
       "status": "monitoring",
-      "statusText": "Monitoring actif",
-      "currentTask": "Surveillance infrastructure",
-      "lastActivity": "2026-03-07T11:03:00+08:00",
+      "statusText": "Monitoring + Logs temps réel",
+      "currentTask": "Surveillance + MAJ auto",
+      "lastActivity": "2026-03-07T11:09:00+08:00",
       "channel": "Automatique",
-      "tasks_completed_today": 5
+      "tasks_completed_today": 6
     },
     "qanon": {
       "name": "QAnon",
@@ -66,13 +66,14 @@
       "role": "Extension Mobile",
       "status": "active",
       "statusText": "Connecté",
-      "currentTask": "Notifications actives",
+      "currentTask": "Notifications",
       "lastActivity": "2026-03-07T10:21:00+08:00",
       "channel": "WhatsApp",
       "tasks_completed_today": 2
     }
   },
   "activeSessions": 2,
-  "lastCronRun": "2026-03-07T11:03:00+08:00",
-  "notes": "Agents créés et prêts. Spawn à la demande via @mention."
+  "lastCronRun": "2026-03-07T11:09:00+08:00",
+  "logsCount": 16,
+  "mode": "LOGS_TOTAL"
 }

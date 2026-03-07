@@ -1,0 +1,26 @@
+{
+  "agent": "Rothschild",
+  "mode": "EXPERT_AUTONOME",
+  "status": "ACTIVE_DEEP_RESEARCH",
+  "derniereRecherche": "2026-03-07T11:16:00",
+  "themeActuel": "Fintech B2B commerçants informels Maroc - Deep Dive",
+  "cyclesSansRésultat": 0,
+  "historiquePivots": [
+    "fintech Maroc général",
+    "funding MENA 2025",
+    "fintech B2B informel"
+  ],
+  "sourcesExplorées": [
+    "web articles",
+    "MAGNiTT Research",
+    "TechCabal",
+    "Fintechnews.ae"
+  ],
+  "prochainesCibles": [
+    "YouTube Chari pitch",
+    "Reddit r/startups B2B Africa",
+    "LinkedIn fondateurs",
+    "IndieHackers embedded finance"
+  ],
+  "note": "Deep dive en cours - Recherche multi-sources active"
+}
