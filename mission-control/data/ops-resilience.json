@@ -1,0 +1,32 @@
+{
+  "system": "RESILIENCE - Plans B/C Auto",
+  "agent": "Ops",
+  "date": "2026-03-07T11:40:00",
+  "regles": {
+    "cron_shell_blocked": {
+      "plan_a": "Cron exécute script shell",
+      "plan_b": "Ops exécute via OpenClaw exec tool",
+      "plan_c": "MAJ manuelle via git add/commit/push direct",
+      "action_auto": "Plan B activé - exec tool"
+    },
+    "whatsapp_disconnect": {
+      "plan_a": "WhatsApp connecté",
+      "plan_b": "Relance auto après 30s",
+      "plan_c": "Notification email + retry toutes les 5 min",
+      "action_auto": "Plan B activé - auto-reconnect"
+    },
+    "github_push_fail": {
+      "plan_a": "Push normal",
+      "plan_b": "Force push avec --force",
+      "plan_c": "Backup local + notification + retry plus tard",
+      "action_auto": "Plan B activé - force push"
+    },
+    "dashboard_404": {
+      "plan_a": "GitHub Pages OK",
+      "plan_b": "Redirection vers VPS local",
+      "plan_c": "Page statique de secours",
+      "action_auto": "Plan C activé - page secours"
+    }
+  },
+  "status": "ACTIVE"
+}
