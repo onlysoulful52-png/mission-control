@@ -1,5 +1,5 @@
 {
-  "lastUpdate": "2026-03-07T10:55:00+08:00",
+  "lastUpdate": "2026-03-07T11:05:00+08:00",
   "agents": {
     "henry": {
       "name": "Henry",
@@ -7,8 +7,9 @@
       "status": "active",
       "statusText": "En ligne - Session principale",
       "currentTask": "Coordination équipe",
-      "lastActivity": "2026-03-07T10:55:00+08:00",
-      "channel": "Kimi Chat"
+      "lastActivity": "2026-03-07T11:05:00+08:00",
+      "channel": "Kimi Chat",
+      "tasks_completed_today": 15
     },
     "rothschild": {
       "name": "Rothschild",
@@ -17,7 +18,8 @@
       "statusText": "En attente de mission",
       "currentTask": null,
       "lastActivity": "2026-03-07T10:50:00+08:00",
-      "channel": "Disponible sur demande"
+      "channel": "Disponible sur demande",
+      "tasks_completed_today": 3
     },
     "junior": {
       "name": "Junior",
@@ -26,7 +28,8 @@
       "statusText": "En attente de mission",
       "currentTask": null,
       "lastActivity": "2026-03-07T10:50:00+08:00",
-      "channel": "Disponible sur demande"
+      "channel": "Disponible sur demande",
+      "tasks_completed_today": 0
     },
     "aiman": {
       "name": "Aiman",
@@ -35,7 +38,8 @@
       "statusText": "En attente de mission",
       "currentTask": null,
       "lastActivity": "2026-03-07T10:50:00+08:00",
-      "channel": "Disponible sur demande"
+      "channel": "Disponible sur demande",
+      "tasks_completed_today": 0
     },
     "ops": {
       "name": "Ops",
@@ -43,8 +47,9 @@
       "status": "monitoring",
       "statusText": "Monitoring actif",
       "currentTask": "Surveillance infrastructure",
-      "lastActivity": "2026-03-07T10:53:00+08:00",
-      "channel": "Automatique"
+      "lastActivity": "2026-03-07T11:03:00+08:00",
+      "channel": "Automatique",
+      "tasks_completed_today": 5
     },
     "qanon": {
       "name": "QAnon",
@@ -53,7 +58,8 @@
       "statusText": "En attente de mission",
       "currentTask": null,
       "lastActivity": "2026-03-07T10:50:00+08:00",
-      "channel": "Disponible sur demande"
+      "channel": "Disponible sur demande",
+      "tasks_completed_today": 0
     },
     "whatsapp-bot": {
       "name": "WhatsApp Bot",
@@ -62,10 +68,11 @@
       "statusText": "Connecté",
       "currentTask": "Notifications actives",
       "lastActivity": "2026-03-07T10:21:00+08:00",
-      "channel": "WhatsApp"
+      "channel": "WhatsApp",
+      "tasks_completed_today": 2
     }
   },
   "activeSessions": 2,
-  "lastCronRun": "2026-03-07T10:53:00+08:00",
+  "lastCronRun": "2026-03-07T11:03:00+08:00",
   "notes": "Agents créés et prêts. Spawn à la demande via @mention."
 }

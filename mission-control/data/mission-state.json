@@ -1,87 +1,19 @@
 {
-  "last_update": "2026-03-07T05:20:00Z",
+  "mission": "Gestion des agents IA et opportunités business",
+  "startDate": "2026-03-07",
   "agents": {
-    "henry": {
-      "status": "online",
-      "capacity": 60,
-      "current_task": "Coordination sous-traitance MarcoPolo",
-      "last_activity": "Dashboard V3 déployé",
-      "tasks_completed_today": 3,
-      "cycle_time": "2.3h",
-      "quality_score": 94
-    },
-    "aiman": {
-      "status": "busy",
-      "capacity": 95,
-      "current_task": "🔴 BLOCKED: Payment Gateway — Investigation latence",
-      "last_activity": "Code review PR #42",
-      "tasks_completed_today": 8,
-      "cycle_time": "4.1h",
-      "quality_score": 89
-    },
-    "junior": {
-      "status": "online",
-      "capacity": 40,
-      "current_task": "Documentation KYC pour AMF",
-      "last_activity": "Veille business trends",
-      "tasks_completed_today": 2,
-      "cycle_time": "1.8h",
-      "quality_score": 85
-    },
-    "rothschild": {
-      "status": "research",
-      "capacity": 80,
-      "current_task": "Validation opportunités business online",
-      "last_activity": "AI Agent Studio validée (score 9.5)",
-      "opportunities_found": 6,
-      "validated": 1,
-      "in_research": 5
-    }
+    "henry": {"status": "active", "role": "Agent Principal"},
+    "rothschild": {"status": "standby", "role": "CEO"},
+    "junior": {"status": "standby", "role": "Analyste"},
+    "aiman": {"status": "standby", "role": "Lead Dev"},
+    "ops": {"status": "monitoring", "role": "DevOps"},
+    "qanon": {"status": "standby", "role": "QA"},
+    "whatsapp-bot": {"status": "active", "role": "Mobile"}
   },
-  "projects": {
-    "eqdom": {
-      "status": "live",
-      "mrr": "$45,200",
-      "users": 1247,
-      "conversion": "23.4%",
-      "blockers": [
-        {"severity": "critical", "issue": "Payment Gateway latence >2000ms", "owner": "aiman"},
-        {"severity": "warning", "issue": "KYC API 72h retard", "owner": "sarah_chen"}
-      ]
-    },
-    "bobcat": {
-      "status": "testing",
-      "blockers": [],
-      "progress": "33%"
-    },
-    "business_research": {
-      "status": "active",
-      "lead": "rothschild",
-      "opportunities_total": 6,
-      "opportunities_validated": 1,
-      "top_opportunity": "AI Agent Training Studio MENA (9.5/10)"
-    }
-  },
+  "alerts": [],
   "recent_logs": [
-    {"time": "05:20", "agent": "henry", "level": "success", "message": "Dashboard auto-update activé"},
-    {"time": "05:18", "agent": "rothschild", "level": "success", "message": "Opportunité AI Agent Studio validée"},
-    {"time": "05:15", "agent": "junior", "level": "info", "message": "Veille concurrentielle terminée"},
-    {"time": "05:10", "agent": "aiman", "level": "warning", "message": "Payment Gateway investigation en cours"},
-    {"time": "05:05", "agent": "system", "level": "info", "message": "Cron jobs auto-update configurés"},
-    {"time": "05:00", "agent": "rothschild", "level": "success", "message": "6 opportunités identifiées"},
-    {"time": "04:45", "agent": "aiman", "level": "success", "message": "Rothschild Command Center déployé"},
-    {"time": "04:40", "agent": "rothschild", "level": "success", "message": "Ciclon 1 terminé - Niche validée"},
-    {"time": "04:35", "agent": "junior", "level": "info", "message": "Rapport veille complété"},
-    {"time": "04:30", "agent": "system", "level": "info", "message": "Équipe Rothschild mobilisée"}
+    {"time": "11:05:00", "level": "info", "agent": "Henry", "message": "Dashboard V4 déployé sur VPS"},
+    {"time": "11:04:30", "level": "success", "agent": "Ops", "message": "Mise à jour automatique effectuée"}
   ],
-  "alerts": [
-    {"type": "critical", "message": "Payment Gateway sandbox failures (47 pending)", "time": "14:00"},
-    {"type": "warning", "message": "KYC API Integration 72h retard", "time": "10:21"}
-  ],
-  "metrics": {
-    "total_tasks_today": 13,
-    "agents_online": 4,
-    "projects_active": 3,
-    "blockers_critical": 1
-  }
+  "opportunities_count": 0
 }
