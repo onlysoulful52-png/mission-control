@@ -15,11 +15,12 @@
       "name": "Rothschild",
       "role": "CEO / Stratège",
       "status": "active",
-      "statusText": "Audit continu dashboard",
-      "currentTask": "Audit qualité + suggestions améliorations",
-      "lastActivity": "2026-03-07T11:32:00+08:00",
-      "channel": "Auto-audit toutes les 30 min",
-      "tasks_completed_today": 3
+      "statusText": "Double mission active",
+      "currentTask": "Veille opportunités (30min) + Audit dashboard (1h)",
+      "lastActivity": "2026-03-08T03:02:00+08:00",
+      "channel": "2 missions en continu",
+      "tasks_completed_today": 0,
+      "missions": ["veille-opportunites", "audit-dashboard"]
     },
     "junior": {
       "name": "Junior",
