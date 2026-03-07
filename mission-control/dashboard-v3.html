@@ -453,10 +453,17 @@
         // 🔄 CHARGEMENT DYNAMIQUE COMPLET
         let missionData = null;
         let businessData = null;
+        let agentsStatusData = null;
         let lastUpdate = null;
         
         async function loadAllData() {
             try {
+                // Charger les vrais statuts des agents
+                const agentsResponse = await fetch('mission-control/data/agents-status.json?' + Date.now());
+                if (agentsResponse.ok) {
+                    agentsStatusData = await agentsResponse.json();
+                }
+                
                 // Charger les données de mission (agents, logs, etc.)
                 const missionResponse = await fetch('data/mission-state.json?' + Date.now());
                 if (missionResponse.ok) {
@@ -495,13 +502,17 @@
         }
         
         function updateHeader() {
-            if (!missionData.agents) return;
+            // Utiliser les vraies données des agents si disponibles
+            const agents = agentsStatusData?.agents || missionData?.agents || {};
+            if (!agents) return;
             
-            const agentCount = Object.keys(missionData.agents).length;
-            const onlineCount = Object.values(missionData.agents).filter(a => a.status !== 'offline').length;
-            document.getElementById('agents-count').textContent = `${onlineCount}/${agentCount}`;
+            const agentCount = Object.keys(agents).length;
+            const activeCount = Object.values(agents).filter(a => 
+                a.status === 'active' || a.status === 'online' || a.status === 'monitoring'
+            ).length;
+            document.getElementById('agents-count').textContent = `${activeCount}/${agentCount}`;
             
-            const totalTasks = Object.values(missionData.agents).reduce((sum, a) => sum + (a.tasks_completed_today || 0), 0);
+            const totalTasks = Object.values(agents).reduce((sum, a) => sum + (a.tasks_completed_today || 0), 0);
             document.getElementById('tasks-count').textContent = totalTasks;
             
             document.getElementById('nav-agents-badge').textContent = agentCount;
@@ -534,46 +545,52 @@
             const loading = document.getElementById('agents-loading');
             const grid = document.getElementById('agents-grid');
             
-            if (!missionData.agents) return;
+            // Utiliser les vraies données des agents si disponibles
+            const agents = agentsStatusData?.agents || missionData?.agents || {};
+            
+            if (!agents || Object.keys(agents).length === 0) {
+                loading.textContent = 'Aucun agent configuré';
+                return;
+            }
             
             let html = '';
-            Object.entries(missionData.agents).forEach(([id, agent]) => {
-                const statusClass = agent.status === 'online' ? 'online' : 
-                                   agent.status === 'busy' ? 'busy' : 'offline';
-                const capacityColor = agent.capacity > 80 ? 'red' : 
-                                     agent.capacity > 50 ? 'yellow' : 'green';
+            Object.entries(agents).forEach(([id, agent]) => {
+                const statusClass = agent.status === 'active' || agent.status === 'online' ? 'online' : 
+                                   agent.status === 'busy' || agent.status === 'working' ? 'busy' : 
+                                   agent.status === 'monitoring' ? 'online' : 'offline';
+                
+                const capacity = agent.capacity || (agent.status === 'active' ? 100 : agent.status === 'standby' ? 20 : 0);
+                const capacityColor = capacity > 80 ? 'red' : capacity > 50 ? 'yellow' : 'green';
                 
                 html += `
                     <div class="agent-card ${statusClass}">
                         <div class="agent-header">
                             <div class="agent-avatar">${getAgentEmoji(id)}</div>
                             <div>
-                                <div class="agent-name">${capitalize(id)}</div>
-                                <div class="agent-role">${agent.current_task || 'En attente'}</div>
+                                <div class="agent-name">${agent.name || capitalize(id)}</div>
+                                <div class="agent-role">${agent.role || 'Agent'}</div>
                             </div>
                         </div>
                         <div class="agent-capacity">
-                            <span>Capacité:</span>
-                            <div class="capacity-bar">
-                                <div class="capacity-fill ${capacityColor}" style="width: ${agent.capacity || 0}%"></div>
-                            </div>
-                            <span>${agent.capacity || 0}%</span>
+                            <span>Statut:</span>
+                            <div style="flex:1; font-size:11px; color:${statusClass === 'online' ? '#00ff88' : statusClass === 'busy' ? '#ffd93d' : '#6b7280'}">${agent.statusText || agent.status}</div>
+                            <span style="font-size:10px; color:#6b7280;">${agent.channel || ''}</span>
                         </div>
                         <div class="agent-current-focus">
-                            ${agent.last_activity || 'Aucune activité récente'}
+                            ${agent.currentTask || agent.current_task || agent.lastActivity || 'En attente'}
                         </div>
                         <div class="agent-stats">
                             <div class="agent-stat">
-                                <div class="agent-stat-value">${agent.cycle_time || '-'}</div>
-                                <div class="agent-stat-label">Cycle Time</div>
-                            </div>
-                            <div class="agent-stat">
-                                <div class="agent-stat-value">${agent.quality_score || '-'}%</div>
-                                <div class="agent-stat-label">Qualité</div>
-                            </div>
-                            <div class="agent-stat">
-                                <div class="agent-stat-value">${agent.tasks_completed_today || 0}</div>
+                                <div class="agent-stat-value">${agent.tasks_completed_today || '-'}</div>
                                 <div class="agent-stat-label">Tâches</div>
+                            </div>
+                            <div class="agent-stat">
+                                <div class="agent-stat-value">${capacity}%</div>
+                                <div class="agent-stat-label">Activité</div>
+                            </div>
+                            <div class="agent-stat">
+                                <div class="agent-stat-value">${formatTime(agent.lastActivity || agent.last_activity)}</div>
+                                <div class="agent-stat-label">Dernière</div>
                             </div>
                         </div>
                     </div>
@@ -583,6 +600,16 @@
             grid.innerHTML = html;
             loading.style.display = 'none';
             grid.style.display = 'grid';
+        }
+        
+        function formatTime(timestamp) {
+            if (!timestamp) return '-';
+            try {
+                const date = new Date(timestamp);
+                return date.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+            } catch (e) {
+                return '-';
+            }
         }
         
         function updateLogs() {
