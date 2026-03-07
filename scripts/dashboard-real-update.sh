@@ -23,6 +23,10 @@ FILES_TO_CHECK=(
     "mission-control/data/logs-complet.json"
     "mission-control/data/veille-rothschild.json"
     "mission-control/data/rothschild-status.json"
+    "mission-control/data/audit-rothschild.json"
+    "mission-control/data/changes-aiman.json"
+    "mission-control/data/ops-logs.json"
+    "mission-control/data/workflow-continu.json"
     "AGENTS_TEAM.md"
 )
 
