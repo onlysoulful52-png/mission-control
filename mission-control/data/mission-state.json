@@ -1,19 +1,25 @@
 {
   "mission": "Gestion des agents IA et opportunités business",
   "startDate": "2026-03-07",
+  "lastUpdate": "2026-03-07T23:37:00+08:00",
   "agents": {
-    "henry": {"status": "active", "role": "Agent Principal"},
-    "rothschild": {"status": "standby", "role": "CEO"},
-    "junior": {"status": "standby", "role": "Analyste"},
-    "aiman": {"status": "standby", "role": "Lead Dev"},
-    "ops": {"status": "monitoring", "role": "DevOps"},
-    "qanon": {"status": "standby", "role": "QA"},
-    "whatsapp-bot": {"status": "active", "role": "Mobile"}
+    "henry": {"status": "active", "role": "Agent Principal", "lastActivity": "2026-03-07T23:37:00+08:00"},
+    "rothschild": {"status": "active", "role": "CEO", "lastActivity": "2026-03-07T22:45:00+08:00"},
+    "aiman": {"status": "active", "role": "Lead Dev", "lastActivity": "2026-03-07T22:45:00+08:00"},
+    "ops": {"status": "active", "role": "DevOps", "lastActivity": "2026-03-07T23:29:00+08:00"},
+    "junior": {"status": "standby", "role": "Analyste", "lastActivity": "2026-03-07T20:00:00+08:00"},
+    "qanon": {"status": "standby", "role": "QA", "lastActivity": "2026-03-07T20:00:00+08:00"},
+    "whatsapp-bot": {"status": "active", "role": "Mobile", "lastActivity": "2026-03-07T23:01:00+08:00"}
   },
   "alerts": [],
   "recent_logs": [
-    {"time": "11:05:00", "level": "info", "agent": "Henry", "message": "Dashboard V4 déployé sur VPS"},
-    {"time": "11:04:30", "level": "success", "agent": "Ops", "message": "Mise à jour automatique effectuée"}
+    {"time": "23:37", "level": "info", "agent": "Henry", "message": "Corrections audit Rothschild appliquées"},
+    {"time": "23:29", "level": "info", "agent": "Ops", "message": "Check cron - aucun changement"},
+    {"time": "22:45", "level": "success", "agent": "Ops", "message": "Déploiement auto réussi - 3 fichiers"},
+    {"time": "22:19", "level": "success", "agent": "Ops", "message": "MAJ auto - mission-state + tasks + personas"}
   ],
-  "opportunities_count": 0
+  "opportunities_count": 1,
+  "tasks_count": 48,
+  "tasks_completed": 26,
+  "status": "OPERATIONAL"
 }
