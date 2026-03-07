@@ -15,11 +15,11 @@
       "name": "Rothschild",
       "role": "CEO / Stratège",
       "status": "active",
-      "statusText": "Deep research en cours",
-      "currentTask": "Veille B2B informel Maroc (YouTube/Reddit/LinkedIn)",
-      "lastActivity": "2026-03-07T11:16:45+08:00",
-      "channel": "Auto-veille toutes les heures",
-      "tasks_completed_today": 2
+      "statusText": "Audit continu dashboard",
+      "currentTask": "Audit qualité + suggestions améliorations",
+      "lastActivity": "2026-03-07T11:32:00+08:00",
+      "channel": "Auto-audit toutes les 30 min",
+      "tasks_completed_today": 3
     },
     "junior": {
       "name": "Junior",
@@ -34,22 +34,22 @@
     "aiman": {
       "name": "Aiman",
       "role": "Lead Developer",
-      "status": "standby",
-      "statusText": "En attente de mission",
-      "currentTask": null,
-      "lastActivity": "2026-03-07T10:50:00+08:00",
-      "channel": "Disponible sur demande",
-      "tasks_completed_today": 0
+      "status": "active",
+      "statusText": "Amélioration continue dashboard",
+      "currentTask": "Intégration suggestions Rothschild",
+      "lastActivity": "2026-03-07T11:32:00+08:00",
+      "channel": "Développement auto sur audit",
+      "tasks_completed_today": 1
     },
     "ops": {
       "name": "Ops",
       "role": "DevOps",
-      "status": "monitoring",
-      "statusText": "Monitoring + Logs temps réel",
-      "currentTask": "Surveillance + MAJ auto",
-      "lastActivity": "2026-03-07T11:09:00+08:00",
-      "channel": "Automatique",
-      "tasks_completed_today": 6
+      "status": "active",
+      "statusText": "Déploiement continu",
+      "currentTask": "Auto-deploy sur changements",
+      "lastActivity": "2026-03-07T11:32:00+08:00",
+      "channel": "Déploiement auto toutes les 5 min",
+      "tasks_completed_today": 7
     },
     "qanon": {
       "name": "QAnon",

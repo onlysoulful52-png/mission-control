@@ -1,0 +1,37 @@
+{
+  "workflow": "FLUX CONTINU AGENTS",
+  "description": "Rothschild → Aiman → Ops - Chaîne d'amélioration continue",
+  "date_creation": "2026-03-07T11:32:00",
+  "agents_actifs": {
+    "rothschild": {
+      "role": "AUDITEUR",
+      "frequence": "Toutes les 30 minutes",
+      "tache": "Audit dashboard et système",
+      "output": "mission-control/data/audit-rothschild.json",
+      "statut": "ACTIVE"
+    },
+    "aiman": {
+      "role": "DÉVELOPPEUR",
+      "frequence": "Toutes les heures",
+      "tache": "Améliore le dashboard selon audit Rothschild",
+      "input": "mission-control/data/audit-rothschild.json",
+      "output": "mission-control/data/changes-aiman.json",
+      "statut": "ACTIVE"
+    },
+    "ops": {
+      "role": "DEPLOYER",
+      "frequence": "Toutes les 5 minutes (si changements)",
+      "tache": "Déploie automatiquement sur GitHub",
+      "output": "mission-control/data/deploy-log.json",
+      "statut": "ACTIVE"
+    }
+  },
+  "flux": [
+    "1. Rothschild audite → Écrit audit-rothschild.json",
+    "2. Aiman lit l'audit → Améliore dashboard → Écrit changes-aiman.json",
+    "3. Ops détecte changements → Git add/commit/push → Écrit deploy-log.json",
+    "4. Dashboard mis à jour sur URL publique"
+  ],
+  "url_dashboard": "https://onlysoulful52-png.github.io/mission-control/",
+  "mode": "CONTINU"
+}
