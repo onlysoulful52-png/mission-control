@@ -1,0 +1,13 @@
+{
+  "vault": {
+    "path": "/root/.openclaw/workspace/obsidian-vault",
+    "name": "Mission Control Vault"
+  },
+  "dailyNotes": {
+    "folder": "DailyNotes",
+    "format": "YYYY-MM-DD"
+  },
+  "plugins": {
+    "enabled": []
+  }
+}
